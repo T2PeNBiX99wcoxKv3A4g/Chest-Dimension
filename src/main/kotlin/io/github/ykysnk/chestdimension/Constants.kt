@@ -1,6 +1,7 @@
 package io.github.ykysnk.chestdimension
 
 import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.item.ItemGroups
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.ChestLevelStorage
@@ -23,9 +24,10 @@ object Constants {
     }
 
     const val MOD_ID: String = "chest-dimension"
+    const val MOD_NAME: String = "Chest Dimension"
 
     @JvmField
-    val LOGGER: Logger = LoggerFactory.getLogger(MOD_ID)
+    val LOGGER: Logger = LoggerFactory.getLogger(MOD_NAME)
 
     @JvmStatic
     val ConfigDir: Path by lazy {
@@ -35,7 +37,7 @@ object Constants {
     }
 
     val ForceInitialize: Unit by lazy {
-        LOGGER.debug("{} {} {} {}", Blocks, Items, ChestLevelStorage, ChestLevelManager)
+        LOGGER.debug("{} {} {} {} {}", Blocks, Items, ItemGroups, ChestLevelStorage, ChestLevelManager)
     }
 
     private var getServer: MinecraftServer? = null
@@ -49,4 +51,10 @@ object Constants {
     fun Entity.teleportToLevel(level: ServerLevel) = teleportTo(level, 0.5, 100.0, 0.5, setOf(), yRot, xRot)
     fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3) =
         teleportTo(level, pos.x, pos.y, pos.z, setOf(), yRot, xRot)
+
+    fun <T> MutableList<T>.funcAndListAdd(func: () -> T) : T {
+        val item = func()
+        add(item)
+        return item
+    }
 }
