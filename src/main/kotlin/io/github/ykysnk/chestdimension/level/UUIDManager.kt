@@ -17,7 +17,7 @@ object UUIDManager {
 
     fun load() {
         if (!Files.exists(dataPath)) {
-            save()
+            saveNow(data)
             return
         }
         data = Yaml.decodeFromString(dataPath.readText())
