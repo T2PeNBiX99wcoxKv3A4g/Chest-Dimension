@@ -58,12 +58,12 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEn
     }
 
     override fun load(tag: CompoundTag) {
-        tag.putUUID("UUID", uuid)
+        if (!tag.hasUUID("UUID")) return
+        uuid = tag.getUUID("UUID")
     }
 
     override fun saveAdditional(tag: CompoundTag) {
-        if (!tag.hasUUID("UUID")) return
-        uuid = tag.getUUID("UUID")
+        tag.putUUID("UUID", uuid)
     }
 
     fun startOpen(player: Player) {
