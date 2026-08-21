@@ -13,7 +13,6 @@ import kotlin.io.path.writeText
 object UUIDManager {
     private val dataPath = Constants.ConfigDir.resolve("levels.yaml")
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
     private var data: Levels = Levels()
 
     fun load() {
