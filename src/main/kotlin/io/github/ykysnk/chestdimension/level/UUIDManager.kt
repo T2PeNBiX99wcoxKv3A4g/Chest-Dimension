@@ -41,6 +41,13 @@ object UUIDManager {
 
     fun get() = data.levels.toMap()
 
+    fun randomUUID(): UUID {
+        while (true) {
+            val uuid = UUID.randomUUID()
+            if (!data.levels.containsKey(uuid.toString())) return uuid
+        }
+    }
+
     init {
         load()
         ServerLifecycleEvents.SERVER_STOPPING.register {

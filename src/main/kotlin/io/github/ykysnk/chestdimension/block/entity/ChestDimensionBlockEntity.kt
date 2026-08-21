@@ -4,6 +4,7 @@ import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.Constants.teleportToLevel
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
+import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.sounds.SoundEvents
@@ -42,7 +43,7 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEn
         override fun isOwnContainer(player: Player): Boolean = playerCache.contains(player)
     }
 
-    var uuid: UUID = UUID.randomUUID()
+    var uuid: UUID = UUIDManager.randomUUID()
         private set
 
     val playerCache: HashSet<Player> = HashSet()
