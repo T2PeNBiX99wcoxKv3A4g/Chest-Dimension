@@ -17,7 +17,7 @@ object UUIDManager {
 
     fun load() {
         if (!Files.exists(dataPath)) {
-            saveNow(data)
+            saveNow()
             return
         }
         data = Yaml.decodeFromString(dataPath.readText())
@@ -27,6 +27,8 @@ object UUIDManager {
         val snapshot = data.deepCopy()
         scope.launch { saveNow(snapshot) }
     }
+
+    private fun saveNow() = saveNow(data)
 
     private fun saveNow(levels: Levels) {
         val text = Yaml.encodeToString(levels)
@@ -42,7 +44,7 @@ object UUIDManager {
     init {
         load()
         ServerLifecycleEvents.SERVER_STOPPING.register {
-            saveNow(data)
+            saveNow()
             scope.cancel()
         }
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register { _, _ ->
