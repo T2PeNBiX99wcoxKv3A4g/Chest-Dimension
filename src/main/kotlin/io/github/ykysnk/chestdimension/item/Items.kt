@@ -8,5 +8,6 @@ import net.minecraft.world.item.Items as MCItems
 object Items {
     val CHEST_PLATFORM: Item = MCItems.registerBlock(Blocks.CHEST_PLATFORM)
     val CHEST_PLATFORM_WALL: Item = MCItems.registerBlock(Blocks.CHEST_PLATFORM_WALL)
+    val CHEST_PLATFORM_FENCE: Item = MCItems.registerBlock(Blocks.CHEST_PLATFORM_FENCE)
     val CHEST_DIMENSION: Item = MCItems.registerBlock(Blocks.CHEST_DIMENSION)
 }

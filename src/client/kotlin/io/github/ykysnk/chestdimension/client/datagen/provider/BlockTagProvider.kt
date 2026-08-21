@@ -11,6 +11,11 @@ class BlockTagProvider(output: FabricDataOutput, registries: CompletableFuture<H
     FabricTagProvider.BlockTagProvider(output, registries) {
     override fun addTags(provider: HolderLookup.Provider) {
         getOrCreateTagBuilder(BlockTags.WALLS).add(Blocks.CHEST_PLATFORM_WALL)
-        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE).add(Blocks.CHEST_PLATFORM).add(Blocks.CHEST_PLATFORM_WALL).add(Blocks.CHEST_DIMENSION)
+        getOrCreateTagBuilder(BlockTags.FENCES).add(Blocks.CHEST_PLATFORM_FENCE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
+            .add(Blocks.CHEST_PLATFORM)
+            .add(Blocks.CHEST_PLATFORM_WALL)
+            .add(Blocks.CHEST_PLATFORM_FENCE)
+            .add(Blocks.CHEST_DIMENSION)
     }
 }

@@ -1,4 +1,5 @@
-// 1.20.1	2026-08-22T00:02:04.1901474	Chest Dimension/Block Loot Tables
+// 1.20.1	2026-08-22T05:27:52.5298666	Chest Dimension/Block Loot Tables
+76248918c5af9f8204e726ca6922087082f9fb3f data\chest-dimension\loot_tables\blocks\chest_platform_fence.json
 ae12bee9f4814b4926e0286bef53278ee4427595 data\chest-dimension\loot_tables\blocks\chest_platform.json
 ffbf6cb754a88d38078d96c0bcd3560699f8052d data\chest-dimension\loot_tables\blocks\chest_platform_wall.json
 ccd249e0e5c36c4ce3d9e3974bb8585a49b3fc18 data\chest-dimension\loot_tables\blocks\chest_dimension.json

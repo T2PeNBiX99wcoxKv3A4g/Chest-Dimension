@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks as MCBlocks
 
 class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
     override fun generateBlockStateModels(blockStateModelGenerator: BlockModelGenerators) {
-        blockStateModelGenerator.family(Blocks.CHEST_PLATFORM).wall(Blocks.CHEST_PLATFORM_WALL)
+        blockStateModelGenerator.family(Blocks.CHEST_PLATFORM).wall(Blocks.CHEST_PLATFORM_WALL).fence(Blocks.CHEST_PLATFORM_FENCE)
         blockStateModelGenerator.blockEntityModels(
             ModelLocationUtils.getModelLocation(Blocks.CHEST_DIMENSION),
             MCBlocks.OAK_PLANKS

@@ -8,6 +8,7 @@ class BlockLootTableProvider(output: FabricDataOutput) : FabricBlockLootTablePro
     override fun generate() {
         dropSelf(Blocks.CHEST_PLATFORM)
         dropSelf(Blocks.CHEST_PLATFORM_WALL)
+        dropSelf(Blocks.CHEST_PLATFORM_FENCE)
         dropSelf(Blocks.CHEST_DIMENSION)
     }
 }
