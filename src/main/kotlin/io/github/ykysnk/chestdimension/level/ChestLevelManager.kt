@@ -114,6 +114,7 @@ object ChestLevelManager {
 
         loaded[uuid] = LoadedChestWorld(uuid, level)
         UUIDManager.add(uuid, LevelData(seed))
+        UUIDManager.save()
         return level
     }
 
