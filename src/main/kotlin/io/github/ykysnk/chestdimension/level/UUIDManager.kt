@@ -28,8 +28,8 @@ object UUIDManager {
         scope.launch { saveNow(snapshot) }
     }
 
-    private fun saveNow(snapshot: Levels) {
-        val text = Yaml.encodeToString(snapshot)
+    private fun saveNow(levels: Levels) {
+        val text = Yaml.encodeToString(levels)
         dataPath.writeText(text)
     }
 
