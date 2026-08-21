@@ -1,6 +1,7 @@
 package io.github.ykysnk.chestdimension.block
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.Block
@@ -11,10 +12,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.block.Blocks as MCBlocks
 
-object Blocks {
-    @Suppress("SameParameterValue")
+object Blocks : RegistryHelper<Block>() {
     private fun register(name: String, block: Block) =
-        Registry.register(BuiltInRegistries.BLOCK, Constants.id(name), block)
+        register { Registry.register(BuiltInRegistries.BLOCK, Constants.id(name), block) }
 
     val CHEST_PLATFORM: Block = register(
         "chest_platform",
@@ -36,5 +36,10 @@ object Blocks {
         )
     )
 
-    val CHEST_DIMENSION: Block = register("chest_dimension", ChestDimensionBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0f, 1200.0f).sound(SoundType.WOOD)))
+    val CHEST_DIMENSION: Block = register(
+        "chest_dimension",
+        ChestDimensionBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0f, 1200.0f).sound(SoundType.WOOD)
+        )
+    )
 }
