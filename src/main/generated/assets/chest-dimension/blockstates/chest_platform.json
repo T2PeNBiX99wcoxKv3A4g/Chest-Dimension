@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "chest-dimension:block/chest_platform"
+    }
+  }
+}

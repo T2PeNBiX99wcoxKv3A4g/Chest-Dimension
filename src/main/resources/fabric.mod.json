@@ -1,0 +1,56 @@
+{
+	"schemaVersion": 1,
+	"id": "${mod_id}",
+	"version": "${version}",
+	"name": "${mod_name}",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"yukiyosanako"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/${mod_id}/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "io.github.ykysnk.chestdimension.ChestDimension",
+				"adapter": "kotlin"
+			}
+		],
+		"client": [
+			{
+				"value": "io.github.ykysnk.chestdimension.client.ChestDimensionClient",
+				"adapter": "kotlin"
+			}
+		],
+		"fabric-datagen": [
+			{
+				"value": "io.github.ykysnk.chestdimension.client.datagen.ChestDimensionDataGenerator",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"${mod_id}.mixins.json",
+		{
+			"config": "${mod_id}.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=17",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*"
+	},
+	"suggests": {
+		"modmenu": "*",
+		"yet_another_config_lib_v3": "*"
+	},
+	"accessWidener": "${mod_id}.aw"
+}

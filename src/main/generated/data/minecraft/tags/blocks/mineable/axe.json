@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "chest-dimension:chest_platform",
+    "chest-dimension:chest_platform_wall",
+    "chest-dimension:chest_dimension"
+  ]
+}

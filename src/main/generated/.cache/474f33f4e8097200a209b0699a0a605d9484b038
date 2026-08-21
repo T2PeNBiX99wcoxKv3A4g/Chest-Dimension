@@ -1,0 +1,12 @@
+// 1.20.1	2026-08-22T00:02:04.1911822	Chest Dimension/Model Definitions
+1dbfff9b6cf804221a17378d793fb7f2b00fb35c assets\chest-dimension\models\block\chest_dimension.json
+033e95a6a70bd1955a377195a743dfcee983c166 assets\chest-dimension\blockstates\chest_platform.json
+20b702d91393d08b4354c9169ce1fe5515534fb6 assets\chest-dimension\models\block\chest_platform_wall_post.json
+14c74294e02ae20d798073ac897b2dd1e68e9602 assets\chest-dimension\models\item\chest_platform_wall.json
+79d20656ac489ddeb0c7e4a8a80a83906efcf6ad assets\chest-dimension\blockstates\chest_dimension.json
+9a4099e2051c62f33b9a309a7b4e65c5777ff00e assets\chest-dimension\blockstates\chest_platform_wall.json
+125a6afd4934fb2955f38859c00fc6d4f988dbd2 assets\chest-dimension\models\block\chest_platform_wall_side.json
+2b544b934adfa3fbbd0177d1b105134c57fc65c4 assets\chest-dimension\models\block\chest_platform_wall_inventory.json
+42adfba1159fd95b9e7177bedc18c27d089457b2 assets\chest-dimension\models\item\chest_platform.json
+603fd4e6e9b5158cf81aee4c9354fabf46b99025 assets\chest-dimension\models\block\chest_platform_wall_side_tall.json
+d3a1f64abc1d773900cec455dae9f12cfeedf491 assets\chest-dimension\models\block\chest_platform.json
