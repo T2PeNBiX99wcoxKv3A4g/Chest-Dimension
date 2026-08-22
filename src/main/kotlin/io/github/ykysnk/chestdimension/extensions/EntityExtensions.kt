@@ -14,6 +14,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.vehicle.DismountHelper
 import net.minecraft.world.level.CollisionGetter
 import net.minecraft.world.level.GameType
+import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 
@@ -76,6 +77,16 @@ fun Entity.teleportToSpawnLocation(level: ServerLevel): Boolean =
 
 fun Entity.findStandUpPosition(level: CollisionGetter, pos: BlockPos, offsets: List<Vec3i>): Vec3? =
     findStandUpPosition(type, level, pos, offsets)
+
+fun Entity.findChestTopPosition(level: Level, chestPos: BlockPos): Vec3? {
+    val feet = chestPos.above()
+    val targetCenter = Vec3.atBottomCenterOf(feet)
+    val box = boundingBox
+    val currentFeet = Vec3(x, box.minY, z)
+    val offset = targetCenter.subtract(currentFeet)
+    val targetBox = box.move(offset)
+    return if (level.noCollision(this, targetBox)) targetCenter else null
+}
 
 fun findStandUpPosition(entityType: EntityType<*>, level: CollisionGetter, pos: BlockPos, offsets: List<Vec3i>): Vec3? {
     val optional = findStandUpPosition(entityType, level, pos, true, offsets)
