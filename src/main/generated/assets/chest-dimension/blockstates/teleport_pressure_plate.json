@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "chest-dimension:block/teleport_pressure_plate"
+    },
+    "powered=true": {
+      "model": "chest-dimension:block/teleport_pressure_plate_down"
+    }
+  }
+}
