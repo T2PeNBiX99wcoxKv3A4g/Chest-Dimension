@@ -3,7 +3,7 @@ package io.github.ykysnk.chestdimension.command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.StringArgumentType
 import io.github.ykysnk.chestdimension.Constants
-import io.github.ykysnk.chestdimension.Constants.teleportToLevel
+import io.github.ykysnk.chestdimension.extensions.teleportToLevel
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.commands.CommandSourceStack

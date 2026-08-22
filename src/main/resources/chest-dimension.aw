@@ -10,3 +10,4 @@ accessible field net/minecraft/server/level/ServerLevel serverLevelData Lnet/min
 accessible field net/minecraft/world/level/storage/LevelStorageSource worldDirValidator Lnet/minecraft/world/level/validation/DirectoryValidator;
 accessible field net/minecraft/world/level/storage/LevelStorageSource fixerUpper Lcom/mojang/datafixers/DataFixer;
 accessible field net/minecraft/world/level/block/entity/BlockEntityType$Builder validBlocks Ljava/util/Set;
+accessible method net/minecraft/server/level/PlayerRespawnLogic getOverworldRespawnPos (Lnet/minecraft/server/level/ServerLevel;II)Lnet/minecraft/core/BlockPos;

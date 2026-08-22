@@ -9,6 +9,7 @@ class BlockLootTableProvider(output: FabricDataOutput) : FabricBlockLootTablePro
         dropSelf(Blocks.CHEST_PLATFORM)
         dropSelf(Blocks.CHEST_PLATFORM_WALL)
         dropSelf(Blocks.CHEST_PLATFORM_FENCE)
+        dropSelf(Blocks.TELEPORT_PRESSURE_PLATE)
         dropSelf(Blocks.CHEST_DIMENSION)
     }
 }
