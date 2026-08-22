@@ -9,9 +9,12 @@ import net.minecraft.world.level.block.FenceBlock
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.WallBlock
 import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.state.properties.BlockSetType
 import net.minecraft.world.level.material.MapColor
+import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.level.block.Blocks as MCBlocks
 
+// TODO: Add Enter point and Exit Point
 object Blocks : RegistryHelper<Block>() {
     private fun register(name: String, block: Block) =
         register { Registry.register(BuiltInRegistries.BLOCK, Constants.id(name), block) }
@@ -33,6 +36,14 @@ object Blocks : RegistryHelper<Block>() {
         FenceBlock(
             BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).forceSolidOn()
                 .strength(2.0f, 1200.0f).sound(SoundType.WOOD)
+        )
+    )
+
+    val TELEPORT_PRESSURE_PLATE: Block = register(
+        "teleport_pressure_plate",
+        TeleportPressurePlateBlock(
+            BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).forceSolidOn().noCollission()
+                .strength(0.5f, 1200.0f).pushReaction(PushReaction.DESTROY), BlockSetType.OAK
         )
     )
 

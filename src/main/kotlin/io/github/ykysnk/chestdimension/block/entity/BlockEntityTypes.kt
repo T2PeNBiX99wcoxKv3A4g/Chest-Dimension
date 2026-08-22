@@ -19,4 +19,10 @@ object BlockEntityTypes {
 
     val CHEST_DIMENSION: BlockEntityType<ChestDimensionBlockEntity> =
         register("chest_dimension", BlockEntityType.Builder.of(::ChestDimensionBlockEntity, Blocks.CHEST_DIMENSION))
+
+    val TELEPORT_PRESSURE_PLATE: BlockEntityType<TeleportPressurePlateBlockEntity> =
+        register(
+            "teleport_pressure_plate",
+            BlockEntityType.Builder.of(::TeleportPressurePlateBlockEntity, Blocks.TELEPORT_PRESSURE_PLATE)
+        )
 }
