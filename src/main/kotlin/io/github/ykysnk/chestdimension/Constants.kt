@@ -9,9 +9,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.phys.Vec3
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
@@ -47,14 +44,4 @@ object Constants {
 
     @JvmStatic
     fun id(path: String) = ResourceLocation(MOD_ID, path)
-
-    fun Entity.teleportToLevel(level: ServerLevel) = teleportTo(level, 0.5, 100.0, 0.5, setOf(), yRot, xRot)
-    fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3) =
-        teleportTo(level, pos.x, pos.y, pos.z, setOf(), yRot, xRot)
-
-    fun <T> MutableList<T>.funcAndListAdd(func: () -> T) : T {
-        val item = func()
-        add(item)
-        return item
-    }
 }
