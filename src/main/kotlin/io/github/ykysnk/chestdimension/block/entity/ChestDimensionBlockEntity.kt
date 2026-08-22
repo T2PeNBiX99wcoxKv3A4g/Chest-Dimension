@@ -1,8 +1,8 @@
 package io.github.ykysnk.chestdimension.block.entity
 
 import io.github.ykysnk.chestdimension.Constants
-import io.github.ykysnk.chestdimension.Constants.teleportToLevel
 import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.extensions.teleportToLevel
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.core.BlockPos
