@@ -5,12 +5,15 @@ import io.github.ykysnk.chestdimension.block.entity.ChestDimensionBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.monster.piglin.PiglinAi
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
@@ -28,6 +31,8 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.pathfinder.PathComputationType
+import net.minecraft.world.level.storage.loot.LootParams
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -203,5 +208,22 @@ class ChestDimensionBlock(properties: Properties) :
         if (blockEntity !is ChestDimensionBlockEntity) return
         blockEntity.checkCache()
         blockEntity.recheckOpen()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun getDrops(state: BlockState, params: LootParams.Builder): MutableList<ItemStack> {
+        val drops = super.getDrops(state, params)
+        val blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
+
+        if (blockEntity is ChestDimensionBlockEntity) {
+            for (stack in drops) {
+                if (stack.item != asItem()) continue
+                val tag = CompoundTag()
+                tag.putUUID("UUID", blockEntity.uuid)
+                BlockItem.setBlockEntityData(stack, BlockEntityTypes.CHEST_DIMENSION, tag)
+            }
+        }
+
+        return drops
     }
 }
