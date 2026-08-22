@@ -2,6 +2,7 @@ package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.data.LevelData
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
@@ -27,6 +28,7 @@ object ChestLevelManager {
     }
 
     private val loaded = mutableMapOf<UUID, LoadedChestWorld>()
+    private val levelToUUID = mutableMapOf<Level, UUID>()
     private var chunkProgressListener: ChunkProgressListener? = null
 
     fun load(server: MinecraftServer, listener: ChunkProgressListener) {
@@ -44,6 +46,7 @@ object ChestLevelManager {
             .registryOrThrow(Registries.DIMENSION_TYPE)
             .getHolderOrThrow(DimensionTypes.CHEST)
         val levelStem = LevelStem(dimensionType, generator)
+        val changeData = hashMapOf<UUID, LevelData>()
 
         for ((uuid, data) in UUIDManager.get()) {
             val uuid2 = runCatching { UUID.fromString(uuid) }.getOrElse {
@@ -51,7 +54,14 @@ object ChestLevelManager {
                 continue
             }
             val worldKey = createWorldKey(uuid2)
-            val obfuscateSeed = BiomeManager.obfuscateSeed(data.seed)
+            var seed = data.seed
+
+            if (seed == -1L) {
+                seed = WorldOptions.randomSeed()
+                changeData[uuid2] = data.copy(seed = seed)
+            }
+
+            val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
             val level = ServerLevel(
                 server,
                 server.executor,
@@ -69,6 +79,11 @@ object ChestLevelManager {
 
             server.levels[worldKey] = level
             loaded[uuid2] = LoadedChestWorld(uuid2, level)
+            levelToUUID[level] = uuid2
+        }
+
+        for ((uuid, newData) in changeData) {
+            UUIDManager.set(uuid, newData)
         }
     }
 
@@ -113,7 +128,8 @@ object ChestLevelManager {
         server.levels[worldKey] = level
 
         loaded[uuid] = LoadedChestWorld(uuid, level)
-        UUIDManager.add(uuid, LevelData(seed))
+        levelToUUID[level] = uuid
+        UUIDManager.add(uuid, seed)
         UUIDManager.save()
         return level
     }
@@ -163,10 +179,13 @@ object ChestLevelManager {
 
     operator fun get(uuid: UUID): ServerLevel? = loaded[uuid]?.level
 
+    fun findUUIDByLevel(level: Level): UUID? = levelToUUID[level]
+
     fun createWorldKey(uuid: UUID): ResourceKey<Level> =
         ResourceKey.create(Registries.DIMENSION, Constants.id("chest/$uuid"))
 
     fun clear() {
         loaded.clear()
+        levelToUUID.clear()
     }
 }

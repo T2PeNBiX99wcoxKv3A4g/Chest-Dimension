@@ -1,10 +1,18 @@
 package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.data.BlockPosData.Companion.toData
+import io.github.ykysnk.chestdimension.data.DimensionData.Companion.toData
+import io.github.ykysnk.chestdimension.data.LevelData
+import io.github.ykysnk.chestdimension.data.Levels
 import kotlinx.coroutines.*
 import kotlinx.serialization.decodeFromString
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.mamoe.yamlkt.Yaml
+import net.minecraft.core.BlockPos
+import net.minecraft.resources.ResourceKey
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.Level
 import java.nio.file.Files
 import java.util.*
 import kotlin.io.path.readText
@@ -35,7 +43,29 @@ object UUIDManager {
         dataPath.writeText(text)
     }
 
-    fun add(uuid: UUID, levelData: LevelData) {
+    fun add(uuid: UUID, seed: Long) {
+        data.levels[uuid.toString()] = LevelData(seed)
+    }
+
+    fun setChestData(uuid: UUID, key: ResourceKey<Level>, pos: BlockPos) {
+        val oldData = data.levels[uuid.toString()] ?: LevelData(-1)
+        data.levels[uuid.toString()] = oldData.copy(chestDimension = key.toData(), chestPos = pos.toData())
+    }
+
+    fun clearChestData(uuid: UUID) {
+        val oldData = data.levels[uuid.toString()] ?: LevelData(-1)
+        data.levels[uuid.toString()] = oldData.copy(chestDimension = null, chestPos = null)
+    }
+
+    fun getExitChestPos(uuid: UUID): BlockPos? {
+        val data = data.levels[uuid.toString()] ?: return null
+        return data.chestPos?.blockPos
+    }
+
+    fun getExitChestDimension(uuid: UUID): ServerLevel? =
+        data.levels[uuid.toString()]?.chestDimension?.resourceKey?.let(Constants.Server::getLevel)
+
+    fun set(uuid: UUID, levelData: LevelData) {
         data.levels[uuid.toString()] = levelData
     }
 

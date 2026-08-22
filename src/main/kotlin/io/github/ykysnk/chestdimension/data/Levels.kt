@@ -1,4 +1,4 @@
-package io.github.ykysnk.chestdimension.level
+package io.github.ykysnk.chestdimension.data
 
 import kotlinx.serialization.Serializable
 
