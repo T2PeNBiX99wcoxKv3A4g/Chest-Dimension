@@ -96,15 +96,18 @@ class ChestDimensionBlock(properties: Properties) :
     ): InteractionResult {
         val blockEntity = level.getBlockEntity(pos)
         if (blockEntity is ChestDimensionBlockEntity) {
-            if (level.isClientSide) {
-                return InteractionResult.SUCCESS
-            } else {
-                level.scheduleTick(pos, this, 20)
-                blockEntity.startOpen(player)
-                // TODO: Stat
-//                player.awardStat(Stats.OPEN_ENDERCHEST)
-                PiglinAi.angerNearbyPiglins(player, true)
-                return InteractionResult.CONSUME
+            val blockPos = pos.above()
+            when {
+                level.getBlockState(blockPos)
+                    .isRedstoneConductor(level, blockPos) -> return InteractionResult.sidedSuccess(level.isClientSide)
+
+                level.isClientSide -> return InteractionResult.SUCCESS
+                else -> {
+                    level.scheduleTick(pos, this, 20)
+                    blockEntity.startOpen(player)
+                    PiglinAi.angerNearbyPiglins(player, true)
+                    return InteractionResult.CONSUME
+                }
             }
         } else {
             return InteractionResult.sidedSuccess(level.isClientSide)
