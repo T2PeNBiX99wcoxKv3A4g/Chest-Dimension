@@ -15,10 +15,12 @@ class BlockTagProvider(output: FabricDataOutput, registries: CompletableFuture<H
         getOrCreateTagBuilder(BlockTags.PRESSURE_PLATES).add(Blocks.TELEPORT_PRESSURE_PLATE)
         getOrCreateTagBuilder(BlockTags.WOODEN_PRESSURE_PLATES).add(Blocks.TELEPORT_PRESSURE_PLATE)
         getOrCreateTagBuilder(BlockTags.WALL_POST_OVERRIDE).add(Blocks.TELEPORT_PRESSURE_PLATE)
+            .add(Blocks.CHEST_PLATFORM_ENTER_PLATE)
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
             .add(Blocks.CHEST_PLATFORM)
             .add(Blocks.CHEST_PLATFORM_WALL)
             .add(Blocks.CHEST_PLATFORM_FENCE)
+            .add(Blocks.CHEST_PLATFORM_ENTER_PLATE)
             .add(Blocks.TELEPORT_PRESSURE_PLATE)
             .add(Blocks.CHEST_DIMENSION)
     }

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "chest-dimension:teleport_pressure_plate"
+    "chest-dimension:teleport_pressure_plate",
+    "chest-dimension:chest_platform_enter_plate"
   ]
 }
