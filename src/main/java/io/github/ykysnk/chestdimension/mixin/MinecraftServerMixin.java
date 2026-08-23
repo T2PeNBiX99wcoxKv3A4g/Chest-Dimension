@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@SuppressWarnings({"AbstractClassWithoutAbstractMethods", "AbstractClassNeverImplemented", "MethodMayBeStatic"})
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
     @Inject(method = "createLevels", at = @At("TAIL"))
@@ -21,7 +22,7 @@ public abstract class MinecraftServerMixin {
     }
 
     @Inject(method = "getAllLevels", at = @At("RETURN"), cancellable = true)
-    private void getAllLevels(CallbackInfoReturnable<Iterable<ServerLevel>> cir){
+    private void getAllLevels(CallbackInfoReturnable<Iterable<ServerLevel>> cir) {
         cir.setReturnValue(new ArrayList<>((Collection<ServerLevel>) cir.getReturnValue()));
     }
 }

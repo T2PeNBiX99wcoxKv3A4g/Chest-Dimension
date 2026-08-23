@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate", "unused")
+
 package io.github.ykysnk.chestdimension
 
 import io.github.ykysnk.chestdimension.block.Blocks
@@ -14,7 +16,6 @@ import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 
-@Suppress("unused")
 object Constants {
     init {
         ServerLifecycleEvents.SERVER_STARTING.register { getServer = it }
@@ -43,5 +44,5 @@ object Constants {
         get() = getServer ?: error("Server is not initialized")
 
     @JvmStatic
-    fun id(path: String) = ResourceLocation(MOD_ID, path)
+    fun id(path: String): ResourceLocation = ResourceLocation(MOD_ID, path)
 }

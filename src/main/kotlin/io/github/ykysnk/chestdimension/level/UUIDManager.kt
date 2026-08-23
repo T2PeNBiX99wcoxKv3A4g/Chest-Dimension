@@ -23,7 +23,7 @@ object UUIDManager {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var data: Levels = Levels()
 
-    fun load() {
+    private fun load() {
         if (!Files.exists(dataPath)) {
             saveNow()
             return
@@ -69,7 +69,7 @@ object UUIDManager {
         data.levels[uuid.toString()] = levelData
     }
 
-    fun get() = data.levels.toMap()
+    fun get(): Map<String, LevelData> = data.levels.toMap()
 
     fun randomUUID(): UUID {
         while (true) {
