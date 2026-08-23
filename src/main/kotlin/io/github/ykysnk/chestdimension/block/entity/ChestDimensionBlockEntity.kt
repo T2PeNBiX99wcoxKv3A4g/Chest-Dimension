@@ -109,12 +109,12 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
     private fun stopOpen(player: Player) {
         if (remove || player.isSpectator) return
         ChestLevelManager.setActive(uuid)
+        level?.let { openersCounter.decrementOpeners(player, it, blockPos, blockState) }
+        val world = ChestLevelManager.getOrCreate(Constants.Server, uuid)
         level?.let {
-            openersCounter.decrementOpeners(player, it, blockPos, blockState)
             UUIDManager.setChestData(uuid, it.dimension(), blockPos)
             UUIDManager.save()
         }
-        val world = ChestLevelManager.getOrCreate(Constants.Server, uuid)
         player.teleportToLevel(world, Vec3(0.5, 1.0, 0.5))
     }
 
