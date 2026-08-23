@@ -14,7 +14,6 @@ import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.level.block.Blocks as MCBlocks
 
-// TODO: Add Enter point and Exit Point
 object Blocks : RegistryHelper<Block>() {
     private fun register(name: String, block: Block) =
         register { Registry.register(BuiltInRegistries.BLOCK, Constants.id(name), block) }
@@ -36,6 +35,13 @@ object Blocks : RegistryHelper<Block>() {
         FenceBlock(
             BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).forceSolidOn()
                 .strength(2.0f, 1200.0f).sound(SoundType.WOOD)
+        )
+    )
+
+    val CHEST_PLATFORM_ENTER_PLATE: Block = register(
+        "chest_platform_enter_plate", PlatformEnterPlateBlock(
+            BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).forceSolidOn().noCollission()
+                .strength(0.5f, 1200.0f).pushReaction(PushReaction.DESTROY), BlockSetType.OAK
         )
     )
 

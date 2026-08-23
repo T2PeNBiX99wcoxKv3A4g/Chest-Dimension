@@ -17,6 +17,12 @@ object BlockEntityTypes {
         return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constants.id(key), builder.build(null))
     }
 
+    val CHEST_PLATFORM_ENTER_PLATE: BlockEntityType<PlatformEnterPlateBlockEntity> =
+        register(
+            "chest_platform_enter_plate",
+            BlockEntityType.Builder.of(::PlatformEnterPlateBlockEntity, Blocks.CHEST_PLATFORM_ENTER_PLATE)
+        )
+
     val CHEST_DIMENSION: BlockEntityType<ChestDimensionBlockEntity> =
         register("chest_dimension", BlockEntityType.Builder.of(::ChestDimensionBlockEntity, Blocks.CHEST_DIMENSION))
 
