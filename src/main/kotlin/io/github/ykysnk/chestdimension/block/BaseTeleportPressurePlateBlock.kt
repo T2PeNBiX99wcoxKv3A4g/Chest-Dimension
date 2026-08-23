@@ -140,6 +140,7 @@ abstract class BaseTeleportPressurePlateBlock(properties: Properties, private va
         }
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     protected fun updateNeighbours(level: Level, pos: BlockPos) {
         level.updateNeighborsAt(pos, this)
         level.updateNeighborsAt(pos.below(), this)

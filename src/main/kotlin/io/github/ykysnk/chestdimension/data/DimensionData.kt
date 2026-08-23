@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
 
 @Serializable
-data class DimensionData(val key: String) {
+data class DimensionData(private val key: String) {
     companion object {
         fun ResourceKey<Level>.toData(): DimensionData = DimensionData(location().toString())
     }

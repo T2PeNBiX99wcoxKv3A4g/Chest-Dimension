@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import net.minecraft.core.BlockPos
 
 @Serializable
-data class BlockPosData(val x: Int, val y: Int, val z: Int) {
+data class BlockPosData(private val x: Int, private val y: Int, private val z: Int) {
     companion object {
         fun BlockPos.toData(): BlockPosData = BlockPosData(x, y, z)
     }
