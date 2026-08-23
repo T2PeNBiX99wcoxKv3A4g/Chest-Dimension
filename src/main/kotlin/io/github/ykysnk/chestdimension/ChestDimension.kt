@@ -6,11 +6,11 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 
 object ChestDimension : ModInitializer {
-	override fun onInitialize() {
-		ForceInitialize
+    override fun onInitialize() {
+        ForceInitialize
 
-		CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
-			ChestDimCommand.register(dispatcher)
-		}
-	}
+        CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
+            ChestDimCommand.register(dispatcher)
+        }
+    }
 }
