@@ -289,6 +289,14 @@ object ChestLevelManager {
         return false
     }
 
+    fun teleportEntityToEnter(level: Level, entity: Entity): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    fun teleportEntitiesToEnter(level: Level, entities: List<Entity>): Boolean {
+        TODO("Not yet implemented")
+    }
+
     fun setInactive(uuid: UUID) {
         UUIDManager.setInactive(uuid)
         UUIDManager.clearChestData(uuid)
