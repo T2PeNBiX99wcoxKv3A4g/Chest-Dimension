@@ -39,9 +39,10 @@ object Blocks : RegistryHelper<Block>() {
     )
 
     val CHEST_PLATFORM_ENTER_PLATE: Block = register(
-        "chest_platform_enter_plate", PlatformEnterPlateBlock(
+        "chest_platform_enter_plate",
+        PlatformEnterPlateBlock(
             BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).forceSolidOn().noCollission()
-                .strength(0.5f, 1200.0f).pushReaction(PushReaction.DESTROY), BlockSetType.OAK
+                .strength(0.5f, 1200.0f).pushReaction(PushReaction.DESTROY)
         )
     )
 

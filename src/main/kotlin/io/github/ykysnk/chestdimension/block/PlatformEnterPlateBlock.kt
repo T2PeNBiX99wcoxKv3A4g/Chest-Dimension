@@ -9,14 +9,13 @@ import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.EntityBlock
+import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.block.state.properties.BlockSetType
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class PlatformEnterPlateBlock(properties: Properties, private val type: BlockSetType) :
-    Block(properties.sound(type.soundType())), EntityBlock {
+class PlatformEnterPlateBlock(properties: Properties) : Block(properties.sound(SoundType.WOOL)), EntityBlock {
     companion object {
         private val AABB: VoxelShape = box(1.0, 0.0, 1.0, 15.0, 1.0, 15.0)
     }
