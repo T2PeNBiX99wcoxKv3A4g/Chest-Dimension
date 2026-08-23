@@ -2,6 +2,7 @@ package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
 import io.github.ykysnk.chestdimension.data.LevelData
 import io.github.ykysnk.chestdimension.extensions.*
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
