@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @SuppressWarnings({"AbstractClassWithoutAbstractMethods", "AbstractClassNeverImplemented"})
-@Mixin(Entity.class)
+@Mixin(value = Entity.class, priority = 10000)
 public abstract class EntityMixin {
     @Shadow
     private Level level;
