@@ -17,10 +17,11 @@ import java.nio.file.Files
 import java.util.*
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
+import kotlin.time.Duration.Companion.minutes
 
 object UUIDManager {
     private val dataPath = Constants.ConfigDir.resolve("levels.yaml")
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var scope: CoroutineScope? = null
     private var data: Levels = Levels()
 
     private fun load() {
@@ -33,7 +34,7 @@ object UUIDManager {
 
     fun save() {
         val snapshot = data.deepCopy()
-        scope.launch { saveNow(snapshot) }
+        scope?.launch { saveNow(snapshot) }
     }
 
     private fun saveNow() = saveNow(data)
@@ -92,9 +93,18 @@ object UUIDManager {
 
     init {
         load()
+        ServerLifecycleEvents.SERVER_STARTING.register {
+            scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+            scope?.launch {
+                while (isActive) {
+                    delay(5.minutes)
+                    save()
+                }
+            }
+        }
         ServerLifecycleEvents.SERVER_STOPPING.register {
             saveNow()
-            scope.cancel()
+            scope?.cancel()
         }
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register { _, _ ->
             save()
