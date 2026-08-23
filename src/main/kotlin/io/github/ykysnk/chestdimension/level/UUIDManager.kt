@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.minutes
 
 object UUIDManager {
     private val dataPath = Constants.ConfigDir.resolve("levels.yaml")
-    private var scope: CoroutineScope? = null
+    private var scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var data: Levels = Levels()
 
     private fun load() {
@@ -33,7 +33,7 @@ object UUIDManager {
     }
 
     fun save() {
-        scope?.launch {
+        scope.launch {
             val snapshot = data.deepCopy()
             saveNow(snapshot)
         }
@@ -96,8 +96,7 @@ object UUIDManager {
     init {
         load()
         ServerLifecycleEvents.SERVER_STARTING.register {
-            scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-            scope?.launch {
+            scope.launch {
                 while (isActive) {
                     delay(5.minutes)
                     save()
@@ -106,7 +105,7 @@ object UUIDManager {
         }
         ServerLifecycleEvents.SERVER_STOPPING.register {
             saveNow()
-            scope?.cancel()
+            scope.cancel()
         }
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register { _, _ ->
             save()
