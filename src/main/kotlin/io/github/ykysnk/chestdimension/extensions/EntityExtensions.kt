@@ -23,55 +23,44 @@ fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3): Boolean =
 fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3i): Boolean =
     teleportTo(level, pos.x.toDouble() + 0.5, pos.y.toDouble(), pos.z.toDouble() + 0.5, setOf(), yRot, xRot)
 
-fun Entity.teleportToSafeLocation(level: ServerLevel, pos: Vec3i): Boolean {
-    if (level.dimensionType().hasSkyLight() && level.server.getWorldData().gameType != GameType.ADVENTURE) {
-        var spawnRadius = max(0, level.server.getSpawnRadius(level))
-        val borderDistance =
-            Mth.floor(level.worldBorder.getDistanceToBorder(pos.x.toDouble(), pos.z.toDouble()))
-        if (borderDistance < spawnRadius) {
-            spawnRadius = borderDistance
-        }
+fun Entity.teleportToSafeLocation(
+    level: ServerLevel,
+    pos: Vec3i,
+    inputSpawnRadius: Int = level.server.getSpawnRadius(level)
+): Boolean {
+    var spawnRadius = inputSpawnRadius.coerceAtLeast(0)
+    val borderDistance = Mth.floor(level.worldBorder.getDistanceToBorder(pos.x.toDouble(), pos.z.toDouble()))
+    if (borderDistance < spawnRadius) spawnRadius = borderDistance
+    if (borderDistance <= 1) spawnRadius = 1
 
-        if (borderDistance <= 1) {
-            spawnRadius = 1
-        }
+    val searchSize = (spawnRadius * 2 + 1).toLong()
+    val searchArea = searchSize * searchSize
+    val searchCount = if (searchArea > 2147483647L) Int.MAX_VALUE else searchArea.toInt()
+    val searchStep = getSearchStep(searchCount)
+    val searchStart = RandomSource.create().nextInt(searchCount)
 
-        val searchSize = (spawnRadius * 2 + 1).toLong()
-        val searchArea = searchSize * searchSize
-        val searchCount = if (searchArea > 2147483647L) Int.MAX_VALUE else searchArea.toInt()
-        val searchStep = getCoprime(searchCount)
-        val searchStart = RandomSource.create().nextInt(searchCount)
-
-        for (searchIndex in 0..<searchCount) {
-            val searchOffset = (searchStart + searchStep * searchIndex) % searchCount
-            val candidateX = searchOffset % (spawnRadius * 2 + 1)
-            val candidateZ = searchOffset / (spawnRadius * 2 + 1)
-            val candidatePos = PlayerRespawnLogic.getOverworldRespawnPos(
-                level,
-                pos.x + candidateX - spawnRadius,
-                pos.z + candidateZ - spawnRadius
-            )
-            if (candidatePos != null) {
-                teleportToLevel(level, candidatePos)
-                if (level.noCollision(this)) {
-                    return true
-                }
+    for (searchIndex in 0..<searchCount) {
+        val searchOffset = (searchStart + searchStep * searchIndex) % searchCount
+        val candidateX = searchOffset % (spawnRadius * 2 + 1)
+        val candidateZ = searchOffset / (spawnRadius * 2 + 1)
+        val candidatePos = PlayerRespawnLogic.getOverworldRespawnPos(
+            level,
+            pos.x + candidateX - spawnRadius,
+            pos.z + candidateZ - spawnRadius
+        )
+        candidatePos?.let {
+            val safePos = findNonCollidingPosition(level, it)
+            safePos?.let { safePos ->
+                teleportToLevel(level, safePos)
+                return true
             }
         }
-    } else {
-        teleportToLevel(level, pos)
-
-        while (!level.noCollision(this) && y < (level.maxBuildHeight - 1).toDouble()) {
-            setPos(x, y + 1.0, z)
-        }
-
-        return true
     }
     return false
 }
 
-fun Entity.teleportToSpawnLocation(level: ServerLevel): Boolean =
-    teleportToSafeLocation(level, level.sharedSpawnPos)
+fun Entity.teleportToSpawnLocation(level: ServerLevel, spawnRadius: Int = level.server.getSpawnRadius(level)): Boolean =
+    teleportToSafeLocation(level, level.sharedSpawnPos, spawnRadius)
 
 fun Entity.findNonCollidingAbovePosition(level: Level, pos: Vec3i, distance: Int = 1): Vec3? =
     findNonCollidingPosition(level, pos.above(distance))
@@ -113,4 +102,27 @@ private fun findSafeLocation(
     return null
 }
 
-private fun getCoprime(spawnArea: Int): Int = if (spawnArea <= 16) spawnArea - 1 else 17
+private fun getSearchStep(searchArea: Int): Int {
+    if (searchArea <= 2) return 1
+
+    var step = minOf(17, searchArea - 1)
+
+    while (gcd(searchArea, step) != 1) {
+        step--
+    }
+
+    return step
+}
+
+private fun gcd(a: Int, b: Int): Int {
+    var x = a
+    var y = b
+
+    while (y != 0) {
+        val remainder = x % y
+        x = y
+        y = remainder
+    }
+
+    return x
+}
