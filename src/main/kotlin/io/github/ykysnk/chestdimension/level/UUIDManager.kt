@@ -57,6 +57,16 @@ object UUIDManager {
         data.levels[uuid.toString()] = oldData.copy(chestDimension = null, chestPos = null)
     }
 
+    fun isActive(uuid: UUID) = !data.inactiveLevels.contains(uuid.toString())
+
+    fun setInactive(uuid: UUID) {
+        data.inactiveLevels.add(uuid.toString())
+    }
+
+    fun setActive(uuid: UUID) {
+        data.inactiveLevels.remove(uuid.toString())
+    }
+
     fun getExitChestPosition(uuid: UUID): BlockPos? {
         val data = data.levels[uuid.toString()] ?: return null
         return data.chestPos?.blockPos
