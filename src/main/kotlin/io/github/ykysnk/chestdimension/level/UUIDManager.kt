@@ -33,10 +33,8 @@ object UUIDManager {
     }
 
     fun save() {
-        scope.launch {
-            val snapshot = data.deepCopy()
-            saveNow(snapshot)
-        }
+        val snapshot = data.deepCopy()
+        saveNow(snapshot)
     }
 
     private fun saveNow() = saveNow(data)
