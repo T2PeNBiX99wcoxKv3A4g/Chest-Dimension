@@ -14,7 +14,6 @@ import net.minecraft.data.models.model.ModelLocationUtils
 import net.minecraft.data.models.model.ModelTemplates
 import net.minecraft.data.models.model.TextureMapping
 import net.minecraft.data.models.model.TextureSlot
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Blocks as MCBlocks
 
 class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
@@ -26,12 +25,8 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
             MCBlocks.OAK_PLANKS
         ).createWithoutBlockItem(Blocks.CHEST_DIMENSION)
 
-        // TODO: Constants.id("block/chest_platform_enter_plate")
         val chestPlatformEnterPlateTextureMapping = TextureMapping()
-        chestPlatformEnterPlateTextureMapping.put(
-            TextureSlot.TEXTURE,
-            ResourceLocation("minecraft", "block/white_wool")
-        )
+        chestPlatformEnterPlateTextureMapping.put(TextureSlot.TEXTURE, Constants.id("block/chest_platform_enter_plate"))
 
         val chestPlatformEnterPlateModel = ModelTemplates.PRESSURE_PLATE_UP.create(
             Blocks.CHEST_PLATFORM_ENTER_PLATE,

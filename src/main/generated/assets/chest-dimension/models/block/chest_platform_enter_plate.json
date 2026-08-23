@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/pressure_plate_up",
   "textures": {
-    "texture": "chest-dimension:chest_platform_enter_plate"
+    "texture": "chest-dimension:block/chest_platform_enter_plate"
   }
 }
