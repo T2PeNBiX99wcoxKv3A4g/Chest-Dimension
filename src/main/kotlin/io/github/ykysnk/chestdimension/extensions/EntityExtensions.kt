@@ -13,10 +13,8 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.vehicle.DismountHelper
 import net.minecraft.world.level.CollisionGetter
-import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
-import kotlin.math.max
 
 fun Entity.teleportToLevel(level: ServerLevel): Boolean = teleportTo(level, 0.5, 100.0, 0.5, setOf(), yRot, xRot)
 fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3): Boolean =
@@ -75,12 +73,11 @@ fun Entity.teleportToSafeLocation(level: ServerLevel, pos: Vec3i): Boolean {
 fun Entity.teleportToSpawnLocation(level: ServerLevel): Boolean =
     teleportToSafeLocation(level, level.sharedSpawnPos)
 
-fun Entity.findStandUpPosition(level: CollisionGetter, pos: BlockPos, offsets: List<Vec3i>): Vec3? =
-    findStandUpPosition(type, level, pos, offsets)
+fun Entity.findNonCollidingAbovePosition(level: Level, pos: Vec3i, distance: Int = 1): Vec3? =
+    findNonCollidingPosition(level, pos.above(distance))
 
-fun Entity.findChestTopPosition(level: Level, chestPos: BlockPos): Vec3? {
-    val feet = chestPos.above()
-    val targetCenter = Vec3.atBottomCenterOf(feet)
+fun Entity.findNonCollidingPosition(level: Level, pos: Vec3i): Vec3? {
+    val targetCenter = Vec3.atBottomCenterOf(pos)
     val box = boundingBox
     val currentFeet = Vec3(x, box.minY, z)
     val offset = targetCenter.subtract(currentFeet)
@@ -88,15 +85,18 @@ fun Entity.findChestTopPosition(level: Level, chestPos: BlockPos): Vec3? {
     return if (level.noCollision(this, targetBox)) targetCenter else null
 }
 
-fun findStandUpPosition(entityType: EntityType<*>, level: CollisionGetter, pos: BlockPos, offsets: List<Vec3i>): Vec3? {
-    val optional = findStandUpPosition(entityType, level, pos, true, offsets)
-    return optional ?: findStandUpPosition(entityType, level, pos, false, offsets)
+fun Entity.findSafeLocation(level: CollisionGetter, pos: BlockPos, offsets: List<Vec3i>): Vec3? =
+    findSafeLocation(type, level, pos, offsets)
+
+fun findSafeLocation(entityType: EntityType<*>, level: CollisionGetter, pos: Vec3i, offsets: List<Vec3i>): Vec3? {
+    val optional = findSafeLocation(entityType, level, pos, true, offsets)
+    return optional ?: findSafeLocation(entityType, level, pos, false, offsets)
 }
 
-private fun findStandUpPosition(
+private fun findSafeLocation(
     entityType: EntityType<*>,
     level: CollisionGetter,
-    pos: BlockPos,
+    pos: Vec3i,
     simulate: Boolean,
     offsets: List<Vec3i>
 ): Vec3? {

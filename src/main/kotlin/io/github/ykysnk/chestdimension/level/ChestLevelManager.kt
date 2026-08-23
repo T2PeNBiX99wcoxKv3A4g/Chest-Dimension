@@ -207,11 +207,11 @@ object ChestLevelManager {
                         }
 
                         else -> {
-                            val safePos = entity.findStandUpPosition(chestDim, chestPos, TELEPORT_OFFSETS)
+                            val safePos = entity.findSafeLocation(chestDim, chestPos, TELEPORT_OFFSETS)
                             when {
                                 safePos != null -> entity.teleportToLevel(chestDim, safePos)
                                 else -> {
-                                    val topPos = entity.findChestTopPosition(chestDim, chestPos)
+                                    val topPos = entity.findNonCollidingAbovePosition(chestDim, chestPos)
                                     when {
                                         topPos != null -> entity.teleportToLevel(chestDim, topPos)
                                         else -> {
@@ -256,11 +256,11 @@ object ChestLevelManager {
                         else -> {
                             entities.forEach { entity ->
                                 entity.resetFallDistance()
-                                val safePos = entity.findStandUpPosition(chestDim, chestPos, TELEPORT_OFFSETS)
+                                val safePos = entity.findSafeLocation(chestDim, chestPos, TELEPORT_OFFSETS)
                                 when {
                                     safePos != null -> entity.teleportToLevel(chestDim, safePos)
                                     else -> {
-                                        val topPos = entity.findChestTopPosition(chestDim, chestPos)
+                                        val topPos = entity.findNonCollidingAbovePosition(chestDim, chestPos)
                                         when {
                                             topPos != null -> entity.teleportToLevel(chestDim, topPos)
                                             else -> {
