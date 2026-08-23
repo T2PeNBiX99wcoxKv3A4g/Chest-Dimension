@@ -228,6 +228,7 @@ object ChestLevelManager {
                     entity.teleportToSpawnLocation(overworld)
                 }
             }
+            UUIDManager.save()
             return true
         }
         return false
@@ -281,6 +282,7 @@ object ChestLevelManager {
                     }
                 }
             }
+            UUIDManager.save()
             return true
         }
         return false
