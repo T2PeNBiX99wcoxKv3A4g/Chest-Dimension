@@ -114,7 +114,7 @@ object ChestDimCommand {
 
     private val uuidArg: RequiredArgumentBuilder<CommandSourceStack, String> by lazy {
         Commands.argument("uuid", StringArgumentType.word()).suggests { _, builder ->
-            UUIDManager.get().keys.forEach(builder::suggest)
+            UUIDManager.getMap().keys.forEach(builder::suggest)
             builder.buildFuture()
         }
     }

@@ -65,11 +65,13 @@ object UUIDManager {
     fun getExitChestDimension(uuid: UUID): ServerLevel? =
         data.levels[uuid.toString()]?.chestDimension?.resourceKey?.let(Constants.Server::getLevel)
 
-    fun set(uuid: UUID, levelData: LevelData) {
+    operator fun set(uuid: UUID, levelData: LevelData) {
         data.levels[uuid.toString()] = levelData
     }
 
-    fun get(): Map<String, LevelData> = data.levels.toMap()
+    operator fun get(uuid: UUID) = data.levels[uuid.toString()]
+
+    fun getMap() = data.levels.toMap()
 
     fun randomUUID(): UUID {
         while (true) {
