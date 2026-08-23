@@ -2,7 +2,7 @@ package io.github.ykysnk.chestdimension.block
 
 import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
 import io.github.ykysnk.chestdimension.block.entity.ChestDimensionBlockEntity
-import io.github.ykysnk.chestdimension.level.UUIDManager
+import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
@@ -220,7 +220,6 @@ class ChestDimensionBlock(properties: Properties) :
         val blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
 
         if (blockEntity is ChestDimensionBlockEntity) {
-            UUIDManager.clearChestData(blockEntity.uuid)
             for (stack in drops) {
                 if (stack.item != asItem()) continue
                 val tag = CompoundTag()
@@ -230,5 +229,21 @@ class ChestDimensionBlock(properties: Properties) :
         }
 
         return drops
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRemove(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        newState: BlockState,
+        movedByPiston: Boolean
+    ) {
+        if (!state.`is`(newState.block)) {
+            val blockEntity = level.getBlockEntity(pos)
+            if (blockEntity is ChestDimensionBlockEntity) ChestLevelManager.setInactive(blockEntity.uuid)
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston)
     }
 }

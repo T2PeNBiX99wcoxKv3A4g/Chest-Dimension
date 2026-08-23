@@ -59,11 +59,12 @@ object ChestLevelManager {
         val levelStem = LevelStem(dimensionType, generator)
         val changeData = hashMapOf<UUID, LevelData>()
 
-        for ((uuid, data) in UUIDManager.get()) {
+        for ((uuid, data) in UUIDManager.getMap()) {
             val uuid2 = runCatching { UUID.fromString(uuid) }.getOrElse {
                 Constants.LOGGER.warn("Invalid UUID in levels.yaml: $uuid (${it.localizedMessage})", it)
                 continue
             }
+            if (!UUIDManager.isActive(uuid2)) continue
             val worldKey = createWorldKey(uuid2)
             var seed = data.seed
 
@@ -94,7 +95,7 @@ object ChestLevelManager {
         }
 
         for ((uuid, newData) in changeData) {
-            UUIDManager.set(uuid, newData)
+            UUIDManager[uuid] = newData
         }
     }
 
@@ -286,6 +287,59 @@ object ChestLevelManager {
             return true
         }
         return false
+    }
+
+    fun setInactive(uuid: UUID) {
+        UUIDManager.setInactive(uuid)
+        UUIDManager.clearChestData(uuid)
+    }
+
+    fun setActive(uuid: UUID) {
+        UUIDManager.setActive(uuid)
+        if (loaded.containsKey(uuid)) return
+        val data = UUIDManager[uuid] ?: return
+        val server = Constants.Server
+        val storage = ChestLevelStorage.access
+        val levelData = DerivedLevelData(server.worldData, server.worldData.overworldData())
+        val listener = chunkProgressListener ?: server.progressListenerFactory.create(11)
+        val isDebugWorld = server.worldData.isDebugWorld
+        val biome = server.registryAccess()
+            .registryOrThrow(Registries.BIOME)
+            .getHolderOrThrow(Biomes.CHEST_BIOME)
+        val biomeSource = FixedBiomeSource(biome)
+        val generator = ChestChunkGenerator(biomeSource)
+        val dimensionType = server.registryAccess()
+            .registryOrThrow(Registries.DIMENSION_TYPE)
+            .getHolderOrThrow(DimensionTypes.CHEST)
+        val levelStem = LevelStem(dimensionType, generator)
+        val worldKey = createWorldKey(uuid)
+        var seed = data.seed
+
+        if (seed == -1L) {
+            seed = WorldOptions.randomSeed()
+            UUIDManager[uuid] = data.copy(seed = seed)
+        }
+
+        val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
+        val level = ServerLevel(
+            server,
+            server.executor,
+            storage,
+            levelData,
+            worldKey,
+            levelStem,
+            listener,
+            isDebugWorld,
+            obfuscateSeed,
+            emptyList(),
+            true,
+            null
+        )
+
+        server.levels[worldKey] = level
+        loaded[uuid] = LoadedChestWorld(uuid, level)
+        levelToUUID[worldKey] = uuid
+        UUIDManager.save()
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
