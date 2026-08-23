@@ -3,13 +3,16 @@ package io.github.ykysnk.chestdimension.level
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.data.LevelData
+import io.github.ykysnk.chestdimension.extensions.*
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.progress.ChunkProgressListener
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.BiomeManager
 import net.minecraft.world.level.biome.FixedBiomeSource
@@ -19,16 +22,23 @@ import net.minecraft.world.level.dimension.LevelStem
 import net.minecraft.world.level.levelgen.WorldOptions
 import net.minecraft.world.level.storage.DerivedLevelData
 import java.util.*
+import kotlin.math.abs
 
 object ChestLevelManager {
-    init {
-        ServerLifecycleEvents.SERVER_STOPPING.register {
-            clear()
+    private val TELEPORT_HORIZONTAL_OFFSETS: List<Vec3i> = (-2..2)
+        .flatMap { x -> (-2..2).map { z -> Vec3i(x, 0, z) } }
+        .filter { it.x != 0 || it.z != 0 }
+        .sortedBy { maxOf(abs(it.x), abs(it.z)) }
+    private val TELEPORT_OFFSETS: List<Vec3i> = buildList {
+        addAll(TELEPORT_HORIZONTAL_OFFSETS)
+        for (i in 1..5) {
+            addAll(TELEPORT_HORIZONTAL_OFFSETS.map { it.below(i) })
+            addAll(TELEPORT_HORIZONTAL_OFFSETS.map { it.above(i) })
+            add(Vec3i(0, i, 0))
         }
     }
-
     private val loaded = mutableMapOf<UUID, LoadedChestWorld>()
-    private val levelToUUID = mutableMapOf<Level, UUID>()
+    private val levelToUUID = mutableMapOf<ResourceKey<Level>, UUID>()
     private var chunkProgressListener: ChunkProgressListener? = null
 
     fun load(server: MinecraftServer, listener: ChunkProgressListener) {
@@ -79,7 +89,7 @@ object ChestLevelManager {
 
             server.levels[worldKey] = level
             loaded[uuid2] = LoadedChestWorld(uuid2, level)
-            levelToUUID[level] = uuid2
+            levelToUUID[worldKey] = uuid2
         }
 
         for ((uuid, newData) in changeData) {
@@ -126,9 +136,8 @@ object ChestLevelManager {
         createStartPlatform(level)
 
         server.levels[worldKey] = level
-
         loaded[uuid] = LoadedChestWorld(uuid, level)
-        levelToUUID[level] = uuid
+        levelToUUID[worldKey] = uuid
         UUIDManager.add(uuid, seed)
         UUIDManager.save()
         return level
@@ -179,13 +188,121 @@ object ChestLevelManager {
 
     operator fun get(uuid: UUID): ServerLevel? = loaded[uuid]?.level
 
-    fun findUUIDByLevel(level: Level): UUID? = levelToUUID[level]
+    fun teleportEntityToExit(level: Level, entity: Entity): Boolean {
+        if (level.isClientSide || !isInsideChestDimension(level)) return false
+        val overworld = Constants.Server.overworld()
+        val uuid = findUUIDByLevel(level)
+        uuid?.let {
+            entity.resetFallDistance()
+            val chestDim = UUIDManager.getExitChestDimension(it)
+            val chestPos = UUIDManager.getExitChestPosition(it)
+            when {
+                chestDim != null && chestPos != null -> {
+                    val block = chestDim.getBlockState(chestPos).block
+                    when (block) {
+                        !is ChestDimensionBlock -> {
+                            entity.teleportToSpawnLocation(overworld)
+                        }
 
-    fun createWorldKey(uuid: UUID): ResourceKey<Level> =
+                        else -> {
+                            val safePos = entity.findStandUpPosition(chestDim, chestPos, TELEPORT_OFFSETS)
+                            when {
+                                safePos != null -> entity.teleportToLevel(chestDim, safePos)
+                                else -> {
+                                    val topPos = entity.findChestTopPosition(chestDim, chestPos)
+                                    when {
+                                        topPos != null -> entity.teleportToLevel(chestDim, topPos)
+                                        else -> {
+                                            if (!entity.teleportToSafeLocation(chestDim, chestPos))
+                                                entity.teleportToSpawnLocation(overworld)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                else -> {
+                    entity.teleportToSpawnLocation(overworld)
+                }
+            }
+            return true
+        }
+        return false
+    }
+
+    fun teleportEntitiesToExit(level: Level, entities: List<Entity>): Boolean {
+        if (level.isClientSide || !isInsideChestDimension(level)) return false
+        val overworld = Constants.Server.overworld()
+        val uuid = findUUIDByLevel(level)
+        uuid?.let {
+            val chestDim = UUIDManager.getExitChestDimension(it)
+            val chestPos = UUIDManager.getExitChestPosition(it)
+            when {
+                chestDim != null && chestPos != null -> {
+                    val block = chestDim.getBlockState(chestPos).block
+                    when (block) {
+                        !is ChestDimensionBlock -> {
+                            entities.forEach { entity ->
+                                entity.resetFallDistance()
+                                entity.teleportToSpawnLocation(overworld)
+                            }
+                        }
+
+                        else -> {
+                            entities.forEach { entity ->
+                                entity.resetFallDistance()
+                                val safePos = entity.findStandUpPosition(chestDim, chestPos, TELEPORT_OFFSETS)
+                                when {
+                                    safePos != null -> entity.teleportToLevel(chestDim, safePos)
+                                    else -> {
+                                        val topPos = entity.findChestTopPosition(chestDim, chestPos)
+                                        when {
+                                            topPos != null -> entity.teleportToLevel(chestDim, topPos)
+                                            else -> {
+                                                if (!entity.teleportToSafeLocation(chestDim, chestPos))
+                                                    entity.teleportToSpawnLocation(overworld)
+                                            }
+                                        }
+                                    }
+                                }
+                                entity.resetFallDistance()
+                            }
+                        }
+                    }
+                }
+
+                else -> {
+                    entities.forEach { entity ->
+                        entity.resetFallDistance()
+                        entity.teleportToSpawnLocation(overworld)
+                    }
+                }
+            }
+            return true
+        }
+        return false
+    }
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun findUUIDByLevel(level: Level): UUID? = levelToUUID[level.dimension()]
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun isInsideChestDimension(level: Level): Boolean =
+        level.dimension().location().toString().startsWith("${Constants.MOD_ID}:chest/")
+
+    private fun createWorldKey(uuid: UUID): ResourceKey<Level> =
         ResourceKey.create(Registries.DIMENSION, Constants.id("chest/$uuid"))
 
-    fun clear() {
+    private fun clear() {
         loaded.clear()
         levelToUUID.clear()
+    }
+
+    init {
+        ServerLifecycleEvents.SERVER_STOPPING.register {
+            clear()
+        }
     }
 }

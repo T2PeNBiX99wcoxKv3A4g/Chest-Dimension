@@ -18,11 +18,11 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 
-fun Entity.teleportToLevel(level: ServerLevel) = teleportTo(level, 0.5, 100.0, 0.5, setOf(), yRot, xRot)
-fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3) =
+fun Entity.teleportToLevel(level: ServerLevel): Boolean = teleportTo(level, 0.5, 100.0, 0.5, setOf(), yRot, xRot)
+fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3): Boolean =
     teleportTo(level, pos.x, pos.y, pos.z, setOf(), yRot, xRot)
 
-fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3i) =
+fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3i): Boolean =
     teleportTo(level, pos.x.toDouble() + 0.5, pos.y.toDouble(), pos.z.toDouble() + 0.5, setOf(), yRot, xRot)
 
 fun Entity.teleportToSafeLocation(level: ServerLevel, pos: Vec3i): Boolean {
