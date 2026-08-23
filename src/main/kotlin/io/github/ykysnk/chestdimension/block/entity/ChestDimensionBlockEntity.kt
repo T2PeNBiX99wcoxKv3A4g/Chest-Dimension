@@ -80,6 +80,7 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
     override fun load(tag: CompoundTag) {
         if (tag.hasUUID("UUID"))
             uuid = tag.getUUID("UUID")
+        ChestLevelManager.setActive(uuid)
         level?.let {
             UUIDManager.setChestData(uuid, it.dimension(), blockPos)
             UUIDManager.save()
@@ -105,8 +106,9 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
         playerCache.clear()
     }
 
-    fun stopOpen(player: Player) {
+    private fun stopOpen(player: Player) {
         if (remove || player.isSpectator) return
+        ChestLevelManager.setActive(uuid)
         level?.let {
             openersCounter.decrementOpeners(player, it, blockPos, blockState)
             UUIDManager.setChestData(uuid, it.dimension(), blockPos)
