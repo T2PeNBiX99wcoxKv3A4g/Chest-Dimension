@@ -20,7 +20,7 @@ object ChestLevelStorage {
 
     private lateinit var storageSource: LevelStorageSource
 
-    fun initialize() {
+    private fun initialize() {
         if (::storageSource.isInitialized) return
         Files.createDirectories(root)
         storageSource = LevelStorageSource.createDefault(root)
@@ -32,7 +32,7 @@ object ChestLevelStorage {
         return storageSource
     }
 
-    fun clear() {
+    private fun clear() {
         access.close()
     }
 
