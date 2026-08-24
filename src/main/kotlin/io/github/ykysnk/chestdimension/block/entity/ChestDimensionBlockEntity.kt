@@ -115,7 +115,7 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
             UUIDManager.setChestData(uuid, it.dimension(), blockPos)
             UUIDManager.save()
         }
-        player.teleportToLevel(world, Vec3(0.5, 1.0, 0.5))
+        ChestLevelManager.teleportEntityToEnter(world, player)
     }
 
     fun recheckOpen() {

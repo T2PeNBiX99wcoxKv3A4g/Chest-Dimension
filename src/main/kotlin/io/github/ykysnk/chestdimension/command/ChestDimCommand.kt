@@ -47,7 +47,7 @@ object ChestDimCommand {
                         )
                 }
                 val world = ChestLevelManager.getOrCreate(context.source.server, uuid)
-                player.teleportToLevel(world, Vec3(0.5, 1.0, 0.5))
+                ChestLevelManager.teleportEntityToEnter(world, player)
                 context.source.sendSuccess({ Component.literal("Created world: ").append(uuidComponent) }, true)
                 1
             }.getOrElse {
