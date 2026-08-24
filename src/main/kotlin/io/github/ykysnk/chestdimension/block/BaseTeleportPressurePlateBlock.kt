@@ -151,8 +151,7 @@ abstract class BaseTeleportPressurePlateBlock(properties: Properties, private va
         return level.getEntitiesOfClass(
             entityClass,
             box,
-            EntitySelector.NO_SPECTATORS
-        ).size
+            EntitySelector.NO_SPECTATORS.and { entity: Entity -> !entity.isIgnoringBlockTriggers }).size
     }
 
     @Deprecated("Deprecated in Java")
