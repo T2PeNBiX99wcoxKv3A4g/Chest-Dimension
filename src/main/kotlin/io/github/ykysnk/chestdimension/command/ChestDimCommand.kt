@@ -21,7 +21,6 @@ import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.phys.Vec3
 import java.util.*
 
 object ChestDimCommand {

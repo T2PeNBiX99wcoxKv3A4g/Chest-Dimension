@@ -2,7 +2,6 @@ package io.github.ykysnk.chestdimension.block.entity
 
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
-import io.github.ykysnk.chestdimension.extensions.teleportToLevel
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.core.BlockPos
@@ -16,7 +15,6 @@ import net.minecraft.world.level.block.entity.ChestLidController
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter
 import net.minecraft.world.level.block.entity.LidBlockEntity
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.phys.Vec3
 import java.util.*
 
 class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
