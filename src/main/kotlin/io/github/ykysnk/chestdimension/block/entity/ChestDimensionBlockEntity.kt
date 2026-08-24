@@ -6,6 +6,7 @@ import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.player.Player
@@ -77,9 +78,11 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
 
     override fun setLevel(level: Level) {
         super.setLevel(level)
-        ChestLevelManager.setActive(uuid)
-        UUIDManager.setChestData(uuid, level.dimension(), blockPos)
-        UUIDManager.save()
+        (level as? ServerLevel)?.let {
+            ChestLevelManager.setActive(uuid)
+            UUIDManager.setChestData(uuid, it.dimension(), blockPos)
+            UUIDManager.save()
+        }
     }
 
     override fun load(tag: CompoundTag) {
@@ -110,12 +113,12 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
         if (remove || player.isSpectator) return
         ChestLevelManager.setActive(uuid)
         level?.let { openersCounter.decrementOpeners(player, it, blockPos, blockState) }
-        val world = ChestLevelManager.getOrCreate(Constants.Server, uuid)
-        level?.let {
+        (level as? ServerLevel)?.let {
+            val world = ChestLevelManager.getOrCreate(Constants.Server, uuid)
             UUIDManager.setChestData(uuid, it.dimension(), blockPos)
             UUIDManager.save()
+            ChestLevelManager.teleportEntityToEnter(world, player)
         }
-        ChestLevelManager.teleportEntityToEnter(world, player)
     }
 
     fun recheckOpen() {
