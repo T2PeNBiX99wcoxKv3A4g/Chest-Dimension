@@ -8,11 +8,11 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 
 fun BlockPos.isBlockNearBy(level: ServerLevel, block: Block): Boolean {
-    val neighbors = listOf(north(), south(), east(), west())
+    val neighbors = listOf(north(), south(), east(), west(), below(2))
     return neighbors.any { level.getBlockState(it).`is`(block) }
 }
 
 inline fun <reified T : BlockEntity> BlockPos.getBlockEntityNearBy(level: ServerLevel): T? {
-    val neighbors = listOf(north(), south(), east(), west())
+    val neighbors = listOf(north(), south(), east(), west(), below(2))
     return neighbors.firstNotNullOfOrNull { level.getBlockEntity(it) as? T }
 }
