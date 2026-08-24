@@ -147,10 +147,10 @@ object ChestLevelManager {
 
     private fun createStartPlatform(level: ServerLevel) {
         val platformY = 0
-        val minX = -8
-        val maxX = 7
-        val minZ = -8
-        val maxZ = 7
+        val minX = -20
+        val maxX = 20
+        val minZ = -20
+        val maxZ = 20
 
         for (x in minX..maxX) {
             for (z in minZ..maxZ) {
@@ -177,6 +177,13 @@ object ChestLevelManager {
             updateWall(level, BlockPos(minX, platformY + 1, z))
             updateWall(level, BlockPos(maxX, platformY + 1, z))
         }
+
+        level.setBlock(BlockPos(0, platformY + 1, 0), Blocks.CHEST_PLATFORM_ENTER_PLATE.defaultBlockState(), 3)
+        level.setBlock(
+            BlockPos(maxX - 1, platformY + 1, minZ + 1),
+            Blocks.TELEPORT_PRESSURE_PLATE.defaultBlockState(),
+            3
+        )
     }
 
     private fun updateWall(level: ServerLevel, pos: BlockPos) {
