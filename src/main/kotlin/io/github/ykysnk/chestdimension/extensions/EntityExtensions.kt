@@ -13,10 +13,10 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.vehicle.DismountHelper
 import net.minecraft.world.level.CollisionGetter
-import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 
-fun Entity.teleportToLevel(level: ServerLevel): Boolean = teleportTo(level, 0.5, 100.0, 0.5, setOf(), yRot, xRot)
+fun Entity.teleportToLevel(level: ServerLevel): Boolean = teleportTo(level, 0.5, 1.0, 0.5, setOf(), yRot, xRot)
+
 fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3): Boolean =
     teleportTo(level, pos.x, pos.y, pos.z, setOf(), yRot, xRot)
 
@@ -62,10 +62,10 @@ fun Entity.teleportToSafeLocation(
 fun Entity.teleportToSpawnLocation(level: ServerLevel, spawnRadius: Int = level.server.getSpawnRadius(level)): Boolean =
     teleportToSafeLocation(level, level.sharedSpawnPos, spawnRadius)
 
-fun Entity.findNonCollidingAbovePosition(level: Level, pos: Vec3i, distance: Int = 1): Vec3? =
+fun Entity.findNonCollidingAbovePosition(level: ServerLevel, pos: Vec3i, distance: Int = 1): Vec3? =
     findNonCollidingPosition(level, pos.above(distance))
 
-fun Entity.findNonCollidingPosition(level: Level, pos: Vec3i): Vec3? {
+fun Entity.findNonCollidingPosition(level: ServerLevel, pos: Vec3i): Vec3? {
     val targetCenter = Vec3.atBottomCenterOf(pos)
     val box = boundingBox
     val currentFeet = Vec3(x, box.minY, z)
