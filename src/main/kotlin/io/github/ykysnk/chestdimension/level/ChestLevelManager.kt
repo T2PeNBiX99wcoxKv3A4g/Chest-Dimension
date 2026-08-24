@@ -258,12 +258,58 @@ object ChestLevelManager {
         return false
     }
 
-    fun teleportEntityToEnter(level: Level, entity: Entity): Boolean {
-        TODO("Not yet implemented")
+    private fun handleEntityTeleportToEnter(
+        entity: Entity,
+        teleportTo: ServerLevel,
+        teleportPosList: List<BlockPos>
+    ): Boolean {
+        entity.resetFallDistance()
+
+        if (teleportPosList.isNotEmpty()) {
+            for (pos in teleportPosList) {
+                entity.findNonCollidingPosition(teleportTo, pos)?.let { findPos ->
+                    if (entity.teleportToLevel(teleportTo, findPos, true)) return true
+                }
+            }
+        }
+
+        entity.findNonCollidingPosition(teleportTo, defaultSpawnPos)?.let { findPos ->
+            if (entity.teleportToLevel(teleportTo, findPos, true)) return true
+        }
+
+        entity.findSafeLocation(teleportTo, defaultSpawnPos, TELEPORT_OFFSETS)?.let { findPos ->
+            if (entity.teleportToLevel(teleportTo, findPos, true)) return true
+        }
+
+        return entity.teleportToSafeLocation(teleportTo, defaultSpawnPos, true)
     }
 
+    fun teleportEntityToEnter(level: Level, entity: Entity): Boolean {
+        if (level.isClientSide || level !is ServerLevel || !isInsideChestDimension(level)) return false
+        val uuid = findUUIDByLevel(level)
+        uuid?.let {
+            val spawnPosList = UUIDManager.getSpawnPosList(it)
+            spawnPosList?.let { list ->
+                if (handleEntityTeleportToEnter(entity, level, list)) return true
+            }
+        }
+        return false
+    }
+
+    @Suppress("unused")
     fun teleportEntitiesToEnter(level: Level, entities: List<Entity>): Boolean {
-        TODO("Not yet implemented")
+        if (level.isClientSide || level !is ServerLevel || !isInsideChestDimension(level)) return false
+        val uuid = findUUIDByLevel(level)
+        uuid?.let {
+            val spawnPosList = UUIDManager.getSpawnPosList(it)
+            spawnPosList?.let { list ->
+                entities.forEach { entity ->
+                    handleEntityTeleportToEnter(entity, level, list)
+                }
+            }
+            return true
+        }
+        return false
     }
 
     fun addSpawnPos(level: Level, pos: BlockPos) {
