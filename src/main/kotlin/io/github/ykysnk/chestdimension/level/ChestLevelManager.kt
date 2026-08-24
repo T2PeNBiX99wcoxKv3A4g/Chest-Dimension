@@ -187,89 +187,62 @@ object ChestLevelManager {
 
     operator fun get(uuid: UUID): ServerLevel? = loaded[uuid]?.level
 
+    private fun handleEntityTeleportToExit(entity: Entity, teleportTo: ServerLevel, teleportPos: BlockPos): Boolean {
+        val overworld = Constants.Server.overworld()
+        entity.resetFallDistance()
+        (teleportTo.getBlockState(teleportPos).block as? ChestDimensionBlock)?.let { _ ->
+            entity.findSafeLocation(teleportTo, teleportPos, TELEPORT_OFFSETS)?.let { safePos ->
+                if (entity.teleportToLevel(teleportTo, safePos)) return true
+            }
+
+            entity.findNonCollidingAbovePosition(teleportTo, teleportPos)?.let { topPos ->
+                if (entity.teleportToLevel(teleportTo, topPos)) return true
+            }
+
+            if (!entity.teleportToSafeLocation(teleportTo, teleportPos))
+                if (entity.teleportToSpawnLocation(overworld)) return true
+        }
+
+        return entity.teleportToSpawnLocation(overworld)
+    }
+
     fun teleportEntityToExit(level: Level, entity: Entity): Boolean {
-        if (level.isClientSide || !isInsideChestDimension(level)) return false
+        if (level.isClientSide || level !is ServerLevel || !isInsideChestDimension(level)) return false
         val overworld = Constants.Server.overworld()
         val uuid = findUUIDByLevel(level)
         uuid?.let {
-            entity.resetFallDistance()
+            UUIDManager.save()
             val chestDim = UUIDManager.getExitChestDimension(it)
             val chestPos = UUIDManager.getExitChestPosition(it)
             when {
-                chestDim != null && chestPos != null -> {
-                    val block = chestDim.getBlockState(chestPos).block
-                    when (block) {
-                        !is ChestDimensionBlock -> {
-                            entity.teleportToSpawnLocation(overworld)
-                        }
-
-                        else -> {
-                            val safePos = entity.findSafeLocation(chestDim, chestPos, TELEPORT_OFFSETS)
-                            when {
-                                safePos != null -> entity.teleportToLevel(chestDim, safePos)
-                                else -> {
-                                    val topPos = entity.findNonCollidingAbovePosition(chestDim, chestPos)
-                                    when {
-                                        topPos != null -> entity.teleportToLevel(chestDim, topPos)
-                                        else -> {
-                                            if (!entity.teleportToSafeLocation(chestDim, chestPos))
-                                                entity.teleportToSpawnLocation(overworld)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                chestDim != null && chestPos != null -> if (handleEntityTeleportToExit(
+                        entity,
+                        chestDim,
+                        chestPos
+                    )
+                ) return true
 
                 else -> {
-                    entity.teleportToSpawnLocation(overworld)
+                    entity.resetFallDistance()
+                    if (entity.teleportToSpawnLocation(overworld)) return true
                 }
             }
-            UUIDManager.save()
-            return true
         }
         return false
     }
 
     fun teleportEntitiesToExit(level: Level, entities: List<Entity>): Boolean {
-        if (level.isClientSide || !isInsideChestDimension(level)) return false
+        if (level.isClientSide || level !is ServerLevel || !isInsideChestDimension(level)) return false
         val overworld = Constants.Server.overworld()
         val uuid = findUUIDByLevel(level)
         uuid?.let {
+            UUIDManager.save()
             val chestDim = UUIDManager.getExitChestDimension(it)
             val chestPos = UUIDManager.getExitChestPosition(it)
             when {
                 chestDim != null && chestPos != null -> {
-                    val block = chestDim.getBlockState(chestPos).block
-                    when (block) {
-                        !is ChestDimensionBlock -> {
-                            entities.forEach { entity ->
-                                entity.resetFallDistance()
-                                entity.teleportToSpawnLocation(overworld)
-                            }
-                        }
-
-                        else -> {
-                            entities.forEach { entity ->
-                                entity.resetFallDistance()
-                                val safePos = entity.findSafeLocation(chestDim, chestPos, TELEPORT_OFFSETS)
-                                when {
-                                    safePos != null -> entity.teleportToLevel(chestDim, safePos)
-                                    else -> {
-                                        val topPos = entity.findNonCollidingAbovePosition(chestDim, chestPos)
-                                        when {
-                                            topPos != null -> entity.teleportToLevel(chestDim, topPos)
-                                            else -> {
-                                                if (!entity.teleportToSafeLocation(chestDim, chestPos))
-                                                    entity.teleportToSpawnLocation(overworld)
-                                            }
-                                        }
-                                    }
-                                }
-                                entity.resetFallDistance()
-                            }
-                        }
+                    entities.forEach { entity ->
+                        handleEntityTeleportToExit(entity, chestDim, chestPos)
                     }
                 }
 
@@ -280,7 +253,6 @@ object ChestLevelManager {
                     }
                 }
             }
-            UUIDManager.save()
             return true
         }
         return false
