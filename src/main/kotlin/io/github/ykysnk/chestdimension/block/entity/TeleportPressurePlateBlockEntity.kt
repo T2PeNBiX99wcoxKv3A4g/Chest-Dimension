@@ -3,6 +3,7 @@ package io.github.ykysnk.chestdimension.block.entity
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.extensions.getBlockEntityNearBy
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
+import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
@@ -18,6 +19,8 @@ class TeleportPressurePlateBlockEntity(pos: BlockPos, blockState: BlockState) :
                 val chestEntity = blockPos.getBlockEntityNearBy<ChestDimensionBlockEntity>(currentLevel)
                 chestEntity?.let {
                     val world = ChestLevelManager.getOrCreate(Constants.Server, it.uuid)
+                    UUIDManager.setChestData(it.uuid, currentLevel.dimension(), chestEntity.blockPos)
+                    UUIDManager.save()
                     ChestLevelManager.teleportEntitiesToEnter(world, copyCache)
                 }
             }
