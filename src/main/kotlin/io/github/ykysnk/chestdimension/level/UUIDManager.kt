@@ -51,13 +51,17 @@ object UUIDManager {
     }
 
     fun setChestData(uuid: UUID, key: ResourceKey<Level>, pos: BlockPos) {
-        val oldData = data.levels[uuid.toString()] ?: LevelData(-1)
-        data.levels[uuid.toString()] = oldData.copy(chestDimension = key.toData(), chestPos = pos.toData())
+        val uuidString = uuid.toString()
+        data.levels[uuidString]?.let {
+            data.levels[uuidString] = it.copy(chestDimension = key.toData(), chestPos = pos.toData())
+        }
     }
 
     fun clearChestData(uuid: UUID) {
-        val oldData = data.levels[uuid.toString()] ?: LevelData(-1)
-        data.levels[uuid.toString()] = oldData.copy(chestDimension = null, chestPos = null)
+        val uuidString = uuid.toString()
+        data.levels[uuidString]?.let {
+            data.levels[uuidString] = it.copy(chestDimension = null, chestPos = null)
+        }
     }
 
     fun isActive(uuid: UUID) = !data.inactiveLevels.contains(uuid.toString())

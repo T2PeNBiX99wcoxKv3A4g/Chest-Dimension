@@ -3,7 +3,7 @@ package io.github.ykysnk.chestdimension.level
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
-import io.github.ykysnk.chestdimension.data.LevelData
+import io.github.ykysnk.chestdimension.data.BlockPosData.Companion.toData
 import io.github.ykysnk.chestdimension.extensions.*
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.BlockPos
@@ -57,7 +57,6 @@ object ChestLevelManager {
             .registryOrThrow(Registries.DIMENSION_TYPE)
             .getHolderOrThrow(DimensionTypes.CHEST)
         val levelStem = LevelStem(dimensionType, generator)
-        val changeData = hashMapOf<UUID, LevelData>()
 
         for ((uuid, data) in UUIDManager.getMap()) {
             val uuid2 = runCatching { UUID.fromString(uuid) }.getOrElse {
@@ -66,13 +65,7 @@ object ChestLevelManager {
             }
             if (!UUIDManager.isActive(uuid2)) continue
             val worldKey = createWorldKey(uuid2)
-            var seed = data.seed
-
-            if (seed == -1L) {
-                seed = WorldOptions.randomSeed()
-                changeData[uuid2] = data.copy(seed = seed)
-            }
-
+            val seed = data.seed
             val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
             val level = ServerLevel(
                 server,
@@ -92,10 +85,6 @@ object ChestLevelManager {
             server.levels[worldKey] = level
             loaded[uuid2] = LoadedChestWorld(uuid2, level)
             levelToUUID[worldKey] = uuid2
-        }
-
-        for ((uuid, newData) in changeData) {
-            UUIDManager[uuid] = newData
         }
     }
 
@@ -328,13 +317,7 @@ object ChestLevelManager {
             .getHolderOrThrow(DimensionTypes.CHEST)
         val levelStem = LevelStem(dimensionType, generator)
         val worldKey = createWorldKey(uuid)
-        var seed = data.seed
-
-        if (seed == -1L) {
-            seed = WorldOptions.randomSeed()
-            UUIDManager[uuid] = data.copy(seed = seed)
-        }
-
+        val seed = data.seed
         val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
         val level = ServerLevel(
             server,
