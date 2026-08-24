@@ -4,7 +4,6 @@ import io.github.ykysnk.chestdimension.block.entity.TeleportPressurePlateBlockEn
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySelector
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.PressurePlateBlock
@@ -30,10 +29,10 @@ class TeleportPressurePlateBlock(properties: Properties, type: BlockSetType) :
     override fun setSignalForState(state: BlockState, signal: Boolean): BlockState = state.setValue(POWERED, signal)
 
     override fun getSignalStrength(level: Level, pos: BlockPos): Boolean =
-        getEntityCount(level, TOUCH_AABB.move(pos), LivingEntity::class.java) > 0
+        getEntityCount(level, TOUCH_AABB.move(pos), Entity::class.java) > 0
 
     override fun getEntities(level: Level, pos: BlockPos): List<Entity> =
-        level.getEntitiesOfClass(LivingEntity::class.java, TOUCH_AABB.move(pos), EntitySelector.NO_SPECTATORS)
+        level.getEntitiesOfClass(Entity::class.java, TOUCH_AABB.move(pos), EntitySelector.NO_SPECTATORS)
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(*arrayOf(PressurePlateBlock.POWERED))
