@@ -77,14 +77,16 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
     }
 
+    override fun setLevel(level: Level) {
+        super.setLevel(level)
+        ChestLevelManager.setActive(uuid)
+        UUIDManager.setChestData(uuid, level.dimension(), blockPos)
+        UUIDManager.save()
+    }
+
     override fun load(tag: CompoundTag) {
         if (tag.hasUUID("UUID"))
             uuid = tag.getUUID("UUID")
-        ChestLevelManager.setActive(uuid)
-        level?.let {
-            UUIDManager.setChestData(uuid, it.dimension(), blockPos)
-            UUIDManager.save()
-        }
     }
 
     override fun saveAdditional(tag: CompoundTag) {
