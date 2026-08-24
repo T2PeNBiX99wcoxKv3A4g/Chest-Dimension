@@ -3,6 +3,7 @@ package io.github.ykysnk.chestdimension.block
 import io.github.ykysnk.chestdimension.block.entity.TeleportPressurePlateBlockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.RandomSource
@@ -95,6 +96,20 @@ abstract class BaseTeleportPressurePlateBlock(properties: Properties, private va
                 entities
             )
             checkPressed(null, level, pos, state, true)
+        }
+    }
+
+    override fun animateTick(state: BlockState, level: Level, pos: BlockPos, random: RandomSource) {
+        for (i in 0..2) {
+            val j = random.nextInt(2) * 2 - 1
+            val k = random.nextInt(2) * 2 - 1
+            val d = pos.x.toDouble() + 0.5 + 0.25 * j.toDouble()
+            val e = (pos.y.toFloat() + random.nextFloat()).toDouble()
+            val f = pos.z.toDouble() + 0.5 + 0.25 * k.toDouble()
+            val g = (random.nextFloat() * j.toFloat()).toDouble()
+            val h = (random.nextFloat().toDouble() - 0.5) * 0.125
+            val l = (random.nextFloat() * k.toFloat()).toDouble()
+            level.addParticle(ParticleTypes.PORTAL, d, e, f, g, h, l)
         }
     }
 
