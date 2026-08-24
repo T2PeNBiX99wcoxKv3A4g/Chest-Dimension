@@ -2,6 +2,8 @@ package io.github.ykysnk.chestdimension.block
 
 import io.github.ykysnk.chestdimension.block.entity.TeleportPressurePlateBlockEntity
 import net.minecraft.core.BlockPos
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntitySelector
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
@@ -29,6 +31,9 @@ class TeleportPressurePlateBlock(properties: Properties, type: BlockSetType) :
 
     override fun getSignalStrength(level: Level, pos: BlockPos): Boolean =
         getEntityCount(level, TOUCH_AABB.move(pos), LivingEntity::class.java) > 0
+
+    override fun getEntities(level: Level, pos: BlockPos): List<Entity> =
+        level.getEntitiesOfClass(LivingEntity::class.java, TOUCH_AABB.move(pos), EntitySelector.NO_SPECTATORS)
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(*arrayOf(PressurePlateBlock.POWERED))

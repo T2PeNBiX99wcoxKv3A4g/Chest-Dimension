@@ -90,8 +90,10 @@ abstract class BaseTeleportPressurePlateBlock(properties: Properties, private va
     override fun tick(state: BlockState, level: ServerLevel, pos: BlockPos, random: RandomSource) {
         val currentSignal = getSignalForState(state)
         if (currentSignal) {
-            val signalStrength = getSignalStrength(level, pos)
-            if (signalStrength) (level.getBlockEntity(pos) as? TeleportPressurePlateBlockEntity)?.teleport()
+            val entities = getEntities(level, pos)
+            if (entities.isNotEmpty()) (level.getBlockEntity(pos) as? TeleportPressurePlateBlockEntity)?.teleport(
+                entities
+            )
             checkPressed(null, level, pos, state, true)
         }
     }
@@ -99,7 +101,6 @@ abstract class BaseTeleportPressurePlateBlock(properties: Properties, private va
     @Deprecated("Deprecated in Java")
     override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
         if (level.isClientSide) return
-        (level.getBlockEntity(pos) as? TeleportPressurePlateBlockEntity)?.addEntity(entity)
         val currentSignal = getSignalForState(state)
         if (currentSignal) return
         checkPressed(entity, level, pos, state, false)
@@ -150,7 +151,8 @@ abstract class BaseTeleportPressurePlateBlock(properties: Properties, private va
         return level.getEntitiesOfClass(
             entityClass,
             box,
-            EntitySelector.NO_SPECTATORS.and { entity: Entity -> !entity.isIgnoringBlockTriggers }).size
+            EntitySelector.NO_SPECTATORS
+        ).size
     }
 
     @Deprecated("Deprecated in Java")
@@ -171,4 +173,6 @@ abstract class BaseTeleportPressurePlateBlock(properties: Properties, private va
     protected abstract fun getSignalForState(state: BlockState): Boolean
 
     protected abstract fun setSignalForState(state: BlockState, signal: Boolean): BlockState
+
+    protected abstract fun getEntities(level: Level, pos: BlockPos): List<Entity>
 }
