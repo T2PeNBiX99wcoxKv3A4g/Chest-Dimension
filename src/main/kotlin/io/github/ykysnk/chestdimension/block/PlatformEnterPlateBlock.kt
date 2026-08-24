@@ -1,9 +1,12 @@
 package io.github.ykysnk.chestdimension.block
 
 import io.github.ykysnk.chestdimension.block.entity.PlatformEnterPlateBlockEntity
+import io.github.ykysnk.chestdimension.level.ChestLevelManager
+import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.LevelReader
 import net.minecraft.world.level.block.Block
@@ -65,4 +68,20 @@ class PlatformEnterPlateBlock(properties: Properties) : Block(properties.sound(S
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity =
         PlatformEnterPlateBlockEntity(pos, state)
+
+    @Deprecated("Deprecated in Java")
+    override fun onRemove(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        newState: BlockState,
+        movedByPiston: Boolean
+    ) {
+        if (!state.`is`(newState.block)) {
+            ChestLevelManager.removeSpawnPos(level, pos)
+            UUIDManager.save()
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston)
+    }
 }

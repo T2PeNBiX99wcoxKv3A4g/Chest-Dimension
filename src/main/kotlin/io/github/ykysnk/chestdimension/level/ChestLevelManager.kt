@@ -293,6 +293,22 @@ object ChestLevelManager {
         TODO("Not yet implemented")
     }
 
+    fun addSpawnPos(level: Level, pos: BlockPos) {
+        if (level.isClientSide) return
+        val uuid = findUUIDByLevel(level)
+        uuid?.let {
+            UUIDManager[it]?.spawnPosList?.add(pos.toData())
+        }
+    }
+
+    fun removeSpawnPos(level: Level, pos: BlockPos) {
+        if (level.isClientSide) return
+        val uuid = findUUIDByLevel(level)
+        uuid?.let {
+            UUIDManager[it]?.spawnPosList?.remove(pos.toData())
+        }
+    }
+
     fun setInactive(uuid: UUID) {
         UUIDManager.setInactive(uuid)
         UUIDManager.clearChestData(uuid)
