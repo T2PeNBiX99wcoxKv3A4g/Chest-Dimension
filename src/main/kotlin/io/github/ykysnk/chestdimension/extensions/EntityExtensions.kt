@@ -15,18 +15,28 @@ import net.minecraft.world.entity.vehicle.DismountHelper
 import net.minecraft.world.level.CollisionGetter
 import net.minecraft.world.phys.Vec3
 
-fun Entity.teleportToLevel(level: ServerLevel): Boolean = teleportTo(level, 0.5, 1.0, 0.5, setOf(), yRot, xRot)
+fun Entity.teleportToLevel(level: ServerLevel, resetRot: Boolean = false): Boolean =
+    teleportTo(level, 0.5, 1.0, 0.5, setOf(), if (resetRot) 180f else yRot, if (resetRot) 0f else xRot)
 
-fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3): Boolean =
-    teleportTo(level, pos.x, pos.y, pos.z, setOf(), yRot, xRot)
+fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3, resetRot: Boolean = false): Boolean =
+    teleportTo(level, pos.x, pos.y, pos.z, setOf(), if (resetRot) 180f else yRot, if (resetRot) 0f else xRot)
 
-fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3i): Boolean =
-    teleportTo(level, pos.x.toDouble() + 0.5, pos.y.toDouble(), pos.z.toDouble() + 0.5, setOf(), yRot, xRot)
+fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3i, resetRot: Boolean = false): Boolean =
+    teleportTo(
+        level,
+        pos.x.toDouble() + 0.5,
+        pos.y.toDouble(),
+        pos.z.toDouble() + 0.5,
+        setOf(),
+        if (resetRot) 180f else yRot,
+        if (resetRot) 0f else xRot
+    )
 
 fun Entity.teleportToSafeLocation(
     level: ServerLevel,
     pos: Vec3i,
-    inputSpawnRadius: Int = level.server.getSpawnRadius(level)
+    inputSpawnRadius: Int = level.server.getSpawnRadius(level),
+    resetRot: Boolean = false
 ): Boolean {
     var spawnRadius = inputSpawnRadius.coerceAtLeast(0)
     val borderDistance = Mth.floor(level.worldBorder.getDistanceToBorder(pos.x.toDouble(), pos.z.toDouble()))
@@ -51,7 +61,7 @@ fun Entity.teleportToSafeLocation(
         candidatePos?.let {
             val safePos = findNonCollidingPosition(level, it)
             safePos?.let { safePos ->
-                teleportToLevel(level, safePos)
+                teleportToLevel(level, safePos, resetRot)
                 return true
             }
         }
@@ -59,8 +69,18 @@ fun Entity.teleportToSafeLocation(
     return false
 }
 
-fun Entity.teleportToSpawnLocation(level: ServerLevel, spawnRadius: Int = level.server.getSpawnRadius(level)): Boolean =
-    teleportToSafeLocation(level, level.sharedSpawnPos, spawnRadius)
+fun Entity.teleportToSafeLocation(level: ServerLevel, pos: Vec3i, resetRot: Boolean = false): Boolean =
+    teleportToSafeLocation(level, pos, level.server.getSpawnRadius(level), resetRot)
+
+fun Entity.teleportToSpawnLocation(
+    level: ServerLevel,
+    spawnRadius: Int = level.server.getSpawnRadius(level),
+    resetRot: Boolean = false
+): Boolean =
+    teleportToSafeLocation(level, level.sharedSpawnPos, spawnRadius, resetRot)
+
+fun Entity.teleportToSpawnLocation(level: ServerLevel, resetRot: Boolean = false): Boolean =
+    teleportToSafeLocation(level, level.sharedSpawnPos, level.server.getSpawnRadius(level), resetRot)
 
 fun Entity.findNonCollidingAbovePosition(level: ServerLevel, pos: Vec3i, distance: Int = 1): Vec3? =
     findNonCollidingPosition(level, pos.above(distance))
