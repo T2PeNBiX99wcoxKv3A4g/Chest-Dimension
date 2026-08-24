@@ -40,6 +40,7 @@ object ChestLevelManager {
     private val loaded = mutableMapOf<UUID, LoadedChestWorld>()
     private val levelToUUID = mutableMapOf<ResourceKey<Level>, UUID>()
     private var chunkProgressListener: ChunkProgressListener? = null
+    private val defaultSpawnPos by lazy { BlockPos(0, 1, 0) }
 
     fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
@@ -129,6 +130,7 @@ object ChestLevelManager {
         loaded[uuid] = LoadedChestWorld(uuid, level)
         levelToUUID[worldKey] = uuid
         UUIDManager.add(uuid, seed)
+        UUIDManager.addSpawnPos(uuid, BlockPos(0, 1, 0))
         UUIDManager.save()
         return level
     }
