@@ -30,12 +30,7 @@ object ChestDimCommand {
         builder.then(Commands.literal("create").executes { context ->
             runCatching {
                 val player = context.source.playerOrException
-                val uuid = runCatching { UUIDManager.randomUUID() }.getOrElse {
-                    Constants.LOGGER.error(it.localizedMessage, it)
-                    context.source.sendFailure(Component.literal("Invalid UUID"))
-                    return@executes 0
-                }
-
+                val uuid = UUIDManager.randomUUID()
                 val uuidComponent: MutableComponent = Component.literal(uuid.toString()).withStyle {
                     it.withUnderlined(true)
                         .withClickEvent(ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, uuid.toString()))
