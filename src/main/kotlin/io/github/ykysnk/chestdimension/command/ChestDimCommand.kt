@@ -28,8 +28,9 @@ import java.util.*
 
 object ChestDimCommand {
     private const val THIS = "this"
-    private const val ALL = "*"
+    private const val ALL = "all"
 
+    @Suppress("SpellCheckingInspection")
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
         val builder = Commands.literal("chestdim").requires { it.hasPermission(2) }
 
@@ -65,12 +66,7 @@ object ChestDimCommand {
                     val pos = Vec3Argument.getVec3(context, "pos")
                     when (val uuidString = StringArgumentType.getString(context, "uuid")) {
                         THIS -> {
-                            val uuid = ChestLevelManager.findUUIDByLevel(context.source.level)
-                            if (uuid == null) {
-                                context.source.sendFailure(Component.literal("Can't find any UUID using this level."))
-                                return@executes 0
-                            }
-                            val level = ChestLevelManager.getOrCreate(context.source.server, uuid)
+                            val level = context.source.level
                             player.teleportToLevel(level, pos)
                             1
                         }
@@ -178,12 +174,7 @@ object ChestDimCommand {
         queryBuilder.then(Commands.literal("daytime").executes {
             when (val uuidString = StringArgumentType.getString(it, "uuid")) {
                 THIS -> {
-                    val uuid = ChestLevelManager.findUUIDByLevel(it.source.level)
-                    if (uuid == null) {
-                        it.source.sendFailure(Component.literal("Can't find any UUID using this level."))
-                        return@executes 0
-                    }
-                    val level = ChestLevelManager.getOrCreate(it.source.server, uuid)
+                    val level = it.source.level
                     queryTime(it.getSource(), getDayTime(level))
                 }
 
@@ -202,12 +193,7 @@ object ChestDimCommand {
         queryBuilder.then(Commands.literal("gametime").executes {
             when (val uuidString = StringArgumentType.getString(it, "uuid")) {
                 THIS -> {
-                    val uuid = ChestLevelManager.findUUIDByLevel(it.source.level)
-                    if (uuid == null) {
-                        it.source.sendFailure(Component.literal("Can't find any UUID using this level."))
-                        return@executes 0
-                    }
-                    val level = ChestLevelManager.getOrCreate(it.source.server, uuid)
+                    val level = it.source.level
                     queryTime(it.getSource(), (level.gameTime % 2147483647L).toInt())
                 }
 
@@ -226,12 +212,7 @@ object ChestDimCommand {
         queryBuilder.then(Commands.literal("day").executes {
             when (val uuidString = StringArgumentType.getString(it, "uuid")) {
                 THIS -> {
-                    val uuid = ChestLevelManager.findUUIDByLevel(it.source.level)
-                    if (uuid == null) {
-                        it.source.sendFailure(Component.literal("Can't find any UUID using this level."))
-                        return@executes 0
-                    }
-                    val level = ChestLevelManager.getOrCreate(it.source.server, uuid)
+                    val level = it.source.level
                     queryTime(it.getSource(), (level.dayTime / 24000L % 2147483647L).toInt())
                 }
 
@@ -295,12 +276,7 @@ object ChestDimCommand {
     private fun setTime(uuidString: String, source: CommandSourceStack, time: Int): Int {
         when (uuidString) {
             THIS -> {
-                val uuid = ChestLevelManager.findUUIDByLevel(source.level)
-                if (uuid == null) {
-                    source.sendFailure(Component.literal("Can't find any UUID using this level."))
-                    return 0
-                }
-                val level = ChestLevelManager.getOrCreate(source.server, uuid)
+                val level = source.level
                 level.dayTime = time.toLong()
                 source.sendSuccess({ Component.translatable("commands.time.set", time) }, true)
                 return getDayTime(level)
@@ -330,12 +306,7 @@ object ChestDimCommand {
     private fun addTime(uuidString: String, source: CommandSourceStack, amount: Int): Int {
         when (uuidString) {
             THIS -> {
-                val uuid = ChestLevelManager.findUUIDByLevel(source.level)
-                if (uuid == null) {
-                    source.sendFailure(Component.literal("Can't find any UUID using this level."))
-                    return 0
-                }
-                val level = ChestLevelManager.getOrCreate(source.server, uuid)
+                val level = source.level
                 level.dayTime += amount.toLong()
                 val i = getDayTime(level)
                 source.sendSuccess({ Component.translatable("commands.time.set", i) }, true)
