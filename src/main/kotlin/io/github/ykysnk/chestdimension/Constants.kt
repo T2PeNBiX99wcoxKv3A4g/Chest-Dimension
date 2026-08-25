@@ -6,7 +6,7 @@ import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.item.ItemGroups
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
-import io.github.ykysnk.chestdimension.level.ChestLevelStorage
+import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.resources.ResourceLocation

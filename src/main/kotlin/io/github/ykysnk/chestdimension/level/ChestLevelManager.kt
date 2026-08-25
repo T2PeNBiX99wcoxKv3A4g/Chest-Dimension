@@ -4,6 +4,7 @@ import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
 import io.github.ykysnk.chestdimension.extensions.*
+import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i

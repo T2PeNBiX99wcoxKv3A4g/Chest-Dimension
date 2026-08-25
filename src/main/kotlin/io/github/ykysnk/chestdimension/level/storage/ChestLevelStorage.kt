@@ -1,4 +1,4 @@
-package io.github.ykysnk.chestdimension.level
+package io.github.ykysnk.chestdimension.level.storage
 
 import io.github.ykysnk.chestdimension.Constants
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
