@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.WallBlock
 import net.minecraft.world.level.dimension.LevelStem
 import net.minecraft.world.level.levelgen.WorldOptions
-import net.minecraft.world.level.storage.DerivedLevelData
 import java.util.*
 import kotlin.math.abs
 
@@ -47,7 +46,6 @@ object ChestLevelManager {
         chunkProgressListener = listener
 
         val storage = ChestLevelStorage.access
-        val levelData = DerivedLevelData(server.worldData, server.worldData.overworldData())
         val isDebugWorld = server.worldData.isDebugWorld
         val biome = server.registryAccess()
             .registryOrThrow(Registries.BIOME)
@@ -68,18 +66,16 @@ object ChestLevelManager {
             val worldKey = createWorldKey(uuid2)
             val seed = data.seed
             val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
-            val level = ServerLevel(
+            val level = ChestServerLevel(
                 server,
                 server.executor,
                 storage,
-                levelData,
                 worldKey,
                 levelStem,
                 listener,
                 isDebugWorld,
                 obfuscateSeed,
                 emptyList(),
-                true,
                 null
             )
 
@@ -89,14 +85,13 @@ object ChestLevelManager {
         }
     }
 
-    fun getOrCreate(server: MinecraftServer, uuid: UUID): ServerLevel {
+    fun getOrCreate(server: MinecraftServer, uuid: UUID): ChestServerLevel {
         loaded[uuid]?.let {
             return it.level
         }
 
         val storage = ChestLevelStorage.access
         val worldKey = createWorldKey(uuid)
-        val levelData = DerivedLevelData(server.worldData, server.worldData.overworldData())
         val listener = chunkProgressListener ?: server.progressListenerFactory.create(11)
         val isDebugWorld = server.worldData.isDebugWorld
         val worldOptions = WorldOptions.defaultWithRandomSeed()
@@ -111,18 +106,16 @@ object ChestLevelManager {
             .registryOrThrow(Registries.DIMENSION_TYPE)
             .getHolderOrThrow(DimensionTypes.CHEST)
         val levelStem = LevelStem(dimensionType, generator)
-        val level = ServerLevel(
+        val level = ChestServerLevel(
             server,
             server.executor,
             storage,
-            levelData,
             worldKey,
             levelStem,
             listener,
             isDebugWorld,
             obfuscateSeed,
             emptyList(),
-            true,
             null
         )
         createStartPlatform(level)
@@ -136,7 +129,7 @@ object ChestLevelManager {
         return level
     }
 
-    private fun createStartPlatform(level: ServerLevel) {
+    private fun createStartPlatform(level: ChestServerLevel) {
         val platformY = 0
         val minX = -20
         val maxX = 20
@@ -177,7 +170,7 @@ object ChestLevelManager {
         )
     }
 
-    private fun updateWall(level: ServerLevel, pos: BlockPos) {
+    private fun updateWall(level: ChestServerLevel, pos: BlockPos) {
         val state = level.getBlockState(pos)
 
         if (state.block is WallBlock) {
@@ -186,7 +179,7 @@ object ChestLevelManager {
         }
     }
 
-    operator fun get(uuid: UUID): ServerLevel? = loaded[uuid]?.level
+    operator fun get(uuid: UUID): ChestServerLevel? = loaded[uuid]?.level
 
     private fun handleEntityTeleportToExit(entity: Entity, teleportTo: ServerLevel, teleportPos: BlockPos): Boolean {
         val overworld = Constants.Server.overworld()
@@ -336,7 +329,6 @@ object ChestLevelManager {
         val data = UUIDManager[uuid] ?: return
         val server = Constants.Server
         val storage = ChestLevelStorage.access
-        val levelData = DerivedLevelData(server.worldData, server.worldData.overworldData())
         val listener = chunkProgressListener ?: server.progressListenerFactory.create(11)
         val isDebugWorld = server.worldData.isDebugWorld
         val biome = server.registryAccess()
@@ -351,18 +343,16 @@ object ChestLevelManager {
         val worldKey = createWorldKey(uuid)
         val seed = data.seed
         val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
-        val level = ServerLevel(
+        val level = ChestServerLevel(
             server,
             server.executor,
             storage,
-            levelData,
             worldKey,
             levelStem,
             listener,
             isDebugWorld,
             obfuscateSeed,
             emptyList(),
-            true,
             null
         )
 
