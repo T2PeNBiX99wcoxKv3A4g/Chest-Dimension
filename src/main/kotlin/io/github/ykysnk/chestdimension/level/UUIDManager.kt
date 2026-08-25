@@ -102,6 +102,8 @@ object UUIDManager {
 
     fun getMap() = data.levels.toMap()
 
+    fun getInactiveList() = data.inactiveLevels.toList()
+
     fun randomUUID(): UUID {
         while (true) {
             val uuid = UUID.randomUUID()
