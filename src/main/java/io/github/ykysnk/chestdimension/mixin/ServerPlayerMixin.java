@@ -19,17 +19,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player implements ChestDimensionData {
     @Unique
-    private static final String OPENED_CHEST_DIMENSION = "OpenedChestDimension";
+    private static final String OPENED_CHEST_DIMENSION = "OpenedChestDim";
     @Unique
-    private static final String OPENED_CHEST_POS_X = "OpenedChestPosX";
+    private static final String OPENED_CHEST_POS_X = "OpenedChestDimPosX";
     @Unique
-    private static final String OPENED_CHEST_POS_Y = "OpenedChestPosY";
+    private static final String OPENED_CHEST_POS_Y = "OpenedChestDimPosY";
     @Unique
-    private static final String OPENED_CHEST_POS_Z = "OpenedChestPosZ";
+    private static final String OPENED_CHEST_POS_Z = "OpenedChestDimPosZ";
     @Unique
     private ResourceKey<Level> chestDimension$openedChestDimension;
     @Unique
     private BlockPos chestDimension$openedChestPos;
+
     protected ServerPlayerMixin(Level level, BlockPos pos, float yRot, GameProfile gameProfile) {
         super(level, pos, yRot, gameProfile);
     }
