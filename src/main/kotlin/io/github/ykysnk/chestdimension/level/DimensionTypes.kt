@@ -32,7 +32,7 @@ object DimensionTypes {
         )
     }
 
-    val ChestMonsterSettings by lazy {
+    private val ChestMonsterSettings by lazy {
         DimensionType.MonsterSettings(
             true, // piglinSafe
             false, // hasRaids

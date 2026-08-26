@@ -8,7 +8,6 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings
 import net.minecraft.world.level.biome.BiomeSpecialEffects
 import net.minecraft.world.level.biome.MobSpawnSettings
 
-@Suppress("MemberVisibilityCanBePrivate")
 object Biomes {
     val CHEST_BIOME: ResourceKey<Biome> = ResourceKey.create(Registries.BIOME, Constants.id("chest_biome"))
 
@@ -24,7 +23,7 @@ object Biomes {
             .build()
     }
 
-    val ChestBiomeSpecialEffects: BiomeSpecialEffects by lazy {
+    private val ChestBiomeSpecialEffects: BiomeSpecialEffects by lazy {
         BiomeSpecialEffects.Builder()
             .fogColor(12638463)
             .skyColor(8103167)
