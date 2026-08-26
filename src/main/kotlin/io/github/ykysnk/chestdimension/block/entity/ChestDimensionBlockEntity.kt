@@ -1,13 +1,15 @@
 package io.github.ykysnk.chestdimension.block.entity
 
 import io.github.ykysnk.chestdimension.Constants
-import io.github.ykysnk.chestdimension.accessor.ChestDimensionData
 import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.extensions.openedChestDimension
+import io.github.ykysnk.chestdimension.extensions.openedChestPos
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.player.Player
@@ -118,10 +120,12 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
             val world = ChestLevelManager.getOrCreate(Constants.Server, uuid)
             UUIDManager.setChestData(uuid, it.dimension(), blockPos)
             UUIDManager.save()
-            (player as? ChestDimensionData)?.let { data ->
-                data.`chestDimension$setOpenedChestDimension`(it.dimension())
-                data.`chestDimension$setOpenedChestPos`(blockPos)
+
+            (player as? ServerPlayer)?.let { serverPlayer ->
+                serverPlayer.openedChestDimension = it
+                serverPlayer.openedChestPos = blockPos
             }
+
             ChestLevelManager.teleportEntityToEnter(world, player)
         }
     }
