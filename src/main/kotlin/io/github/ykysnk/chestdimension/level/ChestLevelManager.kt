@@ -260,7 +260,7 @@ object ChestLevelManager {
         entity.resetFallDistance()
 
         if (teleportPosList.isNotEmpty()) {
-            for (pos in teleportPosList) {
+            for (pos in teleportPosList.shuffled()) {
                 entity.findNonCollidingPosition(teleportTo, pos)?.let { findPos ->
                     if (entity.teleportToLevel(teleportTo, findPos, true)) return true
                 }
