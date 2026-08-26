@@ -14,6 +14,7 @@ import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.level.block.Blocks as MCBlocks
 
+// TODO: Weather and time control
 object Blocks : RegistryHelper<Block>() {
     private fun register(name: String, block: Block) =
         register { Registry.register(BuiltInRegistries.BLOCK, Constants.id(name), block) }
