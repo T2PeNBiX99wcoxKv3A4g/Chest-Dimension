@@ -16,6 +16,7 @@ class ChestDimensionBlockItem : BlockItem(Blocks.CHEST_DIMENSION, Properties()) 
         val itemUUID = getUUID(context.itemInHand)
         val uuid = ChestLevelManager.findUUIDByLevel(context.level)
         if (itemUUID == uuid) {
+            // TODO: Maybe explode to kill player
             context.player?.displayClientMessage(
                 Component.literal("Can't place same UUID chest inside this own chest"),
                 true
