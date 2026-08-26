@@ -12,7 +12,6 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.level.progress.ChunkProgressListener
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
@@ -212,17 +211,7 @@ object ChestLevelManager {
             val chestDim = UUIDManager.getExitChestDimension(it)
             val chestPos = UUIDManager.getExitChestPosition(it)
             entities.forEach { entity ->
-                val player = (entity as? ServerPlayer)
-                val playerChestDim = player?.openedChestDimension
-                val playerChestPos = player?.openedChestPos
-
                 when {
-                    playerChestDim != null && playerChestPos != null -> handleEntityTeleportToExit(
-                        entity,
-                        playerChestDim,
-                        playerChestPos
-                    )
-
                     chestDim != null && chestPos != null -> handleEntityTeleportToExit(
                         entity,
                         chestDim,
