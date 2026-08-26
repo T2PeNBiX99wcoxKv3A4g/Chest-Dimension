@@ -28,7 +28,7 @@ class TeleportPressurePlateBlockEntity(pos: BlockPos, blockState: BlockState) :
                     copyCache.forEach { entity ->
                         (entity as? ServerPlayer)?.let { serverPlayer ->
                             serverPlayer.openedChestDimension = currentLevel
-                            serverPlayer.openedChestPos = blockPos
+                            serverPlayer.openedChestPos = chestEntity.blockPos
                         }
                     }
 
