@@ -12,6 +12,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.level.progress.ChunkProgressListener
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
@@ -200,30 +201,7 @@ object ChestLevelManager {
         return entity.teleportToSpawnLocation(overworld)
     }
 
-    fun teleportEntityToExit(level: Level, entity: Entity): Boolean {
-        if (level.isClientSide || level !is ServerLevel || !isInsideChestDimension(level)) return false
-        val overworld = Constants.Server.overworld()
-        val uuid = findUUIDByLevel(level)
-        uuid?.let {
-            UUIDManager.save()
-            val chestDim = UUIDManager.getExitChestDimension(it)
-            val chestPos = UUIDManager.getExitChestPosition(it)
-            when {
-                chestDim != null && chestPos != null -> if (handleEntityTeleportToExit(
-                        entity,
-                        chestDim,
-                        chestPos
-                    )
-                ) return true
-
-                else -> {
-                    entity.resetFallDistance()
-                    if (entity.teleportToSpawnLocation(overworld)) return true
-                }
-            }
-        }
-        return false
-    }
+    fun teleportEntityToExit(level: Level, entity: Entity): Boolean = teleportEntitiesToExit(level, listOf(entity))
 
     fun teleportEntitiesToExit(level: Level, entities: List<Entity>): Boolean {
         if (level.isClientSide || level !is ServerLevel || !isInsideChestDimension(level)) return false
@@ -233,20 +211,31 @@ object ChestLevelManager {
             UUIDManager.save()
             val chestDim = UUIDManager.getExitChestDimension(it)
             val chestPos = UUIDManager.getExitChestPosition(it)
-            when {
-                chestDim != null && chestPos != null -> {
-                    entities.forEach { entity ->
-                        handleEntityTeleportToExit(entity, chestDim, chestPos)
-                    }
-                }
+            entities.forEach { entity ->
+                val player = (entity as? ServerPlayer)
+                val playerChestDim = player?.openedChestDimension
+                val playerChestPos = player?.openedChestPos
 
-                else -> {
-                    entities.forEach { entity ->
+                when {
+                    playerChestDim != null && playerChestPos != null -> handleEntityTeleportToExit(
+                        entity,
+                        playerChestDim,
+                        playerChestPos
+                    )
+
+                    chestDim != null && chestPos != null -> handleEntityTeleportToExit(
+                        entity,
+                        chestDim,
+                        chestPos
+                    )
+
+                    else -> {
                         entity.resetFallDistance()
                         entity.teleportToSpawnLocation(overworld)
                     }
                 }
             }
+
             return true
         }
         return false
@@ -278,19 +267,8 @@ object ChestLevelManager {
         return entity.teleportToSafeLocation(teleportTo, defaultSpawnPos, true)
     }
 
-    fun teleportEntityToEnter(level: Level, entity: Entity): Boolean {
-        if (level.isClientSide || level !is ServerLevel || !isInsideChestDimension(level)) return false
-        val uuid = findUUIDByLevel(level)
-        uuid?.let {
-            val spawnPosList = UUIDManager.getSpawnPosList(it)
-            spawnPosList?.let { list ->
-                if (handleEntityTeleportToEnter(entity, level, list)) return true
-            }
-        }
-        return false
-    }
+    fun teleportEntityToEnter(level: Level, entity: Entity): Boolean = teleportEntitiesToEnter(level, listOf(entity))
 
-    @Suppress("unused")
     fun teleportEntitiesToEnter(level: Level, entities: List<Entity>): Boolean {
         if (level.isClientSide || level !is ServerLevel || !isInsideChestDimension(level)) return false
         val uuid = findUUIDByLevel(level)

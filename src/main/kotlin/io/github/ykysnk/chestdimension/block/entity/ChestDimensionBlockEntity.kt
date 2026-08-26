@@ -1,6 +1,7 @@
 package io.github.ykysnk.chestdimension.block.entity
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.accessor.ChestDimensionData
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
@@ -117,6 +118,10 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
             val world = ChestLevelManager.getOrCreate(Constants.Server, uuid)
             UUIDManager.setChestData(uuid, it.dimension(), blockPos)
             UUIDManager.save()
+            (player as? ChestDimensionData)?.let { data ->
+                data.`chestDimension$setOpenedChestDimension`(it.dimension())
+                data.`chestDimension$setOpenedChestPos`(blockPos)
+            }
             ChestLevelManager.teleportEntityToEnter(world, player)
         }
     }
