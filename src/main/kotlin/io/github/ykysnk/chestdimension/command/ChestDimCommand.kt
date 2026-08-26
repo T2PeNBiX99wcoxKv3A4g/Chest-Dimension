@@ -47,29 +47,14 @@ object ChestDimCommand {
         Commands.literal("chestdim").let { builder ->
             Commands.literal("create").requires { it.hasPermission(2) }.let { createBuilder ->
                 createBuilder.executes { context ->
-                    runCatching {
-                        val player = context.source.playerOrException
-                        val uuid = UUIDManager.randomUUID()
-                        val uuidComponent: MutableComponent = Component.literal(uuid.toString()).withStyle {
-                            it.withUnderlined(true)
-                                .withClickEvent(ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, uuid.toString()))
-                                .withHoverEvent(
-                                    HoverEvent(
-                                        HoverEvent.Action.SHOW_TEXT,
-                                        Component.literal("Click to copy UUID")
-                                    )
-                                )
-                        }
-                        val world = ChestLevelManager.getOrCreate(context.source.server, uuid)
-                        ChestLevelManager.teleportEntityToEnter(world, player)
-                        context.source.sendSuccess({ Component.literal("Created world: ").append(uuidComponent) }, true)
-                        1
-                    }.getOrElse {
-                        Constants.LOGGER.error(it.localizedMessage, it)
-                        context.source.sendFailure(Component.literal("Command error (${it.localizedMessage})"))
-                        0
-                    }
+                    val player = context.source.playerOrException
+                    create(player, context.source)
                 }
+
+                createBuilder.then(Commands.argument("targets", EntityArgument.entities()).executes { context ->
+                    val entities = EntityArgument.getEntities(context, "targets")
+                    create(entities, context.source)
+                })
 
                 builder.then(createBuilder)
             }
@@ -462,6 +447,23 @@ object ChestDimCommand {
                 })
 
                 builder.then(tpSpawnBuilder)
+            }
+
+            Commands.literal("tp-enter").requires { it.hasPermission(2) }.let { tpEnterBuilder ->
+                tpEnterBuilder.then(uuidArg.executes { context ->
+                    val player = context.source.playerOrException
+                    teleportEnter(player, StringArgumentType.getString(context, "uuid"), context.source)
+                })
+
+                tpEnterBuilder.then(
+                    uuidArg.then(
+                        Commands.argument("targets", EntityArgument.entities()).executes { context ->
+                            val entities = EntityArgument.getEntities(context, "targets")
+                            teleportEnter(entities, StringArgumentType.getString(context, "uuid"), context.source)
+                        })
+                )
+
+                builder.then(tpEnterBuilder)
             }
 
             Commands.literal("give-chest").requires { it.hasPermission(2) }.let { giveChestBuilder ->
@@ -872,19 +874,48 @@ object ChestDimCommand {
             builder.buildFuture()
         }
 
+    private fun create(entity: Entity, source: CommandSourceStack): Int = create(setOf(entity), source)
+
+    private fun create(entities: Collection<Entity>, source: CommandSourceStack): Int {
+        return runCatching {
+            val uuid = UUIDManager.randomUUID()
+            val uuidComponent: MutableComponent = Component.literal(uuid.toString()).withStyle {
+                it.withUnderlined(true)
+                    .withClickEvent(ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, uuid.toString()))
+                    .withHoverEvent(
+                        HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            Component.literal("Click to copy UUID")
+                        )
+                    )
+            }
+            val world = ChestLevelManager.getOrCreate(source.server, uuid)
+            entities.forEach { entity ->
+                ChestLevelManager.teleportEntityToEnter(world, entity)
+            }
+            source.sendSuccess({ Component.literal("Created world: ").append(uuidComponent) }, true)
+            1
+        }.getOrElse {
+            Constants.LOGGER.error(it.localizedMessage, it)
+            source.sendFailure(Component.literal("Command error (${it.localizedMessage})"))
+            0
+        }
+    }
+
     private fun formatDouble(value: Double): String {
         return String.format(Locale.ROOT, "%f", value)
     }
 
-    private fun getLevel(source: CommandSourceStack, dimension: String): ServerLevel? {
+    private fun getLevel(source: CommandSourceStack, dimension: String, onlyChestDim: Boolean = false): ServerLevel? {
         if (dimension == THIS) return source.level
 
         runCatching { UUID.fromString(dimension) }.getOrNull()?.let { uuid ->
             return ChestLevelManager.getOrCreate(source.server, uuid)
         }
 
-        val id = ResourceLocation.tryParse(dimension.replace("\"", "")) ?: return null
+        if (onlyChestDim) return null
 
+        val id = ResourceLocation.tryParse(dimension.replace("\"", "")) ?: return null
         return source.server.getLevel(ResourceKey.create(Registries.DIMENSION, id))
     }
 
@@ -1057,6 +1088,21 @@ object ChestDimCommand {
                     formatDouble(vec3.z)
                 )
             }, true)
+        return 1
+    }
+
+    private fun teleportEnter(entity: Entity, uuidString: String, source: CommandSourceStack): Int =
+        teleportEnter(setOf(entity), uuidString, source)
+
+    private fun teleportEnter(entities: Collection<Entity>, uuidString: String, source: CommandSourceStack): Int {
+        val level = getLevel(source, uuidString, true)
+        if (level == null) {
+            source.sendFailure(Component.literal("UUID is not valid."))
+            return 0
+        }
+        entities.forEach { entity ->
+            ChestLevelManager.teleportEntityToEnter(level, entity)
+        }
         return 1
     }
 
