@@ -20,7 +20,8 @@ import java.util.concurrent.Executor
 
 class ChestChunkGenerator(biomeSource: BiomeSource) : ChunkGenerator(biomeSource) {
     companion object {
-        val CODEC: Codec<ChestChunkGenerator> = BiomeSource.CODEC.xmap(::ChestChunkGenerator, ChestChunkGenerator::biomeSource)
+        val CODEC: Codec<ChestChunkGenerator> =
+            BiomeSource.CODEC.xmap(::ChestChunkGenerator, ChestChunkGenerator::biomeSource)
     }
 
     override fun codec(): Codec<ChestChunkGenerator> {
