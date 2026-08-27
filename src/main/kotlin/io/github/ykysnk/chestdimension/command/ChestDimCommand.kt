@@ -258,6 +258,166 @@ object ChestDimCommand {
                             }
                         }
                     }
+
+                    literal("chestdims") {
+                        uuidArg {
+                            argument("pos", BlockPosArgument.blockPos()) {
+                                executes {
+                                    val player = it.source.playerOrException
+                                    val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                                    teleportSafe(player, pos, uuid, spawnRadius, it.source)
+                                }
+
+                                argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                    executes {
+                                        val player = it.source.playerOrException
+                                        val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                        teleportSafe(player, pos, uuid, spawnRadius, it.source)
+                                    }
+                                }
+                            }
+
+                            argument("targets", EntityArgument.entities()) {
+                                argument("pos", BlockPosArgument.blockPos()) {
+                                    executes {
+                                        val entities = EntityArgument.getEntities(it, "targets")
+                                        val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                                        teleportSafe(entities, pos, uuid, spawnRadius, it.source)
+                                    }
+
+                                    argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                        executes {
+                                            val entities = EntityArgument.getEntities(it, "targets")
+                                            val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                            val uuid = UuidArgument.getUuid(it, "uuid")
+                                            val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                            teleportSafe(entities, pos, uuid, spawnRadius, it.source)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    literal("alldims") {
+                        literal("registry") {
+                            argument("dimension", DimensionArgument.dimension()) {
+                                argument("pos", BlockPosArgument.blockPos()) {
+                                    executes {
+                                        val player = it.source.playerOrException
+                                        val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                        val level = DimensionArgument.getDimension(it, "dimension")
+                                        val spawnRadius = it.source.server.getSpawnRadius(level)
+                                        teleportSafe(player, pos, level, spawnRadius, it.source)
+                                    }
+
+                                    argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                        executes {
+                                            val player = it.source.playerOrException
+                                            val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                            val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            teleportSafe(player, pos, level, spawnRadius, it.source)
+                                        }
+                                    }
+                                }
+
+                                argument("targets", EntityArgument.entities()) {
+                                    argument("pos", BlockPosArgument.blockPos()) {
+                                        executes {
+                                            val entities = EntityArgument.getEntities(it, "targets")
+                                            val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            val spawnRadius = it.source.server.getSpawnRadius(level)
+                                            teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                        }
+
+                                        argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                            executes {
+                                                val entities = EntityArgument.getEntities(it, "targets")
+                                                val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                                val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                                val level = DimensionArgument.getDimension(it, "dimension")
+                                                teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        literal("dynamic") {
+                            allDimsArg {
+                                argument("pos", BlockPosArgument.blockPos()) {
+                                    executes {
+                                        val player = it.source.playerOrException
+                                        val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                        val dimension = StringArgumentType.getString(it, "dimension")
+                                        val level = getLevel(it.source, dimension)
+                                        if (level == null) {
+                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                            return@executes 0
+                                        }
+                                        val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                                        teleportSafe(player, pos, level, spawnRadius, it.source)
+                                    }
+
+                                    argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                        executes {
+                                            val player = it.source.playerOrException
+                                            val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                            teleportSafe(player, pos, level, spawnRadius, it.source)
+                                        }
+                                    }
+                                }
+
+                                argument("targets", EntityArgument.entities()) {
+                                    argument("pos", BlockPosArgument.blockPos()) {
+                                        executes {
+                                            val entities = EntityArgument.getEntities(it, "targets")
+                                            val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                                            teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                        }
+
+                                        argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                            executes {
+                                                val entities = EntityArgument.getEntities(it, "targets")
+                                                val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                                val dimension = StringArgumentType.getString(it, "dimension")
+                                                val level = getLevel(it.source, dimension)
+                                                if (level == null) {
+                                                    it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                    return@executes 0
+                                                }
+                                                val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                                teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 literal("spawn") {
