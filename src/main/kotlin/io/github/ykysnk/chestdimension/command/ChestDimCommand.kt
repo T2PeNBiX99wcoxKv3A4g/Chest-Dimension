@@ -1,8 +1,11 @@
 package io.github.ykysnk.chestdimension.command
 
 import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.arguments.FloatArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.exceptions.CommandSyntaxException
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
 import io.github.ykysnk.chestdimension.extensions.*
@@ -14,6 +17,7 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.DimensionArgument
 import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.commands.arguments.ResourceArgument
 import net.minecraft.commands.arguments.TimeArgument
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument
 import net.minecraft.commands.arguments.coordinates.Vec3Argument
@@ -29,6 +33,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.valueproviders.IntProvider
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
@@ -36,8 +41,10 @@ import net.minecraft.world.phys.Vec3
 import java.util.*
 
 object ChestDimCommand {
-    private const val THIS = "this"
-    private const val ALL = "all"
+    internal const val THIS = "this"
+    internal const val ALL = "all"
+
+    private val ERROR_INVULNERABLE = SimpleCommandExceptionType(Component.translatable("commands.damage.invulnerable"))
 
     @Suppress("SpellCheckingInspection")
     fun register(
@@ -790,6 +797,92 @@ object ChestDimCommand {
                 }
             }
 
+            literal("damage") {
+                requires { it.hasPermission(2) }
+
+                argument("targets", EntityArgument.entities()) {
+                    argument("amount", FloatArgumentType.floatArg(0.0f)) {
+                        executes {
+                            val entities = EntityArgument.getEntities(it, "targets")
+                            val amount = FloatArgumentType.getFloat(it, "amount")
+                            damage(it.source, entities, amount, it.source.level.damageSources().generic())
+                        }
+
+                        argument("damageType", ResourceArgument.resource(registryAccess, Registries.DAMAGE_TYPE)) {
+                            executes {
+                                val entities = EntityArgument.getEntities(it, "targets")
+                                val amount = FloatArgumentType.getFloat(it, "amount")
+                                val damageType = ResourceArgument.getResource(it, "damageType", Registries.DAMAGE_TYPE)
+                                damage(
+                                    it.source,
+                                    entities,
+                                    amount,
+                                    DamageSource(damageType)
+                                )
+                            }
+
+                            literal("at") {
+                                argument("location", Vec3Argument.vec3()) {
+                                    executes {
+                                        val entities = EntityArgument.getEntities(it, "targets")
+                                        val amount = FloatArgumentType.getFloat(it, "amount")
+                                        val damageType =
+                                            ResourceArgument.getResource(it, "damageType", Registries.DAMAGE_TYPE)
+                                        val location = Vec3Argument.getVec3(it, "location")
+                                        damage(
+                                            it.source,
+                                            entities,
+                                            amount,
+                                            DamageSource(damageType, location)
+                                        )
+                                    }
+                                }
+                            }
+
+                            literal("by") {
+                                argument("entity", EntityArgument.entity()) {
+                                    executes {
+                                        val entities = EntityArgument.getEntities(it, "targets")
+                                        val amount = FloatArgumentType.getFloat(it, "amount")
+                                        val damageType =
+                                            ResourceArgument.getResource(it, "damageType", Registries.DAMAGE_TYPE)
+                                        val entity = EntityArgument.getEntity(it, "entity")
+                                        damage(
+                                            it.source,
+                                            entities,
+                                            amount,
+                                            DamageSource(damageType, entity)
+                                        )
+                                    }
+
+                                    literal("from") {
+                                        argument("cause", EntityArgument.entity()) {
+                                            executes {
+                                                val entities = EntityArgument.getEntities(it, "targets")
+                                                val amount = FloatArgumentType.getFloat(it, "amount")
+                                                val damageType =
+                                                    ResourceArgument.getResource(
+                                                        it,
+                                                        "damageType",
+                                                        Registries.DAMAGE_TYPE
+                                                    )
+                                                val entity = EntityArgument.getEntity(it, "entity")
+                                                val cause = EntityArgument.getEntity(it, "cause")
+                                                damage(
+                                                    it.source,
+                                                    entities,
+                                                    amount,
+                                                    DamageSource(damageType, entity, cause)
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             literal("ping") {
                 executes {
@@ -1226,5 +1319,22 @@ object ChestDimCommand {
         level.setWeatherParameters(0, getDuration(level, time, ServerLevel.THUNDER_DURATION), true, true)
         source.sendSuccess({ Component.translatable("commands.weather.set.thunder") }, true)
         return time
+    }
+
+    @Throws(CommandSyntaxException::class)
+    private fun damage(
+        source: CommandSourceStack,
+        targets: Collection<Entity>,
+        amount: Float,
+        damageType: DamageSource
+    ): Int {
+        var count = 0
+        targets.forEach {
+            if (!it.hurt(damageType, amount)) return@forEach
+            source.sendSuccess({ Component.translatable("commands.damage.success", amount, it.displayName) }, true)
+            count++
+        }
+        if (count == 0) throw ERROR_INVULNERABLE.create()
+        return count
     }
 }
