@@ -17,6 +17,6 @@ class DynamicRegistryProvider(output: FabricDataOutput, registriesFuture: Comple
     }
 
     override fun getName(): String {
-        return "Chest Biome Dynamic Registries"
+        return "Chest Dimension Dynamic Registries"
     }
 }

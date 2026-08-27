@@ -1,4 +1,4 @@
-// 1.20.1	2026-08-27T14:10:05.6019658	Chest Dimension/Chest Biome Dynamic Registries
+// 1.20.1	2026-08-27T17:28:07.2493469	Chest Dimension/Chest Dimension Dynamic Registries
 5f3e1961dd27cd02c665704aefe31dd0f0305847 data\chest-dimension\damage_type\explosion_by_chest.json
 a7937e3577b265a53643ce1a701ad204e68ad129 data\chest-dimension\worldgen\biome\chest_biome.json
 ba9da5114a3f5cd2920b7cbf5796b1054a30158a data\chest-dimension\dimension_type\chest.json
