@@ -788,6 +788,15 @@ object ChestDimCommand {
                 }
             }
 
+
+            literal("ping") {
+                executes {
+                    val player = it.source.playerOrException
+                    it.source.sendSuccess({ Component.literal("Ping: ${player.latency}ms") }, true)
+                    1
+                }
+            }
+
             dispatcher.register(this)
         }
     }
