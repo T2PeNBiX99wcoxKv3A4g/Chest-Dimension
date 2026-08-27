@@ -7,10 +7,21 @@ import net.minecraft.world.item.Items as MCItems
 
 @Suppress("unused")
 object Items : RegistryHelper<Item>() {
+    @JvmField
     val CHEST_PLATFORM: Item = register { MCItems.registerBlock(Blocks.CHEST_PLATFORM) }
+
+    @JvmField
     val CHEST_PLATFORM_WALL: Item = register { MCItems.registerBlock(Blocks.CHEST_PLATFORM_WALL) }
+
+    @JvmField
     val CHEST_PLATFORM_FENCE: Item = register { MCItems.registerBlock(Blocks.CHEST_PLATFORM_FENCE) }
+
+    @JvmField
     val CHEST_PLATFORM_ENTER_PLATE: Item = register { MCItems.registerBlock(Blocks.CHEST_PLATFORM_ENTER_PLATE) }
+
+    @JvmField
     val TELEPORT_PRESSURE_PLATE: Item = register { MCItems.registerBlock(Blocks.TELEPORT_PRESSURE_PLATE) }
+
+    @JvmField
     val CHEST_DIMENSION: Item = register { MCItems.registerBlock(ChestDimensionBlockItem()) }
 }
