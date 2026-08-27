@@ -1,6 +1,7 @@
 package io.github.ykysnk.chestdimension.extensions
 
 import com.mojang.brigadier.arguments.ArgumentType
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
@@ -38,44 +39,15 @@ internal inline fun ArgumentBuilder<CommandSourceStack, *>.uuidArg(block: Requir
         apply(block)
     }
 
-//internal inline fun ArgumentBuilder<CommandSourceStack, *>.allDimsArg(block: RequiredArgumentBuilder<CommandSourceStack, UUID>.() -> Unit) =
-//    argument("uuid", UuidArgument.uuid()) {
-//        suggests { context, builder ->
-//            val server = context.source.server
-//            val tempSet = hashSetOf<String>()
-//            UUIDManager.getMap().keys.forEach(tempSet::add)
-//            UUIDManager.getInactiveList().forEach(tempSet::add)
-//            tempSet.forEach(builder::suggest)
-//
-//            server.allLevels.forEach {
-//                if (ChestLevelManager.isInsideChestDimension(it)) return@forEach
-//                builder.suggest("\"${it.dimension().location()}\"")
-//            }
-//
-//            builder.buildFuture()
-//        }
-//
-//        apply(block)
-//    }
+internal inline fun ArgumentBuilder<CommandSourceStack, *>.allDimsArg(block: RequiredArgumentBuilder<CommandSourceStack, String>.() -> Unit) =
+    argument("dimension", StringArgumentType.string()) {
+        suggests { context, builder ->
+            val server = context.source.server
+            server.allLevels.forEach {
+                builder.suggest("\"${it.dimension().location()}\"")
+            }
+            builder.buildFuture()
+        }
 
-//internal inline fun ArgumentBuilder<CommandSourceStack, *>.allDimsWithAllArg(block: RequiredArgumentBuilder<CommandSourceStack, String>.() -> Unit) =
-//    argument("uuid", StringArgumentType.string()) {
-//        suggests { context, builder ->
-//            val server = context.source.server
-//            val tempSet = hashSetOf<String>()
-//            UUIDManager.getMap().keys.forEach(tempSet::add)
-//            UUIDManager.getInactiveList().forEach(tempSet::add)
-//            tempSet.forEach(builder::suggest)
-//
-//            server.allLevels.forEach {
-//                if (ChestLevelManager.isInsideChestDimension(it)) return@forEach
-//                builder.suggest("\"${it.dimension().location()}\"")
-//            }
-//
-//            builder.suggest(THIS)
-//            builder.suggest(ALL)
-//            builder.buildFuture()
-//        }
-//
-//        apply(block)
-//    }
+        apply(block)
+    }

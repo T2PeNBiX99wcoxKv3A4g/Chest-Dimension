@@ -3,6 +3,7 @@ package io.github.ykysnk.chestdimension.command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.FloatArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import io.github.ykysnk.chestdimension.Constants
@@ -24,6 +25,8 @@ import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.valueproviders.IntProvider
@@ -35,9 +38,6 @@ import net.minecraft.world.phys.Vec3
 import java.util.*
 
 object ChestDimCommand {
-    internal const val THIS = "this"
-    internal const val ALL = "all"
-
     private val ERROR_INVULNERABLE = SimpleCommandExceptionType(Component.translatable("commands.damage.invulnerable"))
 
     @Suppress("SpellCheckingInspection")
@@ -984,6 +984,11 @@ object ChestDimCommand {
 
     private fun formatDouble(value: Double): String {
         return String.format(Locale.ROOT, "%f", value)
+    }
+
+    private fun getLevel(source: CommandSourceStack, dimension: String): ServerLevel? {
+        val id = ResourceLocation.tryParse(dimension.replace("\"", "")) ?: return null
+        return source.server.getLevel(ResourceKey.create(Registries.DIMENSION, id))
     }
 
     private fun getLevel(source: CommandSourceStack, dimension: UUID): ServerLevel =
