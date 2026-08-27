@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "chest-dimension:explosion_by_chest"
+    "chest-dimension:explosion_by_chest",
+    "chest-dimension:explosion_by_chest_inside"
   ]
 }
