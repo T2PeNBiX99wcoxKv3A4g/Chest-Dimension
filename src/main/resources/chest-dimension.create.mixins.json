@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "io.github.ykysnk.chestdimension.create.mixin",
+  "plugin": "io.github.ykysnk.chestdimension.create.CreateMixinPlugin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "CrushingWheelControllerBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

@@ -24,6 +24,11 @@ repositories {
     maven("https://maven.parchmentmc.org") {
         name = "Parchment"
     }
+    maven("https://mvn.devos.one/snapshots/")
+    maven("https://mvn.devos.one/releases/")
+    maven("https://maven.createmod.net/")
+    maven("https://raw.githubusercontent.com/Fuzss/modresources/main/maven")
+    maven("https://maven.jamieswhiteshirt.com/libs-release/")
 }
 
 loom {
@@ -67,9 +72,9 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${providers.gradleProperty("fabric_kotlin_version").get()}")
     modImplementation("com.terraformersmc:modmenu:${providers.gradleProperty("mod_menu_version").get()}")
     modImplementation("dev.isxander:yet-another-config-lib:${providers.gradleProperty("yacl_version").get()}")
+    modImplementation("com.simibubi.create:create-fabric:${providers.gradleProperty("create_version").get()}")
     include(implementation("net.mamoe.yamlkt:yamlkt:${providers.gradleProperty("yamlkt_version").get()}")!!)
 }
-
 
 val generateFallbackTranslations = tasks.register("generateFallbackTranslations") {
     description = "Generate fallback translations from en_us.json"
