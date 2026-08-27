@@ -13,5 +13,6 @@ class DamageTypeTagProvider(output: FabricDataOutput, registries: CompletableFut
     FabricTagProvider<DamageType>(output, Registries.DAMAGE_TYPE, registries) {
     override fun addTags(provider: HolderLookup.Provider) {
         getOrCreateTagBuilder(DamageTypeTags.ALWAYS_HURTS_ENDER_DRAGONS).add(DamageTypes.EXPLOSION_BY_CHEST)
+            .add(DamageTypes.EXPLOSION_BY_CHEST_INSIDE)
     }
 }

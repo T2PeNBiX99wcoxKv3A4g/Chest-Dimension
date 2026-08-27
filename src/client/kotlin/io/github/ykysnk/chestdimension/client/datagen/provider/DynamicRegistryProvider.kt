@@ -14,6 +14,7 @@ class DynamicRegistryProvider(output: FabricDataOutput, registriesFuture: Comple
         entries.add(Biomes.CHEST_BIOME, Biomes.ChestBiomeType)
         entries.add(DimensionTypes.CHEST, DimensionTypes.ChestDimensionType)
         entries.add(DamageTypes.EXPLOSION_BY_CHEST, DamageTypes.ExplosionByChestType)
+        entries.add(DamageTypes.EXPLOSION_BY_CHEST_INSIDE, DamageTypes.ExplosionByChestInsideType)
     }
 
     override fun getName(): String {

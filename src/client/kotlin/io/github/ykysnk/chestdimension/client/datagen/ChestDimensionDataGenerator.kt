@@ -20,6 +20,7 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
     override fun buildRegistry(registryBuilder: RegistrySetBuilder) {
         registryBuilder.add(Registries.DAMAGE_TYPE) { context ->
             context.register(DamageTypes.EXPLOSION_BY_CHEST, DamageTypes.ExplosionByChestType)
+            context.register(DamageTypes.EXPLOSION_BY_CHEST_INSIDE, DamageTypes.ExplosionByChestInsideType)
         }
     }
 }

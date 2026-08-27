@@ -10,5 +10,10 @@ object DamageTypes {
     val EXPLOSION_BY_CHEST: ResourceKey<DamageType> =
         ResourceKey.create(Registries.DAMAGE_TYPE, Constants.id("explosion_by_chest"))
 
+    val EXPLOSION_BY_CHEST_INSIDE: ResourceKey<DamageType> =
+        ResourceKey.create(Registries.DAMAGE_TYPE, Constants.id("explosion_by_chest_inside"))
+
     val ExplosionByChestType by lazy { DamageType("explosion_by_chest", DamageScaling.NEVER, 4.0f) }
+
+    val ExplosionByChestInsideType by lazy { DamageType("explosion_by_chest_inside", DamageScaling.NEVER, 10.0f) }
 }
