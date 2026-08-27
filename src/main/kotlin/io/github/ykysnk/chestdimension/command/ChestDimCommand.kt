@@ -890,6 +890,15 @@ object ChestDimCommand {
                     it.source.sendSuccess({ Component.literal("Ping: ${player.latency}ms") }, true)
                     1
                 }
+
+                argument("player", EntityArgument.player()) {
+                    executes {
+                        val player = EntityArgument.getPlayer(it, "player")
+                            ?: throw CommandSourceStack.ERROR_NOT_PLAYER.create()
+                        it.source.sendSuccess({ Component.literal("Ping: ${player.latency}ms") }, true)
+                        1
+                    }
+                }
             }
 
             dispatcher.register(this)
