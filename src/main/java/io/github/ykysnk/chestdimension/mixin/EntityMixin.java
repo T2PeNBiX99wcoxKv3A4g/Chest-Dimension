@@ -30,10 +30,13 @@ public abstract class EntityMixin {
     @WrapOperation(method = "checkBelowWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"))
     private void checkBelowWorld(Entity instance, Operation<Void> original) {
         if (ChestLevelManager.INSTANCE.teleportEntityToExit(level, instance)) return;
-        if (!level.isClientSide && level instanceof ServerLevel serverLevel && instance instanceof ItemEntity itemEntity && itemEntity.getItem().is(Items.CHEST_DIMENSION)) {
-            var blockPos = BlockPos.containing(position);
-            EntityExtensionsKt.teleportToSafeLocation(instance, serverLevel, blockPos, 20, false);
-            setPos(new Vec3(position.x, Math.max(level.getMinBuildHeight() + 2, position.y), position.z));
+        if (instance instanceof ItemEntity itemEntity && itemEntity.getItem().is(Items.CHEST_DIMENSION)) {
+            instance.resetFallDistance();
+            if (level instanceof ServerLevel serverLevel) {
+                var blockPos = BlockPos.containing(position);
+                EntityExtensionsKt.teleportToSafeLocation(instance, serverLevel, blockPos, 10, false);
+                setPos(new Vec3(position.x, Math.max(level.getMinBuildHeight() + 2, position.y), position.z));
+            }
             return;
         }
         original.call(instance);
