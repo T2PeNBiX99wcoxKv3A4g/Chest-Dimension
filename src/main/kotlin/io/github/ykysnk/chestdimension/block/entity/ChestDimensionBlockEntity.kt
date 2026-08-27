@@ -32,6 +32,11 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
                 .getHolderOrThrow(DamageTypes.EXPLOSION_BY_CHEST)
         }
 
+        private val damageSourceInsideType: Holder.Reference<DamageType> by lazy {
+            Constants.Server.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
+                .getHolderOrThrow(DamageTypes.EXPLOSION_BY_CHEST_INSIDE)
+        }
+
         @Suppress("unused")
         fun lidAnimateTick(level: Level, pos: BlockPos, state: BlockState, blockEntity: ChestDimensionBlockEntity) {
             blockEntity.chestLidController.tickLid()
@@ -96,10 +101,17 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
         return exitDimKey != null && exitPos != null && (exitDimKey != level?.dimension() || exitPos != blockPos)
     }
 
+    private fun isChestInsideChest(): Boolean = (level as? ServerLevel)?.let {
+        val levelUUID = ChestLevelManager.findUUIDByLevel(it)
+        return levelUUID == uuid
+    } ?: false
+
     private fun explodeItSelf(level: ServerLevel): Boolean {
-        if (!haveSameChest()) return false
+        val isInsideChest = isChestInsideChest()
+        if (!haveSameChest() && !isInsideChest) return false
         val damageSourcePosition = blockPos.center
-        val damageSource = DamageSource(damageSourceType, damageSourcePosition)
+        val damageSource =
+            DamageSource(if (isInsideChest) damageSourceInsideType else damageSourceType, damageSourcePosition)
         destroyByItSelf = true
         val drops = Block.getDrops(blockState, level, blockPos, this)
         level.removeBlock(blockPos, false)
@@ -108,7 +120,7 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
             damageSource,
             null,
             damageSourcePosition,
-            6f,
+            if (isInsideChest) 10f else 6f,
             true,
             Level.ExplosionInteraction.BLOCK
         )
