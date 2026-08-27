@@ -3,7 +3,6 @@ package io.github.ykysnk.chestdimension.command
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.FloatArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
-import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import io.github.ykysnk.chestdimension.Constants
@@ -15,10 +14,7 @@ import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
-import net.minecraft.commands.arguments.DimensionArgument
-import net.minecraft.commands.arguments.EntityArgument
-import net.minecraft.commands.arguments.ResourceArgument
-import net.minecraft.commands.arguments.TimeArgument
+import net.minecraft.commands.arguments.*
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument
 import net.minecraft.commands.arguments.coordinates.Vec3Argument
 import net.minecraft.core.BlockPos
@@ -28,8 +24,6 @@ import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.valueproviders.IntProvider
@@ -72,124 +66,79 @@ object ChestDimCommand {
             literal("tp") {
                 requires { it.hasPermission(2) }
 
-                allDimsArg {
-                    argument("pos", Vec3Argument.vec3()) {
-                        executes {
-                            val player = it.source.playerOrException
-                            val pos = Vec3Argument.getVec3(it, "pos")
-                            val uuid = StringArgumentType.getString(it, "uuid")
-                            teleport(player, pos, uuid, it.source)
-                        }
-                    }
-
-                    argument("targets", EntityArgument.entities()) {
+                literal("direct") {
+                    uuidArg {
                         argument("pos", Vec3Argument.vec3()) {
-                            executes {
-                                val entities = EntityArgument.getEntities(it, "targets")
-                                val pos = Vec3Argument.getVec3(it, "pos")
-                                val uuid = StringArgumentType.getString(it, "uuid")
-                                teleport(entities, pos, uuid, it.source)
-                            }
-                        }
-                    }
-                }
-
-                argument("dimension", DimensionArgument.dimension()) {
-                    argument("pos", Vec3Argument.vec3()) {
-                        executes {
-                            val player = it.source.playerOrException
-                            val pos = Vec3Argument.getVec3(it, "pos")
-                            val level = DimensionArgument.getDimension(it, "dimension")
-                            teleport(player, pos, level, it.source)
-                        }
-                    }
-
-                    argument("targets", EntityArgument.entities()) {
-                        argument("pos", Vec3Argument.vec3()) {
-                            executes {
-                                val entities = EntityArgument.getEntities(it, "targets")
-                                val pos = Vec3Argument.getVec3(it, "pos")
-                                val level = DimensionArgument.getDimension(it, "dimension")
-                                teleport(entities, pos, level, it.source)
-                            }
-                        }
-                    }
-                }
-
-                argument("pos", Vec3Argument.vec3()) {
-                    executes {
-                        val player = it.source.playerOrException
-                        val pos = Vec3Argument.getVec3(it, "pos")
-                        teleport(player, pos, it.source.level, it.source)
-                    }
-                }
-
-                argument("targets", EntityArgument.entities()) {
-                    argument("pos", Vec3Argument.vec3()) {
-                        executes {
-                            val entities = EntityArgument.getEntities(it, "targets")
-                            val pos = Vec3Argument.getVec3(it, "pos")
-                            teleport(entities, pos, it.source.level, it.source)
-                        }
-                    }
-                }
-            }
-
-            literal("tp-safe") {
-                requires { it.hasPermission(2) }
-
-                allDimsArg {
-                    argument("pos", BlockPosArgument.blockPos()) {
-                        executes {
-                            val player = it.source.playerOrException
-                            val pos = BlockPosArgument.getBlockPos(it, "pos")
-                            val uuid = StringArgumentType.getString(it, "uuid")
-                            val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
-                            teleportSafe(player, pos, uuid, spawnRadius, it.source)
-                        }
-
-                        argument("spawn-radius", IntegerArgumentType.integer(1)) {
                             executes {
                                 val player = it.source.playerOrException
-                                val pos = BlockPosArgument.getBlockPos(it, "pos")
-                                val uuid = StringArgumentType.getString(it, "uuid")
-                                val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                                teleportSafe(player, pos, uuid, spawnRadius, it.source)
+                                val pos = Vec3Argument.getVec3(it, "pos")
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                teleport(player, pos, uuid, it.source)
                             }
                         }
-                    }
 
-                    argument("targets", EntityArgument.entities()) {
-                        argument("pos", BlockPosArgument.blockPos()) {
-                            executes {
-                                val entities = EntityArgument.getEntities(it, "targets")
-                                val pos = BlockPosArgument.getBlockPos(it, "pos")
-                                val uuid = StringArgumentType.getString(it, "uuid")
-                                val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
-                                teleportSafe(entities, pos, uuid, spawnRadius, it.source)
-                            }
-
-                            argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                        argument("targets", EntityArgument.entities()) {
+                            argument("pos", Vec3Argument.vec3()) {
                                 executes {
                                     val entities = EntityArgument.getEntities(it, "targets")
-                                    val pos = BlockPosArgument.getBlockPos(it, "pos")
-                                    val uuid = StringArgumentType.getString(it, "uuid")
-                                    val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                                    teleportSafe(entities, pos, uuid, spawnRadius, it.source)
+                                    val pos = Vec3Argument.getVec3(it, "pos")
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    teleport(entities, pos, uuid, it.source)
                                 }
                             }
                         }
                     }
+
+                    argument("dimension", DimensionArgument.dimension()) {
+                        argument("pos", Vec3Argument.vec3()) {
+                            executes {
+                                val player = it.source.playerOrException
+                                val pos = Vec3Argument.getVec3(it, "pos")
+                                val level = DimensionArgument.getDimension(it, "dimension")
+                                teleport(player, pos, level, it.source)
+                            }
+                        }
+
+                        argument("targets", EntityArgument.entities()) {
+                            argument("pos", Vec3Argument.vec3()) {
+                                executes {
+                                    val entities = EntityArgument.getEntities(it, "targets")
+                                    val pos = Vec3Argument.getVec3(it, "pos")
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    teleport(entities, pos, level, it.source)
+                                }
+                            }
+                        }
+                    }
+
+                    argument("pos", Vec3Argument.vec3()) {
+                        executes {
+                            val player = it.source.playerOrException
+                            val pos = Vec3Argument.getVec3(it, "pos")
+                            teleport(player, pos, it.source.level, it.source)
+                        }
+                    }
+
+                    argument("targets", EntityArgument.entities()) {
+                        argument("pos", Vec3Argument.vec3()) {
+                            executes {
+                                val entities = EntityArgument.getEntities(it, "targets")
+                                val pos = Vec3Argument.getVec3(it, "pos")
+                                teleport(entities, pos, it.source.level, it.source)
+                            }
+                        }
+                    }
                 }
 
-                argument("dimension", DimensionArgument.dimension()) {
+                literal("safe") {
+                    requires { it.hasPermission(2) }
+
                     argument("pos", BlockPosArgument.blockPos()) {
                         executes {
                             val player = it.source.playerOrException
                             val pos = BlockPosArgument.getBlockPos(it, "pos")
-                            val level = DimensionArgument.getDimension(it, "dimension")
-                            val spawnRadius = it.source.server.getSpawnRadius(level)
-                            teleportSafe(player, pos, level, spawnRadius, it.source)
+                            val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                            teleportSafe(player, pos, it.source.level, spawnRadius, it.source)
                         }
 
                         argument("spawn-radius", IntegerArgumentType.integer(1)) {
@@ -197,195 +146,242 @@ object ChestDimCommand {
                                 val player = it.source.playerOrException
                                 val pos = BlockPosArgument.getBlockPos(it, "pos")
                                 val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                                val level = DimensionArgument.getDimension(it, "dimension")
-                                teleportSafe(player, pos, level, spawnRadius, it.source)
+                                teleportSafe(player, pos, it.source.level, spawnRadius, it.source)
+                            }
+                        }
+
+                        argument("targets", EntityArgument.entities()) {
+                            argument("pos", BlockPosArgument.blockPos()) {
+                                executes {
+                                    val entities = EntityArgument.getEntities(it, "targets")
+                                    val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                    val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                                    teleportSafe(entities, pos, it.source.level, spawnRadius, it.source)
+                                }
+
+                                argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                    executes {
+                                        val entities = EntityArgument.getEntities(it, "targets")
+                                        val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                        val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                        teleportSafe(entities, pos, it.source.level, spawnRadius, it.source)
+                                    }
+                                }
                             }
                         }
                     }
 
-                    argument("targets", EntityArgument.entities()) {
+                    uuidArg {
                         argument("pos", BlockPosArgument.blockPos()) {
                             executes {
-                                val entities = EntityArgument.getEntities(it, "targets")
+                                val player = it.source.playerOrException
+                                val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                                teleportSafe(player, pos, uuid, spawnRadius, it.source)
+                            }
+
+                            argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                executes {
+                                    val player = it.source.playerOrException
+                                    val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                    teleportSafe(player, pos, uuid, spawnRadius, it.source)
+                                }
+                            }
+                        }
+
+                        argument("targets", EntityArgument.entities()) {
+                            argument("pos", BlockPosArgument.blockPos()) {
+                                executes {
+                                    val entities = EntityArgument.getEntities(it, "targets")
+                                    val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                                    teleportSafe(entities, pos, uuid, spawnRadius, it.source)
+                                }
+
+                                argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                    executes {
+                                        val entities = EntityArgument.getEntities(it, "targets")
+                                        val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                        teleportSafe(entities, pos, uuid, spawnRadius, it.source)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    argument("dimension", DimensionArgument.dimension()) {
+                        argument("pos", BlockPosArgument.blockPos()) {
+                            executes {
+                                val player = it.source.playerOrException
                                 val pos = BlockPosArgument.getBlockPos(it, "pos")
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 val spawnRadius = it.source.server.getSpawnRadius(level)
-                                teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                teleportSafe(player, pos, level, spawnRadius, it.source)
+                            }
+
+                            argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                executes {
+                                    val player = it.source.playerOrException
+                                    val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                    val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    teleportSafe(player, pos, level, spawnRadius, it.source)
+                                }
+                            }
+                        }
+
+                        argument("targets", EntityArgument.entities()) {
+                            argument("pos", BlockPosArgument.blockPos()) {
+                                executes {
+                                    val entities = EntityArgument.getEntities(it, "targets")
+                                    val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    val spawnRadius = it.source.server.getSpawnRadius(level)
+                                    teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                }
+
+                                argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                    executes {
+                                        val entities = EntityArgument.getEntities(it, "targets")
+                                        val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                        val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                        val level = DimensionArgument.getDimension(it, "dimension")
+                                        teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                literal("spawn") {
+                    requires { it.hasPermission(2) }
+
+                    executes {
+                        val player = it.source.playerOrException
+                        val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                        teleportSpawn(player, it.source.level, spawnRadius, it.source)
+                    }
+
+                    argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                        executes {
+                            val player = it.source.playerOrException
+                            val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                            teleportSpawn(player, it.source.level, spawnRadius, it.source)
+                        }
+                    }
+
+                    argument("targets", EntityArgument.entities()) {
+                        executes {
+                            val entities = EntityArgument.getEntities(it, "targets")
+                            val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                            teleportSpawn(entities, it.source.level, spawnRadius, it.source)
+                        }
+
+                        argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                            executes {
+                                val entities = EntityArgument.getEntities(it, "targets")
+                                val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                teleportSpawn(entities, it.source.level, spawnRadius, it.source)
+                            }
+                        }
+                    }
+
+                    uuidArg {
+                        executes {
+                            val player = it.source.playerOrException
+                            val uuid = UuidArgument.getUuid(it, "uuid")
+                            val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                            teleportSpawn(player, uuid, spawnRadius, it.source)
+                        }
+
+                        argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                            executes {
+                                val player = it.source.playerOrException
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                teleportSpawn(player, uuid, spawnRadius, it.source)
+                            }
+                        }
+
+                        argument("targets", EntityArgument.entities()) {
+                            executes {
+                                val entities = EntityArgument.getEntities(it, "targets")
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                                teleportSpawn(entities, uuid, spawnRadius, it.source)
                             }
 
                             argument("spawn-radius", IntegerArgumentType.integer(1)) {
                                 executes {
                                     val entities = EntityArgument.getEntities(it, "targets")
-                                    val pos = BlockPosArgument.getBlockPos(it, "pos")
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
                                     val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                                    val level = DimensionArgument.getDimension(it, "dimension")
-                                    teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                    teleportSpawn(entities, uuid, spawnRadius, it.source)
                                 }
                             }
                         }
                     }
-                }
 
-                argument("pos", BlockPosArgument.blockPos()) {
-                    executes {
-                        val player = it.source.playerOrException
-                        val pos = BlockPosArgument.getBlockPos(it, "pos")
-                        val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
-                        teleportSafe(player, pos, THIS, spawnRadius, it.source)
-                    }
-
-                    argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                    argument("dimension", DimensionArgument.dimension()) {
                         executes {
                             val player = it.source.playerOrException
-                            val pos = BlockPosArgument.getBlockPos(it, "pos")
-                            val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                            teleportSafe(player, pos, THIS, spawnRadius, it.source)
+                            val level = DimensionArgument.getDimension(it, "dimension")
+                            val spawnRadius = it.source.server.getSpawnRadius(level)
+                            teleportSpawn(player, level, spawnRadius, it.source)
                         }
-                    }
 
-                    argument("targets", EntityArgument.entities()) {
-                        argument("pos", BlockPosArgument.blockPos()) {
+                        argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                            executes {
+                                val player = it.source.playerOrException
+                                val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                val level = DimensionArgument.getDimension(it, "dimension")
+                                teleportSpawn(player, level, spawnRadius, it.source)
+                            }
+                        }
+
+                        argument("targets", EntityArgument.entities()) {
                             executes {
                                 val entities = EntityArgument.getEntities(it, "targets")
-                                val pos = BlockPosArgument.getBlockPos(it, "pos")
-                                val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
-                                teleportSafe(entities, pos, THIS, spawnRadius, it.source)
+                                val level = DimensionArgument.getDimension(it, "dimension")
+                                val spawnRadius = it.source.server.getSpawnRadius(level)
+                                teleportSpawn(entities, level, spawnRadius, it.source)
                             }
 
                             argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                executes { context ->
-                                    val entities = EntityArgument.getEntities(context, "targets")
-                                    val pos = BlockPosArgument.getBlockPos(context, "pos")
-                                    val spawnRadius = IntegerArgumentType.getInteger(context, "spawn-radius")
-                                    teleportSafe(entities, pos, THIS, spawnRadius, context.source)
+                                executes {
+                                    val entities = EntityArgument.getEntities(it, "targets")
+                                    val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    teleportSpawn(entities, level, spawnRadius, it.source)
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            literal("tp-spawn") {
-                requires { it.hasPermission(2) }
+                literal("enter") {
+                    requires { it.hasPermission(2) }
 
-                executes {
-                    val player = it.source.playerOrException
-                    val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
-                    teleportSpawn(player, THIS, spawnRadius, it.source)
-                }
-
-                allDimsArg {
-                    executes {
-                        val player = it.source.playerOrException
-                        val uuid = StringArgumentType.getString(it, "uuid")
-                        val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
-                        teleportSpawn(player, uuid, spawnRadius, it.source)
-                    }
-
-                    argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                    uuidArg {
                         executes {
                             val player = it.source.playerOrException
-                            val uuid = StringArgumentType.getString(it, "uuid")
-                            val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                            teleportSpawn(player, uuid, spawnRadius, it.source)
-                        }
-                    }
-
-                    argument("targets", EntityArgument.entities()) {
-                        executes {
-                            val entities = EntityArgument.getEntities(it, "targets")
-                            val uuid = StringArgumentType.getString(it, "uuid")
-                            val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
-                            teleportSpawn(entities, uuid, spawnRadius, it.source)
+                            val uuid = UuidArgument.getUuid(it, "uuid")
+                            teleportEnter(player, uuid, it.source)
                         }
 
-                        argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                        argument("targets", EntityArgument.entities()) {
                             executes {
                                 val entities = EntityArgument.getEntities(it, "targets")
-                                val uuid = StringArgumentType.getString(it, "uuid")
-                                val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                                teleportSpawn(entities, uuid, spawnRadius, it.source)
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                teleportEnter(entities, uuid, it.source)
                             }
-                        }
-                    }
-                }
-
-                argument("dimension", DimensionArgument.dimension()) {
-                    executes {
-                        val player = it.source.playerOrException
-                        val level = DimensionArgument.getDimension(it, "dimension")
-                        val spawnRadius = it.source.server.getSpawnRadius(level)
-                        teleportSpawn(player, level, spawnRadius, it.source)
-                    }
-
-                    argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                        executes {
-                            val player = it.source.playerOrException
-                            val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                            val level = DimensionArgument.getDimension(it, "dimension")
-                            teleportSpawn(player, level, spawnRadius, it.source)
-                        }
-                    }
-
-                    argument("targets", EntityArgument.entities()) {
-                        executes {
-                            val entities = EntityArgument.getEntities(it, "targets")
-                            val level = DimensionArgument.getDimension(it, "dimension")
-                            val spawnRadius = it.source.server.getSpawnRadius(level)
-                            teleportSpawn(entities, level, spawnRadius, it.source)
-                        }
-
-                        argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                            executes {
-                                val entities = EntityArgument.getEntities(it, "targets")
-                                val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                                val level = DimensionArgument.getDimension(it, "dimension")
-                                teleportSpawn(entities, level, spawnRadius, it.source)
-                            }
-                        }
-                    }
-                }
-
-                argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                    executes {
-                        val player = it.source.playerOrException
-                        val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
-                        teleportSpawn(player, THIS, spawnRadius, it.source)
-                    }
-                }
-
-                argument("targets", EntityArgument.entities()) {
-                    executes { context ->
-                        val entities = EntityArgument.getEntities(context, "targets")
-                        val spawnRadius = context.source.server.getSpawnRadius(context.source.level)
-                        teleportSpawn(entities, THIS, spawnRadius, context.source)
-                    }
-
-                    argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                        executes { context ->
-                            val entities = EntityArgument.getEntities(context, "targets")
-                            val spawnRadius = IntegerArgumentType.getInteger(context, "spawn-radius")
-                            teleportSpawn(entities, THIS, spawnRadius, context.source)
-                        }
-                    }
-                }
-            }
-
-            literal("tp-enter") {
-                requires { it.hasPermission(2) }
-
-                uuidArg {
-                    executes {
-                        val player = it.source.playerOrException
-                        val uuid = StringArgumentType.getString(it, "uuid")
-                        teleportEnter(player, uuid, it.source)
-                    }
-
-                    argument("targets", EntityArgument.entities()) {
-                        executes {
-                            val entities = EntityArgument.getEntities(it, "targets")
-                            val uuid = StringArgumentType.getString(it, "uuid")
-                            teleportEnter(entities, uuid, it.source)
                         }
                     }
                 }
@@ -396,22 +392,22 @@ object ChestDimCommand {
 
                 executes { context ->
                     val player = context.source.playerOrException
-                    giveChest(player, THIS, context.source)
+                    giveChest(player, context.source)
                 }
 
                 uuidArg {
                     executes {
                         val player = it.source.playerOrException
-                        val uuid = StringArgumentType.getString(it, "uuid")
-                        giveChest(player, uuid, it.source)
+                        val uuid = UuidArgument.getUuid(it, "uuid")
+                        giveChest(player, uuid)
                     }
 
                     argument("player", EntityArgument.player()) {
                         executes {
                             val player = EntityArgument.getPlayer(it, "player")
                                 ?: throw CommandSourceStack.ERROR_NOT_PLAYER.create()
-                            val uuid = StringArgumentType.getString(it, "uuid")
-                            giveChest(player, uuid, it.source)
+                            val uuid = UuidArgument.getUuid(it, "uuid")
+                            giveChest(player, uuid)
                         }
                     }
                 }
@@ -420,7 +416,7 @@ object ChestDimCommand {
                     executes {
                         val player =
                             EntityArgument.getPlayer(it, "player") ?: throw CommandSourceStack.ERROR_NOT_PLAYER.create()
-                        giveChest(player, THIS, it.source)
+                        giveChest(player, it.source)
                     }
                 }
             }
@@ -431,32 +427,32 @@ object ChestDimCommand {
                 literal("set") {
                     literal("day") {
                         executes {
-                            setTime(THIS, it.getSource(), 1000)
+                            setTime(it.source.level, it.source, 1000)
                         }
                     }
 
                     literal("noon") {
                         executes {
-                            setTime(THIS, it.getSource(), 6000)
+                            setTime(it.source.level, it.source, 6000)
                         }
                     }
 
                     literal("night") {
                         executes {
-                            setTime(THIS, it.getSource(), 13000)
+                            setTime(it.source.level, it.source, 13000)
                         }
                     }
 
                     literal("midnight") {
                         executes {
-                            setTime(THIS, it.getSource(), 18000)
+                            setTime(it.source.level, it.source, 18000)
                         }
                     }
 
                     argument("time", TimeArgument.time()) {
                         executes {
                             val time = IntegerArgumentType.getInteger(it, "time")
-                            setTime(THIS, it.getSource(), time)
+                            setTime(it.source.level, it.source, time)
                         }
                     }
                 }
@@ -465,7 +461,7 @@ object ChestDimCommand {
                     argument("time", TimeArgument.time()) {
                         executes {
                             val time = IntegerArgumentType.getInteger(it, "time")
-                            addTime(THIS, it.getSource(), time)
+                            addTime(it.source.level, it.source, time)
                         }
                     }
                 }
@@ -473,73 +469,58 @@ object ChestDimCommand {
                 literal("query") {
                     literal("daytime") {
                         executes {
-                            val level = getLevel(it.source, THIS)
-                            if (level == null) {
-                                it.source.sendFailure(Component.literal("UUID is not valid."))
-                                return@executes 0
-                            }
-                            queryTime(it.getSource(), getDayTime(level))
+                            queryTime(it.source, getDayTime(it.source.level))
                         }
                     }
 
                     literal("gametime") {
                         executes {
-                            val level = getLevel(it.source, THIS)
-                            if (level == null) {
-                                it.source.sendFailure(Component.literal("UUID is not valid."))
-                                return@executes 0
-                            }
-                            queryTime(it.getSource(), (level.gameTime % 2147483647L).toInt())
+                            queryTime(it.source, (it.source.level.gameTime % 2147483647L).toInt())
                         }
                     }
 
                     literal("day") {
                         executes {
-                            val level = getLevel(it.source, THIS)
-                            if (level == null) {
-                                it.source.sendFailure(Component.literal("UUID is not valid."))
-                                return@executes 0
-                            }
-                            queryTime(it.getSource(), (level.dayTime / 24000L % 2147483647L).toInt())
+                            queryTime(it.source, (it.source.level.dayTime / 24000L % 2147483647L).toInt())
                         }
                     }
                 }
 
-                allDimsWithAllArg {
+                uuidArg {
                     literal("set") {
                         literal("day") {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                setTime(uuidString, it.getSource(), 1000)
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setTime(uuid, it.source, 1000)
                             }
                         }
 
                         literal("noon") {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                setTime(uuidString, it.getSource(), 6000)
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setTime(uuid, it.source, 6000)
                             }
                         }
 
                         literal("night") {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                setTime(uuidString, it.getSource(), 13000)
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setTime(uuid, it.source, 13000)
                             }
                         }
 
                         literal("midnight") {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                setTime(uuidString, it.getSource(), 18000)
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setTime(uuid, it.source, 18000)
                             }
                         }
 
                         argument("time", TimeArgument.time()) {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
+                                val uuid = UuidArgument.getUuid(it, "uuid")
                                 val time = IntegerArgumentType.getInteger(it, "time")
-                                setTime(uuidString, it.getSource(), time)
+                                setTime(uuid, it.source, time)
                             }
                         }
                     }
@@ -547,9 +528,9 @@ object ChestDimCommand {
                     literal("add") {
                         argument("time", TimeArgument.time()) {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
+                                val uuid = UuidArgument.getUuid(it, "uuid")
                                 val time = IntegerArgumentType.getInteger(it, "time")
-                                addTime(uuidString, it.getSource(), time)
+                                addTime(uuid, it.source, time)
                             }
                         }
                     }
@@ -557,37 +538,25 @@ object ChestDimCommand {
                     literal("query") {
                         literal("daytime") {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                val level = getLevel(it.source, uuidString)
-                                if (level == null) {
-                                    it.source.sendFailure(Component.literal("UUID is not valid."))
-                                    return@executes 0
-                                }
-                                queryTime(it.getSource(), getDayTime(level))
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                val level = getLevel(it.source, uuid)
+                                queryTime(it.source, getDayTime(level))
                             }
                         }
 
                         literal("gametime") {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                val level = getLevel(it.source, uuidString)
-                                if (level == null) {
-                                    it.source.sendFailure(Component.literal("UUID is not valid."))
-                                    return@executes 0
-                                }
-                                queryTime(it.getSource(), (level.gameTime % 2147483647L).toInt())
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                val level = getLevel(it.source, uuid)
+                                queryTime(it.source, (level.gameTime % 2147483647L).toInt())
                             }
                         }
 
                         literal("day") {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                val level = getLevel(it.source, uuidString)
-                                if (level == null) {
-                                    it.source.sendFailure(Component.literal("UUID is not valid."))
-                                    return@executes 0
-                                }
-                                queryTime(it.getSource(), (level.dayTime / 24000L % 2147483647L).toInt())
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                val level = getLevel(it.source, uuid)
+                                queryTime(it.source, (level.dayTime / 24000L % 2147483647L).toInt())
                             }
                         }
                     }
@@ -598,28 +567,28 @@ object ChestDimCommand {
                         literal("day") {
                             executes {
                                 val level = DimensionArgument.getDimension(it, "dimension")
-                                setTime(level, it.getSource(), 1000)
+                                setTime(level, it.source, 1000)
                             }
                         }
 
                         literal("noon") {
                             executes {
                                 val level = DimensionArgument.getDimension(it, "dimension")
-                                setTime(level, it.getSource(), 6000)
+                                setTime(level, it.source, 6000)
                             }
                         }
 
                         literal("night") {
                             executes {
                                 val level = DimensionArgument.getDimension(it, "dimension")
-                                setTime(level, it.getSource(), 13000)
+                                setTime(level, it.source, 13000)
                             }
                         }
 
                         literal("midnight") {
                             executes {
                                 val level = DimensionArgument.getDimension(it, "dimension")
-                                setTime(level, it.getSource(), 18000)
+                                setTime(level, it.source, 18000)
                             }
                         }
 
@@ -627,7 +596,7 @@ object ChestDimCommand {
                             executes {
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 val time = IntegerArgumentType.getInteger(it, "time")
-                                setTime(level, it.getSource(), time)
+                                setTime(level, it.source, time)
                             }
                         }
                     }
@@ -637,7 +606,7 @@ object ChestDimCommand {
                             executes {
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 val time = IntegerArgumentType.getInteger(it, "time")
-                                addTime(level, it.getSource(), time)
+                                addTime(level, it.source, time)
                             }
                         }
                     }
@@ -646,21 +615,65 @@ object ChestDimCommand {
                         literal("daytime") {
                             executes {
                                 val level = DimensionArgument.getDimension(it, "dimension")
-                                queryTime(it.getSource(), getDayTime(level))
+                                queryTime(it.source, getDayTime(level))
                             }
                         }
 
                         literal("gametime") {
                             executes {
                                 val level = DimensionArgument.getDimension(it, "dimension")
-                                queryTime(it.getSource(), (level.gameTime % 2147483647L).toInt())
+                                queryTime(it.source, (level.gameTime % 2147483647L).toInt())
                             }
                         }
 
                         literal("day") {
                             executes {
                                 val level = DimensionArgument.getDimension(it, "dimension")
-                                queryTime(it.getSource(), (level.dayTime / 24000L % 2147483647L).toInt())
+                                queryTime(it.source, (level.dayTime / 24000L % 2147483647L).toInt())
+                            }
+                        }
+                    }
+                }
+
+                literal("all") {
+                    literal("set") {
+                        literal("day") {
+                            executes {
+                                setTime(it.source, 1000)
+                            }
+                        }
+
+                        literal("noon") {
+                            executes {
+                                setTime(it.source, 6000)
+                            }
+                        }
+
+                        literal("night") {
+                            executes {
+                                setTime(it.source, 13000)
+                            }
+                        }
+
+                        literal("midnight") {
+                            executes {
+                                setTime(it.source, 18000)
+                            }
+                        }
+
+                        argument("time", TimeArgument.time()) {
+                            executes {
+                                val time = IntegerArgumentType.getInteger(it, "time")
+                                setTime(it.source, time)
+                            }
+                        }
+                    }
+
+                    literal("add") {
+                        argument("time", TimeArgument.time()) {
+                            executes {
+                                val time = IntegerArgumentType.getInteger(it, "time")
+                                addTime(it.source, time)
                             }
                         }
                     }
@@ -672,67 +685,79 @@ object ChestDimCommand {
 
                 literal("clear") {
                     executes {
-                        setClear(THIS, it.source, -1)
+                        setClear(it.source.level, it.source, -1)
                     }
 
                     argument("duration", TimeArgument.time(1)) {
                         executes {
-                            setClear(THIS, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                            setClear(it.source.level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                         }
                     }
                 }
 
                 literal("rain") {
                     executes {
-                        setRain(THIS, it.source, -1)
+                        setRain(it.source.level, it.source, -1)
                     }
 
                     argument("duration", TimeArgument.time(1)) {
                         executes {
-                            setRain(THIS, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                            setRain(it.source.level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                         }
                     }
                 }
 
-                allDimsWithAllArg {
+                literal("thunder") {
+                    executes {
+                        setThunder(it.source.level, it.source, -1)
+                    }
+
+                    argument("duration", TimeArgument.time(1)) {
+                        executes {
+                            setThunder(it.source.level, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                        }
+                    }
+                }
+
+                uuidArg {
                     literal("clear") {
                         executes {
-                            val uuidString = StringArgumentType.getString(it, "uuid")
-                            setClear(uuidString, it.source, -1)
+                            val uuid = UuidArgument.getUuid(it, "uuid")
+                            setClear(uuid, it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                setClear(uuidString, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setClear(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
                         }
                     }
 
                     literal("rain") {
                         executes {
-                            val uuidString = StringArgumentType.getString(it, "uuid")
-                            setRain(uuidString, it.source, -1)
+                            val uuid = UuidArgument.getUuid(it, "uuid")
+                            setRain(uuid, it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                setRain(uuidString, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setRain(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
                         }
                     }
 
                     literal("thunder") {
                         executes {
-                            val uuidString = StringArgumentType.getString(it, "uuid")
-                            setThunder(uuidString, it.source, -1)
+                            val uuid = UuidArgument.getUuid(it, "uuid")
+                            setThunder(uuid, it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
                             executes {
-                                val uuidString = StringArgumentType.getString(it, "uuid")
-                                setThunder(uuidString, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setThunder(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
                         }
                     }
@@ -781,19 +806,43 @@ object ChestDimCommand {
                         }
                     }
                 }
-            }
 
-            literal("weather") {
-                requires { it.hasPermission(2) }
+                literal("all") {
+                    literal("clear") {
+                        executes {
+                            setClear(it.source, -1)
+                        }
 
-                literal("thunder") {
-                    executes {
-                        setThunder(THIS, it.source, -1)
+                        argument("duration", TimeArgument.time(1)) {
+                            executes {
+                                setClear(it.source, IntegerArgumentType.getInteger(it, "duration"))
+                            }
+                        }
                     }
 
-                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
-                        setThunder(THIS, it.source, IntegerArgumentType.getInteger(it, "duration"))
-                    })
+                    literal("rain") {
+                        executes {
+                            setRain(it.source, -1)
+                        }
+
+                        argument("duration", TimeArgument.time(1)) {
+                            executes {
+                                setRain(it.source, IntegerArgumentType.getInteger(it, "duration"))
+                            }
+                        }
+                    }
+
+                    literal("thunder") {
+                        executes {
+                            setThunder(it.source, -1)
+                        }
+
+                        argument("duration", TimeArgument.time(1)) {
+                            executes {
+                                setThunder(it.source, IntegerArgumentType.getInteger(it, "duration"))
+                            }
+                        }
+                    }
                 }
             }
 
@@ -937,28 +986,14 @@ object ChestDimCommand {
         return String.format(Locale.ROOT, "%f", value)
     }
 
-    private fun getLevel(source: CommandSourceStack, dimension: String, onlyChestDim: Boolean = false): ServerLevel? {
-        if (dimension == THIS) return source.level
+    private fun getLevel(source: CommandSourceStack, dimension: UUID): ServerLevel =
+        ChestLevelManager.getOrCreate(source.server, dimension)
 
-        runCatching { UUID.fromString(dimension) }.getOrNull()?.let { uuid ->
-            return ChestLevelManager.getOrCreate(source.server, uuid)
-        }
+    private fun teleport(entity: Entity, pos: Vec3, uuid: UUID, source: CommandSourceStack): Int =
+        teleport(setOf(entity), pos, uuid, source)
 
-        if (onlyChestDim) return null
-
-        val id = ResourceLocation.tryParse(dimension.replace("\"", "")) ?: return null
-        return source.server.getLevel(ResourceKey.create(Registries.DIMENSION, id))
-    }
-
-    private fun teleport(entity: Entity, pos: Vec3, uuidString: String, source: CommandSourceStack): Int =
-        teleport(setOf(entity), pos, uuidString, source)
-
-    private fun teleport(entities: Collection<Entity>, pos: Vec3, uuidString: String, source: CommandSourceStack): Int {
-        val level = getLevel(source, uuidString)
-        if (level == null) {
-            source.sendFailure(Component.literal("UUID is not valid."))
-            return 0
-        }
+    private fun teleport(entities: Collection<Entity>, pos: Vec3, uuid: UUID, source: CommandSourceStack): Int {
+        val level = getLevel(source, uuid)
         return teleport(entities, pos, level, source)
     }
 
@@ -995,23 +1030,19 @@ object ChestDimCommand {
     private fun teleportSafe(
         entity: Entity,
         pos: BlockPos,
-        uuidString: String,
+        uuid: UUID,
         spawnRadius: Int,
         source: CommandSourceStack
-    ): Int = teleportSafe(setOf(entity), pos, uuidString, spawnRadius, source)
+    ): Int = teleportSafe(setOf(entity), pos, uuid, spawnRadius, source)
 
     private fun teleportSafe(
         entities: Collection<Entity>,
         pos: BlockPos,
-        uuidString: String,
+        uuid: UUID,
         spawnRadius: Int,
         source: CommandSourceStack
     ): Int {
-        val level = getLevel(source, uuidString)
-        if (level == null) {
-            source.sendFailure(Component.literal("UUID is not valid."))
-            return 0
-        }
+        val level = getLevel(source, uuid)
         return teleportSafe(entities, pos, level, spawnRadius, source)
     }
 
@@ -1061,22 +1092,18 @@ object ChestDimCommand {
 
     private fun teleportSpawn(
         entity: Entity,
-        uuidString: String,
+        uuid: UUID,
         spawnRadius: Int,
         source: CommandSourceStack
-    ): Int = teleportSpawn(setOf(entity), uuidString, spawnRadius, source)
+    ): Int = teleportSpawn(setOf(entity), uuid, spawnRadius, source)
 
     private fun teleportSpawn(
         entities: Collection<Entity>,
-        uuidString: String,
+        uuid: UUID,
         spawnRadius: Int,
         source: CommandSourceStack
     ): Int {
-        val level = getLevel(source, uuidString)
-        if (level == null) {
-            source.sendFailure(Component.literal("UUID is not valid."))
-            return 0
-        }
+        val level = getLevel(source, uuid)
         return teleportSpawn(entities, level, spawnRadius, source)
     }
 
@@ -1122,43 +1149,29 @@ object ChestDimCommand {
         return 1
     }
 
-    private fun teleportEnter(entity: Entity, uuidString: String, source: CommandSourceStack): Int =
-        teleportEnter(setOf(entity), uuidString, source)
+    private fun teleportEnter(entity: Entity, uuid: UUID, source: CommandSourceStack): Int =
+        teleportEnter(setOf(entity), uuid, source)
 
-    private fun teleportEnter(entities: Collection<Entity>, uuidString: String, source: CommandSourceStack): Int {
-        val level = getLevel(source, uuidString, true)
-        if (level == null) {
-            source.sendFailure(Component.literal("UUID is not valid."))
-            return 0
-        }
+    private fun teleportEnter(entities: Collection<Entity>, uuid: UUID, source: CommandSourceStack): Int {
+        val level = getLevel(source, uuid)
         entities.forEach { entity ->
             ChestLevelManager.teleportEntityToEnter(level, entity)
         }
         return 1
     }
 
-    private fun giveChest(player: ServerPlayer, uuidString: String, source: CommandSourceStack): Int {
-        when (uuidString) {
-            THIS -> {
-                val uuid = ChestLevelManager.findUUIDByLevel(source.level)
-                if (uuid == null) {
-                    source.sendFailure(Component.literal("Can't find any UUID using this level."))
-                    return 0
-                }
-                player.addItem(createChestItem(uuid))
-                return 1
-            }
-
-            else -> {
-                val uuid = runCatching { UUID.fromString(uuidString) }.getOrElse {
-                    Constants.LOGGER.error(it.localizedMessage, it)
-                    source.sendFailure(Component.literal("UUID is not valid."))
-                    return 0
-                }
-                player.addItem(createChestItem(uuid))
-                return 1
-            }
+    private fun giveChest(player: ServerPlayer, source: CommandSourceStack): Int {
+        val uuid = ChestLevelManager.findUUIDByLevel(source.level)
+        if (uuid == null) {
+            source.sendFailure(Component.literal("Can't find any UUID using this level."))
+            return 0
         }
+        return giveChest(player, uuid)
+    }
+
+    private fun giveChest(player: ServerPlayer, uuid: UUID): Int {
+        player.addItem(createChestItem(uuid))
+        return 1
     }
 
     private fun createChestItem(uuid: UUID): ItemStack {
@@ -1178,24 +1191,16 @@ object ChestDimCommand {
         return time
     }
 
-    private fun setTime(uuidString: String, source: CommandSourceStack, time: Int): Int {
-        when (uuidString) {
-            ALL -> {
-                for (serverLevel in source.server.allLevels) serverLevel.dayTime = time.toLong()
+    private fun setTime(source: CommandSourceStack, time: Int): Int {
+        for (serverLevel in source.server.allLevels) serverLevel.dayTime = time.toLong()
 
-                source.sendSuccess({ Component.translatable("commands.time.set", time) }, true)
-                return getDayTime(source.level)
-            }
+        source.sendSuccess({ Component.translatable("commands.time.set", time) }, true)
+        return getDayTime(source.level)
+    }
 
-            else -> {
-                val level = getLevel(source, uuidString)
-                if (level == null) {
-                    source.sendFailure(Component.literal("UUID is not valid."))
-                    return 0
-                }
-                return setTime(level, source, time)
-            }
-        }
+    private fun setTime(uuid: UUID, source: CommandSourceStack, time: Int): Int {
+        val level = getLevel(source, uuid)
+        return setTime(level, source, time)
     }
 
     private fun setTime(level: ServerLevel, source: CommandSourceStack, time: Int): Int {
@@ -1204,25 +1209,17 @@ object ChestDimCommand {
         return getDayTime(level)
     }
 
-    private fun addTime(uuidString: String, source: CommandSourceStack, amount: Int): Int {
-        when (uuidString) {
-            ALL -> {
-                for (serverLevel in source.server.allLevels) serverLevel.dayTime += amount.toLong()
+    private fun addTime(source: CommandSourceStack, amount: Int): Int {
+        for (serverLevel in source.server.allLevels) serverLevel.dayTime += amount.toLong()
 
-                val i = getDayTime(source.level)
-                source.sendSuccess({ Component.translatable("commands.time.set", i) }, true)
-                return i
-            }
+        val i = getDayTime(source.level)
+        source.sendSuccess({ Component.translatable("commands.time.set", i) }, true)
+        return i
+    }
 
-            else -> {
-                val level = getLevel(source, uuidString)
-                if (level == null) {
-                    source.sendFailure(Component.literal("UUID is not valid."))
-                    return 0
-                }
-                return addTime(level, source, amount)
-            }
-        }
+    private fun addTime(uuid: UUID, source: CommandSourceStack, amount: Int): Int {
+        val level = getLevel(source, uuid)
+        return addTime(level, source, amount)
     }
 
     private fun addTime(level: ServerLevel, source: CommandSourceStack, amount: Int): Int {
@@ -1236,30 +1233,22 @@ object ChestDimCommand {
         return if (time == -1) timeProvider.sample(level.getRandom()) else time
     }
 
-    private fun setClear(uuidString: String, source: CommandSourceStack, time: Int): Int {
-        when (uuidString) {
-            ALL -> {
-                for (serverLevel in source.server.allLevels) serverLevel.setWeatherParameters(
-                    getDuration(
-                        serverLevel,
-                        time,
-                        ServerLevel.RAIN_DELAY
-                    ), 0, false, false
-                )
+    private fun setClear(source: CommandSourceStack, time: Int): Int {
+        for (serverLevel in source.server.allLevels) serverLevel.setWeatherParameters(
+            getDuration(
+                serverLevel,
+                time,
+                ServerLevel.RAIN_DELAY
+            ), 0, false, false
+        )
 
-                source.sendSuccess({ Component.translatable("commands.weather.set.clear") }, true)
-                return time
-            }
+        source.sendSuccess({ Component.translatable("commands.weather.set.clear") }, true)
+        return time
+    }
 
-            else -> {
-                val level = getLevel(source, uuidString)
-                if (level == null) {
-                    source.sendFailure(Component.literal("UUID is not valid."))
-                    return 0
-                }
-                return setClear(level, source, time)
-            }
-        }
+    private fun setClear(uuid: UUID, source: CommandSourceStack, time: Int): Int {
+        val level = getLevel(source, uuid)
+        return setClear(level, source, time)
     }
 
     private fun setClear(level: ServerLevel, source: CommandSourceStack, time: Int): Int {
@@ -1268,29 +1257,21 @@ object ChestDimCommand {
         return time
     }
 
-    private fun setRain(uuidString: String, source: CommandSourceStack, time: Int): Int {
-        when (uuidString) {
-            ALL -> {
-                for (serverLevel in source.server.allLevels) serverLevel.setWeatherParameters(
-                    0,
-                    getDuration(serverLevel, time, ServerLevel.RAIN_DURATION),
-                    true,
-                    false
-                )
+    private fun setRain(source: CommandSourceStack, time: Int): Int {
+        for (serverLevel in source.server.allLevels) serverLevel.setWeatherParameters(
+            0,
+            getDuration(serverLevel, time, ServerLevel.RAIN_DURATION),
+            true,
+            false
+        )
 
-                source.sendSuccess({ Component.translatable("commands.weather.set.rain") }, true)
-                return time
-            }
+        source.sendSuccess({ Component.translatable("commands.weather.set.rain") }, true)
+        return time
+    }
 
-            else -> {
-                val level = getLevel(source, uuidString)
-                if (level == null) {
-                    source.sendFailure(Component.literal("UUID is not valid."))
-                    return 0
-                }
-                return setRain(level, source, time)
-            }
-        }
+    private fun setRain(uuid: UUID, source: CommandSourceStack, time: Int): Int {
+        val level = getLevel(source, uuid)
+        return setRain(level, source, time)
     }
 
     private fun setRain(level: ServerLevel, source: CommandSourceStack, time: Int): Int {
@@ -1299,29 +1280,21 @@ object ChestDimCommand {
         return time
     }
 
-    private fun setThunder(uuidString: String, source: CommandSourceStack, time: Int): Int {
-        when (uuidString) {
-            ALL -> {
-                for (serverLevel in source.server.allLevels) serverLevel.setWeatherParameters(
-                    0,
-                    getDuration(serverLevel, time, ServerLevel.THUNDER_DURATION),
-                    true,
-                    true
-                )
+    private fun setThunder(source: CommandSourceStack, time: Int): Int {
+        for (serverLevel in source.server.allLevels) serverLevel.setWeatherParameters(
+            0,
+            getDuration(serverLevel, time, ServerLevel.THUNDER_DURATION),
+            true,
+            true
+        )
 
-                source.sendSuccess({ Component.translatable("commands.weather.set.thunder") }, true)
-                return time
-            }
+        source.sendSuccess({ Component.translatable("commands.weather.set.thunder") }, true)
+        return time
+    }
 
-            else -> {
-                val level = getLevel(source, uuidString)
-                if (level == null) {
-                    source.sendFailure(Component.literal("UUID is not valid."))
-                    return 0
-                }
-                return setThunder(level, source, time)
-            }
-        }
+    private fun setThunder(uuid: UUID, source: CommandSourceStack, time: Int): Int {
+        val level = getLevel(source, uuid)
+        return setThunder(level, source, time)
     }
 
     private fun setThunder(level: ServerLevel, source: CommandSourceStack, time: Int): Int {
@@ -1338,6 +1311,7 @@ object ChestDimCommand {
         damageType: DamageSource
     ): Int {
         var count = 0
+        // TODO: Better message
         targets.forEach {
             if (!it.hurt(damageType, amount)) return@forEach
             source.sendSuccess({ Component.translatable("commands.damage.success", amount, it.displayName) }, true)
