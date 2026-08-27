@@ -10,6 +10,7 @@ import io.github.ykysnk.chestdimension.extensions.*
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
+import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.DimensionArgument
@@ -40,7 +41,11 @@ object ChestDimCommand {
     private const val ALL = "all"
 
     @Suppress("SpellCheckingInspection")
-    fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
+    fun register(
+        dispatcher: CommandDispatcher<CommandSourceStack>,
+        registryAccess: CommandBuildContext,
+        environment: Commands.CommandSelection
+    ) {
         Commands.literal("chestdim").apply {
             literal("create") {
                 requires { it.hasPermission(2) }

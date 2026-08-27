@@ -9,8 +9,8 @@ object ChestDimension : ModInitializer {
     override fun onInitialize() {
         ForceInitialize
 
-        CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
-            ChestDimCommand.register(dispatcher)
+        CommandRegistrationCallback.EVENT.register { dispatcher, registryAccess, environment ->
+            ChestDimCommand.register(dispatcher, registryAccess, environment)
         }
     }
 }
