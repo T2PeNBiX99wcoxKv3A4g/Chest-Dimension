@@ -217,6 +217,22 @@ object ChestDimCommand {
                 literal("safe") {
                     requires { it.hasPermission(2) }
 
+                    executes {
+                        val player = it.source.playerOrException
+                        val pos = BlockPos.containing(player.position())
+                        val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
+                        teleportSafe(player, pos, it.source.level, spawnRadius, it.source)
+                    }
+
+                    argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                        executes {
+                            val player = it.source.playerOrException
+                            val pos = BlockPos.containing(player.position())
+                            val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                            teleportSafe(player, pos, it.source.level, spawnRadius, it.source)
+                        }
+                    }
+
                     argument("pos", BlockPosArgument.blockPos()) {
                         executes {
                             val player = it.source.playerOrException
@@ -761,6 +777,60 @@ object ChestDimCommand {
                                 val entities = EntityArgument.getEntities(it, "targets")
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 teleportEnter(entities, uuid, it.source)
+                            }
+                        }
+                    }
+                }
+
+                literal("entity") {
+                    literal("direct") {
+                        argument("targets", EntityArgument.entities()) {
+                            argument("pos", EntityArgument.entities()) {
+                                executes {
+                                    val entities = EntityArgument.getEntities(it, "targets")
+                                    val posEntity = EntityArgument.getEntities(it, "pos").random()
+                                    if (posEntity == null) {
+                                        it.source.sendFailure(Component.literal("Position entity is not valid."))
+                                        return@executes 0
+                                    }
+                                    val level = (posEntity.level() as? ServerLevel) ?: it.source.level
+                                    val pos = posEntity.position()
+                                    teleport(entities, pos, level, it.source)
+                                }
+                            }
+                        }
+                    }
+
+                    literal("safe") {
+                        argument("targets", EntityArgument.entities()) {
+                            argument("pos", EntityArgument.entities()) {
+                                executes {
+                                    val entities = EntityArgument.getEntities(it, "targets")
+                                    val posEntity = EntityArgument.getEntities(it, "pos").random()
+                                    if (posEntity == null) {
+                                        it.source.sendFailure(Component.literal("Position entity is not valid."))
+                                        return@executes 0
+                                    }
+                                    val level = (posEntity.level() as? ServerLevel) ?: it.source.level
+                                    val pos = BlockPos.containing(posEntity.position())
+                                    val spawnRadius = it.source.server.getSpawnRadius(level)
+                                    teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                }
+
+                                argument("spawn-radius", IntegerArgumentType.integer(1)) {
+                                    executes {
+                                        val entities = EntityArgument.getEntities(it, "targets")
+                                        val posEntity = EntityArgument.getEntities(it, "pos").random()
+                                        if (posEntity == null) {
+                                            it.source.sendFailure(Component.literal("Position entity is not valid."))
+                                            return@executes 0
+                                        }
+                                        val level = (posEntity.level() as? ServerLevel) ?: it.source.level
+                                        val pos = BlockPos.containing(posEntity.position())
+                                        val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
+                                        teleportSafe(entities, pos, level, spawnRadius, it.source)
+                                    }
+                                }
                             }
                         }
                     }
