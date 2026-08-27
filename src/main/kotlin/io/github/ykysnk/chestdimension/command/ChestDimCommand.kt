@@ -1224,6 +1224,176 @@ object ChestDimCommand {
                         }
                     }
                 }
+
+                literal("chestdims") {
+                    uuidArg {
+                        literal("clear") {
+                            executes {
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setClear(uuid, it.source, -1)
+                            }
+
+                            argument("duration", TimeArgument.time(1)) {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setClear(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                }
+                            }
+                        }
+
+                        literal("rain") {
+                            executes {
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setRain(uuid, it.source, -1)
+                            }
+
+                            argument("duration", TimeArgument.time(1)) {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setRain(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                }
+                            }
+                        }
+
+                        literal("thunder") {
+                            executes {
+                                val uuid = UuidArgument.getUuid(it, "uuid")
+                                setThunder(uuid, it.source, -1)
+                            }
+
+                            argument("duration", TimeArgument.time(1)) {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setThunder(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                }
+                            }
+                        }
+                    }
+                }
+
+                literal("alldims") {
+                    literal("registry") {
+                        argument("dimension", DimensionArgument.dimension()) {
+                            literal("clear") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setClear(level, it.source, -1)
+                                }
+
+                                argument("duration", TimeArgument.time(1)) {
+                                    executes {
+                                        val level = DimensionArgument.getDimension(it, "dimension")
+                                        setClear(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                    }
+                                }
+                            }
+
+                            literal("rain") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setRain(level, it.source, -1)
+                                }
+
+                                argument("duration", TimeArgument.time(1)) {
+                                    executes {
+                                        val level = DimensionArgument.getDimension(it, "dimension")
+                                        setRain(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                    }
+                                }
+                            }
+
+                            literal("thunder") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setThunder(level, it.source, -1)
+                                }
+
+                                argument("duration", TimeArgument.time(1)) {
+                                    executes {
+                                        val level = DimensionArgument.getDimension(it, "dimension")
+                                        setThunder(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    literal("dynamic") {
+                        allDimsArg {
+                            literal("clear") {
+                                executes {
+                                    val dimension = StringArgumentType.getString(it, "dimension")
+                                    val level = getLevel(it.source, dimension)
+                                    if (level == null) {
+                                        it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                        return@executes 0
+                                    }
+                                    setClear(level, it.source, -1)
+                                }
+
+                                argument("duration", TimeArgument.time(1)) {
+                                    executes {
+                                        val dimension = StringArgumentType.getString(it, "dimension")
+                                        val level = getLevel(it.source, dimension)
+                                        if (level == null) {
+                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                            return@executes 0
+                                        }
+                                        setClear(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                    }
+                                }
+                            }
+
+                            literal("rain") {
+                                executes {
+                                    val dimension = StringArgumentType.getString(it, "dimension")
+                                    val level = getLevel(it.source, dimension)
+                                    if (level == null) {
+                                        it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                        return@executes 0
+                                    }
+                                    setRain(level, it.source, -1)
+                                }
+
+                                argument("duration", TimeArgument.time(1)) {
+                                    executes {
+                                        val dimension = StringArgumentType.getString(it, "dimension")
+                                        val level = getLevel(it.source, dimension)
+                                        if (level == null) {
+                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                            return@executes 0
+                                        }
+                                        setRain(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                    }
+                                }
+                            }
+
+                            literal("thunder") {
+                                executes {
+                                    val dimension = StringArgumentType.getString(it, "dimension")
+                                    val level = getLevel(it.source, dimension)
+                                    if (level == null) {
+                                        it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                        return@executes 0
+                                    }
+                                    setThunder(level, it.source, -1)
+                                }
+
+                                argument("duration", TimeArgument.time(1)) {
+                                    executes {
+                                        val dimension = StringArgumentType.getString(it, "dimension")
+                                        val level = getLevel(it.source, dimension)
+                                        if (level == null) {
+                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                            return@executes 0
+                                        }
+                                        setThunder(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             literal("damage") {
