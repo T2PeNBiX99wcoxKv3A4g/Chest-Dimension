@@ -67,6 +67,24 @@ object ChestDimCommand {
                 requires { it.hasPermission(2) }
 
                 literal("direct") {
+                    argument("pos", Vec3Argument.vec3()) {
+                        executes {
+                            val player = it.source.playerOrException
+                            val pos = Vec3Argument.getVec3(it, "pos")
+                            teleport(player, pos, it.source.level, it.source)
+                        }
+                    }
+
+                    argument("targets", EntityArgument.entities()) {
+                        argument("pos", Vec3Argument.vec3()) {
+                            executes {
+                                val entities = EntityArgument.getEntities(it, "targets")
+                                val pos = Vec3Argument.getVec3(it, "pos")
+                                teleport(entities, pos, it.source.level, it.source)
+                            }
+                        }
+                    }
+
                     uuidArg {
                         argument("pos", Vec3Argument.vec3()) {
                             executes {
@@ -111,20 +129,86 @@ object ChestDimCommand {
                         }
                     }
 
-                    argument("pos", Vec3Argument.vec3()) {
-                        executes {
-                            val player = it.source.playerOrException
-                            val pos = Vec3Argument.getVec3(it, "pos")
-                            teleport(player, pos, it.source.level, it.source)
+                    literal("chestdims") {
+                        uuidArg {
+                            argument("pos", Vec3Argument.vec3()) {
+                                executes {
+                                    val player = it.source.playerOrException
+                                    val pos = Vec3Argument.getVec3(it, "pos")
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    teleport(player, pos, uuid, it.source)
+                                }
+                            }
+
+                            argument("targets", EntityArgument.entities()) {
+                                argument("pos", Vec3Argument.vec3()) {
+                                    executes {
+                                        val entities = EntityArgument.getEntities(it, "targets")
+                                        val pos = Vec3Argument.getVec3(it, "pos")
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        teleport(entities, pos, uuid, it.source)
+                                    }
+                                }
+                            }
                         }
                     }
 
-                    argument("targets", EntityArgument.entities()) {
-                        argument("pos", Vec3Argument.vec3()) {
-                            executes {
-                                val entities = EntityArgument.getEntities(it, "targets")
-                                val pos = Vec3Argument.getVec3(it, "pos")
-                                teleport(entities, pos, it.source.level, it.source)
+                    literal("alldims") {
+                        literal("registry") {
+                            argument("dimension", DimensionArgument.dimension()) {
+                                argument("pos", Vec3Argument.vec3()) {
+                                    executes {
+                                        val player = it.source.playerOrException
+                                        val pos = Vec3Argument.getVec3(it, "pos")
+                                        val level = DimensionArgument.getDimension(it, "dimension")
+                                        teleport(player, pos, level, it.source)
+                                    }
+                                }
+
+                                argument("targets", EntityArgument.entities()) {
+                                    argument("pos", Vec3Argument.vec3()) {
+                                        executes {
+                                            val entities = EntityArgument.getEntities(it, "targets")
+                                            val pos = Vec3Argument.getVec3(it, "pos")
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            teleport(entities, pos, level, it.source)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        literal("dynamic") {
+                            allDimsArg {
+                                argument("pos", Vec3Argument.vec3()) {
+                                    executes {
+                                        val player = it.source.playerOrException
+                                        val pos = Vec3Argument.getVec3(it, "pos")
+                                        val dimension = StringArgumentType.getString(it, "dimension")
+                                        val level = getLevel(it.source, dimension)
+                                        if (level == null) {
+                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                            return@executes 0
+                                        }
+                                        teleport(player, pos, level, it.source)
+                                    }
+                                }
+
+                                argument("targets", EntityArgument.entities()) {
+                                    argument("pos", Vec3Argument.vec3()) {
+                                        executes {
+                                            val entities = EntityArgument.getEntities(it, "targets")
+                                            val pos = Vec3Argument.getVec3(it, "pos")
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            teleport(entities, pos, level, it.source)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
