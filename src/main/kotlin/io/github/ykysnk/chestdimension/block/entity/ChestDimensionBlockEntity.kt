@@ -21,6 +21,11 @@ import java.util.*
 class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
     BlockEntity(BlockEntityTypes.CHEST_DIMENSION, pos, blockState), LidBlockEntity {
     companion object {
+        private val damageSourceType: Holder.Reference<DamageType> by lazy {
+            Constants.Server.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
+                .getHolderOrThrow(DamageTypes.EXPLOSION_BY_CHEST)
+        }
+
         @Suppress("unused")
         fun lidAnimateTick(level: Level, pos: BlockPos, state: BlockState, blockEntity: ChestDimensionBlockEntity) {
             blockEntity.chestLidController.tickLid()
