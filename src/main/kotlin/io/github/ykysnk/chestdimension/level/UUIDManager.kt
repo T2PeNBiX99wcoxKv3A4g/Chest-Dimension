@@ -50,6 +50,11 @@ object UUIDManager {
         data.levels[uuid.toString()] = LevelData(seed)
     }
 
+    @Suppress("unused")
+    fun haveChestData(uuid: UUID): Boolean = data.levels[uuid.toString()]?.let {
+        return it.chestDimension != null && it.chestPos != null
+    } ?: false
+
     fun setChestData(uuid: UUID, key: ResourceKey<Level>, pos: BlockPos) {
         val uuidString = uuid.toString()
         data.levels[uuidString]?.let {
@@ -90,6 +95,9 @@ object UUIDManager {
         val data = data.levels[uuid.toString()] ?: return null
         return data.chestPos?.blockPos
     }
+
+    fun getExitChestDimensionKey(uuid: UUID): ResourceKey<Level>? =
+        data.levels[uuid.toString()]?.chestDimension?.resourceKey
 
     fun getExitChestDimension(uuid: UUID): ServerLevel? =
         data.levels[uuid.toString()]?.chestDimension?.resourceKey?.let(Constants.Server::getLevel)

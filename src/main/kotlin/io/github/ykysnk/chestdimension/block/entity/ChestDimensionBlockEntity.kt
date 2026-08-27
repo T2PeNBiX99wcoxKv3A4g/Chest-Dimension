@@ -4,13 +4,19 @@ import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
+import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.ChestLidController
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter
@@ -70,6 +76,9 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
     var uuid: UUID = UUIDManager.randomUUID()
         private set
 
+    var destroyByItSelf: Boolean = false
+        private set
+
     val playerCache: HashSet<Player> = HashSet()
 
     override fun triggerEvent(id: Int, type: Int): Boolean {
@@ -81,10 +90,37 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
     }
 
+    fun haveSameChest(): Boolean {
+        val exitDimKey = UUIDManager.getExitChestDimensionKey(uuid)
+        val exitPos = UUIDManager.getExitChestPosition(uuid)
+        return exitDimKey != null && exitPos != null && (exitDimKey != level?.dimension() || exitPos != blockPos)
+    }
+
+    private fun explodeItSelf(level: ServerLevel): Boolean {
+        if (!haveSameChest()) return false
+        val damageSourcePosition = blockPos.center
+        val damageSource = DamageSource(damageSourceType, damageSourcePosition)
+        destroyByItSelf = true
+        val drops = Block.getDrops(blockState, level, blockPos, this)
+        level.removeBlock(blockPos, false)
+        level.explode(
+            null,
+            damageSource,
+            null,
+            damageSourcePosition,
+            6f,
+            true,
+            Level.ExplosionInteraction.BLOCK
+        )
+        drops.forEach { Block.popResource(level, blockPos, it) }
+        return true
+    }
+
     override fun setLevel(level: Level) {
         super.setLevel(level)
         (level as? ServerLevel)?.let {
             ChestLevelManager.setActive(uuid)
+            if (haveSameChest()) return@let
             UUIDManager.setChestData(uuid, it.dimension(), blockPos)
             UUIDManager.save()
         }
@@ -119,6 +155,7 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
         ChestLevelManager.setActive(uuid)
         level?.let { openersCounter.decrementOpeners(player, it, blockPos, blockState) }
         (level as? ServerLevel)?.let {
+            if (explodeItSelf(it)) return@let
             val world = ChestLevelManager.getOrCreate(Constants.Server, uuid)
             UUIDManager.setChestData(uuid, it.dimension(), blockPos)
             UUIDManager.save()

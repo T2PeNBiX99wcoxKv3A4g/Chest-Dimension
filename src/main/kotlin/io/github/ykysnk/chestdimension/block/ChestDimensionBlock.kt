@@ -242,7 +242,8 @@ class ChestDimensionBlock(properties: Properties) :
     ) {
         if (!state.`is`(newState.block)) {
             val blockEntity = level.getBlockEntity(pos)
-            if (blockEntity is ChestDimensionBlockEntity) ChestLevelManager.setInactive(blockEntity.uuid)
+            if (blockEntity is ChestDimensionBlockEntity && !blockEntity.destroyByItSelf && !blockEntity.haveSameChest())
+                ChestLevelManager.setInactive(blockEntity.uuid)
             UUIDManager.save()
         }
 
