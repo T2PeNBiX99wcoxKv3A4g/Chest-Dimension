@@ -41,20 +41,22 @@ object ChestLevelManager {
     private val levelToUUID = mutableMapOf<ResourceKey<Level>, UUID>()
     private var chunkProgressListener: ChunkProgressListener? = null
     private val defaultSpawnPos by lazy { BlockPos(0, 1, 0) }
+    private val biome by lazy {
+        Constants.Server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.CHEST_BIOME)
+    }
+
+    private val dimensionType by lazy {
+        Constants.Server.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE)
+            .getHolderOrThrow(DimensionTypes.CHEST)
+    }
 
     fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
 
         val storage = ChestLevelStorage.access
         val isDebugWorld = server.worldData.isDebugWorld
-        val biome = server.registryAccess()
-            .registryOrThrow(Registries.BIOME)
-            .getHolderOrThrow(Biomes.CHEST_BIOME)
         val biomeSource = FixedBiomeSource(biome)
         val generator = ChestChunkGenerator(biomeSource)
-        val dimensionType = server.registryAccess()
-            .registryOrThrow(Registries.DIMENSION_TYPE)
-            .getHolderOrThrow(DimensionTypes.CHEST)
         val levelStem = LevelStem(dimensionType, generator)
 
         for ((uuid, data) in UUIDManager.getMap()) {
@@ -97,14 +99,8 @@ object ChestLevelManager {
         val worldOptions = WorldOptions.defaultWithRandomSeed()
         val seed = worldOptions.seed()
         val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
-        val biome = server.registryAccess()
-            .registryOrThrow(Registries.BIOME)
-            .getHolderOrThrow(Biomes.CHEST_BIOME)
         val biomeSource = FixedBiomeSource(biome)
         val generator = ChestChunkGenerator(biomeSource)
-        val dimensionType = server.registryAccess()
-            .registryOrThrow(Registries.DIMENSION_TYPE)
-            .getHolderOrThrow(DimensionTypes.CHEST)
         val levelStem = LevelStem(dimensionType, generator)
         val level = ChestServerLevel(
             server,
@@ -298,14 +294,8 @@ object ChestLevelManager {
         val storage = ChestLevelStorage.access
         val listener = chunkProgressListener ?: server.progressListenerFactory.create(11)
         val isDebugWorld = server.worldData.isDebugWorld
-        val biome = server.registryAccess()
-            .registryOrThrow(Registries.BIOME)
-            .getHolderOrThrow(Biomes.CHEST_BIOME)
         val biomeSource = FixedBiomeSource(biome)
         val generator = ChestChunkGenerator(biomeSource)
-        val dimensionType = server.registryAccess()
-            .registryOrThrow(Registries.DIMENSION_TYPE)
-            .getHolderOrThrow(DimensionTypes.CHEST)
         val levelStem = LevelStem(dimensionType, generator)
         val worldKey = createWorldKey(uuid)
         val seed = data.seed
