@@ -6,10 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
-import io.github.ykysnk.chestdimension.extensions.teleportToLevel
-import io.github.ykysnk.chestdimension.extensions.teleportToSafeLocation
-import io.github.ykysnk.chestdimension.extensions.teleportToSpawnLocation
-import io.github.ykysnk.chestdimension.extensions.toVec3
+import io.github.ykysnk.chestdimension.extensions.*
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
@@ -44,29 +41,31 @@ object ChestDimCommand {
 
     @Suppress("SpellCheckingInspection")
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
-        Commands.literal("chestdim").let { builder ->
-            Commands.literal("create").requires { it.hasPermission(2) }.let { createBuilder ->
-                createBuilder.executes { context ->
-                    val player = context.source.playerOrException
-                    create(player, context.source)
-                }
+        Commands.literal("chestdim").apply {
+            literal("create") {
+                requires { it.hasPermission(2) }
 
-                createBuilder.then(Commands.argument("targets", EntityArgument.entities()).executes { context ->
+                then(Commands.argument("targets", EntityArgument.entities()).executes { context ->
                     val entities = EntityArgument.getEntities(context, "targets")
                     create(entities, context.source)
                 })
 
-                builder.then(createBuilder)
+                executes { context ->
+                    val player = context.source.playerOrException
+                    create(player, context.source)
+                }
             }
 
-            Commands.literal("tp").requires { it.hasPermission(2) }.let { tpBuilder ->
-                tpBuilder.then(allDimsArg.then(Commands.argument("pos", Vec3Argument.vec3()).executes { context ->
+            literal("tp") {
+                requires { it.hasPermission(2) }
+
+                then(allDimsArg.then(Commands.argument("pos", Vec3Argument.vec3()).executes { context ->
                     val player = context.source.playerOrException
                     val pos = Vec3Argument.getVec3(context, "pos")
                     teleport(player, pos, StringArgumentType.getString(context, "uuid"), context.source)
                 }))
 
-                tpBuilder.then(
+                then(
                     allDimsArg.then(
                         Commands.argument("targets", EntityArgument.entities())
                             .then(Commands.argument("pos", Vec3Argument.vec3()).executes { context ->
@@ -77,7 +76,7 @@ object ChestDimCommand {
                     )
                 )
 
-                tpBuilder.then(
+                then(
                     Commands.argument("dimension", DimensionArgument.dimension())
                         .then(Commands.argument("pos", Vec3Argument.vec3()).executes { context ->
                             val player = context.source.playerOrException
@@ -87,7 +86,7 @@ object ChestDimCommand {
                         })
                 )
 
-                tpBuilder.then(
+                then(
                     Commands.argument("dimension", DimensionArgument.dimension()).then(
                         Commands.argument("targets", EntityArgument.entities())
                             .then(Commands.argument("pos", Vec3Argument.vec3()).executes { context ->
@@ -99,13 +98,13 @@ object ChestDimCommand {
                     )
                 )
 
-                tpBuilder.then(Commands.argument("pos", Vec3Argument.vec3()).executes { context ->
+                then(Commands.argument("pos", Vec3Argument.vec3()).executes { context ->
                     val player = context.source.playerOrException
                     val pos = Vec3Argument.getVec3(context, "pos")
                     teleport(player, pos, context.source.level, context.source)
                 })
 
-                tpBuilder.then(
+                then(
                     Commands.argument("targets", EntityArgument.entities())
                         .then(Commands.argument("pos", Vec3Argument.vec3()).executes { context ->
                             val entities = EntityArgument.getEntities(context, "targets")
@@ -113,12 +112,12 @@ object ChestDimCommand {
                             teleport(entities, pos, context.source.level, context.source)
                         })
                 )
-
-                builder.then(tpBuilder)
             }
 
-            Commands.literal("tp-safe").requires { it.hasPermission(2) }.let { tpSafeBuilder ->
-                tpSafeBuilder.then(
+            literal("tp-safe") {
+                requires { it.hasPermission(2) }
+
+                then(
                     allDimsArg.then(
                         Commands.argument("pos", BlockPosArgument.blockPos()).then(
                             Commands.argument(
@@ -139,7 +138,7 @@ object ChestDimCommand {
                     )
                 )
 
-                tpSafeBuilder.then(
+                then(
                     allDimsArg.then(
                         Commands.argument("targets", EntityArgument.entities()).then(
                             Commands.argument("pos", BlockPosArgument.blockPos()).then(
@@ -162,7 +161,7 @@ object ChestDimCommand {
                     )
                 )
 
-                tpSafeBuilder.then(
+                then(
                     allDimsArg.then(
                         Commands.argument("pos", BlockPosArgument.blockPos()).executes { context ->
                             val player = context.source.playerOrException
@@ -178,7 +177,7 @@ object ChestDimCommand {
                         })
                 )
 
-                tpSafeBuilder.then(
+                then(
                     allDimsArg.then(
                         Commands.argument("targets", EntityArgument.entities()).then(
                             Commands.argument("pos", BlockPosArgument.blockPos()).executes { context ->
@@ -196,7 +195,7 @@ object ChestDimCommand {
                     )
                 )
 
-                tpSafeBuilder.then(
+                then(
                     Commands.argument("dimension", DimensionArgument.dimension()).then(
                         Commands.argument("pos", BlockPosArgument.blockPos()).then(
                             Commands.argument(
@@ -212,7 +211,7 @@ object ChestDimCommand {
                     )
                 )
 
-                tpSafeBuilder.then(
+                then(
                     Commands.argument("dimension", DimensionArgument.dimension()).then(
                         Commands.argument("targets", EntityArgument.entities()).then(
                             Commands.argument("pos", BlockPosArgument.blockPos()).then(
@@ -230,7 +229,7 @@ object ChestDimCommand {
                     )
                 )
 
-                tpSafeBuilder.then(
+                then(
                     Commands.argument("dimension", DimensionArgument.dimension()).then(
                         Commands.argument("pos", BlockPosArgument.blockPos()).executes { context ->
                             val player = context.source.playerOrException
@@ -241,7 +240,7 @@ object ChestDimCommand {
                         })
                 )
 
-                tpSafeBuilder.then(
+                then(
                     Commands.argument("dimension", DimensionArgument.dimension()).then(
                         Commands.argument("targets", EntityArgument.entities()).then(
                             Commands.argument("pos", BlockPosArgument.blockPos()).executes { context ->
@@ -254,7 +253,7 @@ object ChestDimCommand {
                     )
                 )
 
-                tpSafeBuilder.then(
+                then(
                     Commands.argument("pos", BlockPosArgument.blockPos()).then(
                         Commands.argument(
                             "spawn-radius",
@@ -273,7 +272,7 @@ object ChestDimCommand {
                         })
                 )
 
-                tpSafeBuilder.then(
+                then(
                     Commands.argument("targets", EntityArgument.entities()).then(
                         Commands.argument("pos", BlockPosArgument.blockPos()).then(
                             Commands.argument(
@@ -294,7 +293,7 @@ object ChestDimCommand {
                     )
                 )
 
-                tpSafeBuilder.then(
+                then(
                     Commands.argument("pos", BlockPosArgument.blockPos()).executes { context ->
                         val player = context.source.playerOrException
                         val pos = BlockPosArgument.getBlockPos(context, "pos")
@@ -308,7 +307,7 @@ object ChestDimCommand {
                         )
                     })
 
-                tpSafeBuilder.then(
+                then(
                     Commands.argument("targets", EntityArgument.entities()).then(
                         Commands.argument("pos", BlockPosArgument.blockPos()).executes { context ->
                             val entities = EntityArgument.getEntities(context, "targets")
@@ -323,12 +322,12 @@ object ChestDimCommand {
                             )
                         })
                 )
-
-                builder.then(tpSafeBuilder)
             }
 
-            Commands.literal("tp-spawn").requires { it.hasPermission(2) }.let { tpSpawnBuilder ->
-                tpSpawnBuilder.then(
+            literal("tp-spawn") {
+                requires { it.hasPermission(2) }
+
+                then(
                     allDimsArg.then(
                         Commands.argument("spawn-radius", IntegerArgumentType.integer(1)).executes { context ->
                             val player = context.source.playerOrException
@@ -342,7 +341,7 @@ object ChestDimCommand {
                         })
                 )
 
-                tpSpawnBuilder.then(
+                then(
                     allDimsArg.then(
                         Commands.argument("targets", EntityArgument.entities()).then(
                             Commands.argument("spawn-radius", IntegerArgumentType.integer(1)).executes { context ->
@@ -358,13 +357,13 @@ object ChestDimCommand {
                     )
                 )
 
-                tpSpawnBuilder.then(allDimsArg.executes { context ->
+                then(allDimsArg.executes { context ->
                     val player = context.source.playerOrException
                     val spawnRadius = context.source.server.getSpawnRadius(context.source.level)
                     teleportSpawn(player, StringArgumentType.getString(context, "uuid"), spawnRadius, context.source)
                 })
 
-                tpSpawnBuilder.then(
+                then(
                     allDimsArg.then(
                         Commands.argument("targets", EntityArgument.entities()).executes { context ->
                             val entities = EntityArgument.getEntities(context, "targets")
@@ -378,7 +377,7 @@ object ChestDimCommand {
                         })
                 )
 
-                tpSpawnBuilder.then(
+                then(
                     Commands.argument("dimension", DimensionArgument.dimension()).then(
                         Commands.argument("spawn-radius", IntegerArgumentType.integer(1)).executes { context ->
                             val player = context.source.playerOrException
@@ -388,7 +387,7 @@ object ChestDimCommand {
                         })
                 )
 
-                tpSpawnBuilder.then(
+                then(
                     Commands.argument("dimension", DimensionArgument.dimension()).then(
                         Commands.argument("targets", EntityArgument.entities()).then(
                             Commands.argument("spawn-radius", IntegerArgumentType.integer(1)).executes { context ->
@@ -400,14 +399,14 @@ object ChestDimCommand {
                     )
                 )
 
-                tpSpawnBuilder.then(Commands.argument("dimension", DimensionArgument.dimension()).executes { context ->
+                then(Commands.argument("dimension", DimensionArgument.dimension()).executes { context ->
                     val player = context.source.playerOrException
                     val level = DimensionArgument.getDimension(context, "dimension")
                     val spawnRadius = context.source.server.getSpawnRadius(level)
                     teleportSpawn(player, level, spawnRadius, context.source)
                 })
 
-                tpSpawnBuilder.then(
+                then(
                     Commands.argument("dimension", DimensionArgument.dimension())
                         .then(Commands.argument("targets", EntityArgument.entities()).executes { context ->
                             val entities = EntityArgument.getEntities(context, "targets")
@@ -417,7 +416,7 @@ object ChestDimCommand {
                         })
                 )
 
-                tpSpawnBuilder.then(
+                then(
                     Commands.argument("spawn-radius", IntegerArgumentType.integer(1)).executes { context ->
                         val player = context.source.playerOrException
                         val spawnRadius = IntegerArgumentType.getInteger(context, "spawn-radius")
@@ -425,7 +424,7 @@ object ChestDimCommand {
                     }
                 )
 
-                tpSpawnBuilder.then(
+                then(
                     Commands.argument("targets", EntityArgument.entities()).then(
                         Commands.argument("spawn-radius", IntegerArgumentType.integer(1)).executes { context ->
                             val entities = EntityArgument.getEntities(context, "targets")
@@ -434,40 +433,40 @@ object ChestDimCommand {
                         }
                     ))
 
-                tpSpawnBuilder.executes { context ->
+                executes { context ->
                     val player = context.source.playerOrException
                     val spawnRadius = context.source.server.getSpawnRadius(context.source.level)
                     teleportSpawn(player, THIS, spawnRadius, context.source)
                 }
 
-                tpSpawnBuilder.then(Commands.argument("targets", EntityArgument.entities()).executes { context ->
+                then(Commands.argument("targets", EntityArgument.entities()).executes { context ->
                     val entities = EntityArgument.getEntities(context, "targets")
                     val spawnRadius = context.source.server.getSpawnRadius(context.source.level)
                     teleportSpawn(entities, THIS, spawnRadius, context.source)
                 })
-
-                builder.then(tpSpawnBuilder)
             }
 
-            Commands.literal("tp-enter").requires { it.hasPermission(2) }.let { tpEnterBuilder ->
-                tpEnterBuilder.then(uuidArg.executes { context ->
+            literal("tp-enter") {
+                requires { it.hasPermission(2) }
+
+                then(uuidArg.executes { context ->
                     val player = context.source.playerOrException
                     teleportEnter(player, StringArgumentType.getString(context, "uuid"), context.source)
                 })
 
-                tpEnterBuilder.then(
+                then(
                     uuidArg.then(
                         Commands.argument("targets", EntityArgument.entities()).executes { context ->
                             val entities = EntityArgument.getEntities(context, "targets")
                             teleportEnter(entities, StringArgumentType.getString(context, "uuid"), context.source)
                         })
                 )
-
-                builder.then(tpEnterBuilder)
             }
 
-            Commands.literal("give-chest").requires { it.hasPermission(2) }.let { giveChestBuilder ->
-                giveChestBuilder.then(
+            literal("give-chest") {
+                requires { it.hasPermission(2) }
+
+                then(
                     uuidArg.then(
                         Commands.argument("player", EntityArgument.player()).executes { context ->
                             val player =
@@ -477,143 +476,131 @@ object ChestDimCommand {
                         })
                 )
 
-                giveChestBuilder.then(Commands.argument("player", EntityArgument.player()).executes { context ->
+                then(Commands.argument("player", EntityArgument.player()).executes { context ->
                     val player =
                         EntityArgument.getPlayer(context, "player")
                             ?: throw CommandSourceStack.ERROR_NOT_PLAYER.create()
                     giveChest(player, THIS, context.source)
                 })
 
-                giveChestBuilder.then(uuidArg.executes { context ->
+                then(uuidArg.executes { context ->
                     val player = context.source.playerOrException
                     giveChest(player, StringArgumentType.getString(context, "uuid"), context.source)
                 })
 
-                giveChestBuilder.executes { context ->
+                executes { context ->
                     val player = context.source.playerOrException
                     giveChest(player, THIS, context.source)
                 }
-
-                builder.then(giveChestBuilder)
             }
 
-            Commands.literal("time").requires { it.hasPermission(2) }.let { timeBuilder ->
-                Commands.literal("set").let { setBuilder ->
-                    setBuilder.then(Commands.literal("day").executes {
+            literal("time") {
+                requires { it.hasPermission(2) }
+
+                literal("set", allDimsWithAllArg) {
+                    then(Commands.literal("day").executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setTime(uuidString, it.getSource(), 1000)
                     })
 
-                    setBuilder.then(Commands.literal("noon").executes {
+                    then(Commands.literal("noon").executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setTime(uuidString, it.getSource(), 6000)
                     })
 
-                    setBuilder.then(Commands.literal("night").executes {
+                    then(Commands.literal("night").executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setTime(uuidString, it.getSource(), 13000)
                     })
 
-                    setBuilder.then(Commands.literal("midnight").executes {
+                    then(Commands.literal("midnight").executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setTime(uuidString, it.getSource(), 18000)
                     })
 
-                    setBuilder.then(Commands.argument("time", TimeArgument.time()).executes {
+                    then(Commands.argument("time", TimeArgument.time()).executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         val time = IntegerArgumentType.getInteger(it, "time")
                         setTime(uuidString, it.getSource(), time)
                     })
-
-                    timeBuilder.then(allDimsWithAllArg.then(setBuilder))
                 }
 
-                Commands.literal("set").let { setBuilder ->
-                    setBuilder.then(Commands.literal("day").executes {
+                literal("set", Commands.argument("dimension", DimensionArgument.dimension())) {
+                    then(Commands.literal("day").executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setTime(level, it.getSource(), 1000)
                     })
 
-                    setBuilder.then(Commands.literal("noon").executes {
+                    then(Commands.literal("noon").executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setTime(level, it.getSource(), 6000)
                     })
 
-                    setBuilder.then(Commands.literal("night").executes {
+                    then(Commands.literal("night").executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setTime(level, it.getSource(), 13000)
                     })
 
-                    setBuilder.then(Commands.literal("midnight").executes {
+                    then(Commands.literal("midnight").executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setTime(level, it.getSource(), 18000)
                     })
 
-                    setBuilder.then(Commands.argument("time", TimeArgument.time()).executes {
+                    then(Commands.argument("time", TimeArgument.time()).executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         val time = IntegerArgumentType.getInteger(it, "time")
                         setTime(level, it.getSource(), time)
                     })
-
-                    timeBuilder.then(Commands.argument("dimension", DimensionArgument.dimension()).then(setBuilder))
                 }
 
-                Commands.literal("set").let { setBuilder ->
-                    setBuilder.then(Commands.literal("day").executes {
+                literal("set") {
+                    then(Commands.literal("day").executes {
                         setTime(THIS, it.getSource(), 1000)
                     })
 
-                    setBuilder.then(Commands.literal("noon").executes {
+                    then(Commands.literal("noon").executes {
                         setTime(THIS, it.getSource(), 6000)
                     })
 
-                    setBuilder.then(Commands.literal("night").executes {
+                    then(Commands.literal("night").executes {
                         setTime(THIS, it.getSource(), 13000)
                     })
 
-                    setBuilder.then(Commands.literal("midnight").executes {
+                    then(Commands.literal("midnight").executes {
                         setTime(THIS, it.getSource(), 18000)
                     })
 
-                    setBuilder.then(Commands.argument("time", TimeArgument.time()).executes {
+                    then(Commands.argument("time", TimeArgument.time()).executes {
                         val time = IntegerArgumentType.getInteger(it, "time")
                         setTime(THIS, it.getSource(), time)
                     })
-
-                    timeBuilder.then(setBuilder)
                 }
 
-                Commands.literal("add").let { addBuilder ->
-                    addBuilder.then(Commands.argument("time", TimeArgument.time()).executes {
+                literal("add", allDimsWithAllArg) {
+                    then(Commands.argument("time", TimeArgument.time()).executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         val time = IntegerArgumentType.getInteger(it, "time")
                         addTime(uuidString, it.getSource(), time)
                     })
-
-                    timeBuilder.then(allDimsWithAllArg.then(addBuilder))
                 }
 
-                Commands.literal("add").let { addBuilder ->
-                    addBuilder.then(Commands.argument("time", TimeArgument.time()).executes {
+                literal("add", Commands.argument("dimension", DimensionArgument.dimension())) {
+                    then(Commands.argument("time", TimeArgument.time()).executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         val time = IntegerArgumentType.getInteger(it, "time")
                         addTime(level, it.getSource(), time)
                     })
-
-                    timeBuilder.then(Commands.argument("dimension", DimensionArgument.dimension()).then(addBuilder))
                 }
 
-                Commands.literal("add").let { addBuilder ->
-                    addBuilder.then(Commands.argument("time", TimeArgument.time()).executes {
+                literal("add") {
+                    then(Commands.argument("time", TimeArgument.time()).executes {
                         val time = IntegerArgumentType.getInteger(it, "time")
                         addTime(THIS, it.getSource(), time)
                     })
-
-                    timeBuilder.then(addBuilder)
                 }
 
-                Commands.literal("query").let { queryBuilder ->
-                    queryBuilder.then(Commands.literal("daytime").executes {
+                literal("query", allDimsArg) {
+                    then(Commands.literal("daytime").executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         val level = getLevel(it.source, uuidString)
                         if (level == null) {
@@ -623,7 +610,7 @@ object ChestDimCommand {
                         queryTime(it.getSource(), getDayTime(level))
                     })
 
-                    queryBuilder.then(Commands.literal("gametime").executes {
+                    then(Commands.literal("gametime").executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         val level = getLevel(it.source, uuidString)
                         if (level == null) {
@@ -633,7 +620,7 @@ object ChestDimCommand {
                         queryTime(it.getSource(), (level.gameTime % 2147483647L).toInt())
                     })
 
-                    queryBuilder.then(Commands.literal("day").executes {
+                    then(Commands.literal("day").executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         val level = getLevel(it.source, uuidString)
                         if (level == null) {
@@ -642,31 +629,27 @@ object ChestDimCommand {
                         }
                         queryTime(it.getSource(), (level.dayTime / 24000L % 2147483647L).toInt())
                     })
-
-                    timeBuilder.then(allDimsArg.then(queryBuilder))
                 }
 
-                Commands.literal("query").let { queryBuilder ->
-                    queryBuilder.then(Commands.literal("daytime").executes {
+                literal("query", Commands.argument("dimension", DimensionArgument.dimension())) {
+                    then(Commands.literal("daytime").executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         queryTime(it.getSource(), getDayTime(level))
                     })
 
-                    queryBuilder.then(Commands.literal("gametime").executes {
+                    then(Commands.literal("gametime").executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         queryTime(it.getSource(), (level.gameTime % 2147483647L).toInt())
                     })
 
-                    queryBuilder.then(Commands.literal("day").executes {
+                    then(Commands.literal("day").executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         queryTime(it.getSource(), (level.dayTime / 24000L % 2147483647L).toInt())
                     })
-
-                    timeBuilder.then(Commands.argument("dimension", DimensionArgument.dimension()).then(queryBuilder))
                 }
 
-                Commands.literal("query").let { queryBuilder ->
-                    queryBuilder.then(Commands.literal("daytime").executes {
+                literal("query") {
+                    then(Commands.literal("daytime").executes {
                         val level = getLevel(it.source, THIS)
                         if (level == null) {
                             it.source.sendFailure(Component.literal("UUID is not valid."))
@@ -675,7 +658,7 @@ object ChestDimCommand {
                         queryTime(it.getSource(), getDayTime(level))
                     })
 
-                    queryBuilder.then(Commands.literal("gametime").executes {
+                    then(Commands.literal("gametime").executes {
                         val level = getLevel(it.source, THIS)
                         if (level == null) {
                             it.source.sendFailure(Component.literal("UUID is not valid."))
@@ -684,7 +667,7 @@ object ChestDimCommand {
                         queryTime(it.getSource(), (level.gameTime % 2147483647L).toInt())
                     })
 
-                    queryBuilder.then(Commands.literal("day").executes {
+                    then(Commands.literal("day").executes {
                         val level = getLevel(it.source, THIS)
                         if (level == null) {
                             it.source.sendFailure(Component.literal("UUID is not valid."))
@@ -692,140 +675,120 @@ object ChestDimCommand {
                         }
                         queryTime(it.getSource(), (level.dayTime / 24000L % 2147483647L).toInt())
                     })
-
-                    timeBuilder.then(queryBuilder)
                 }
-                builder.then(timeBuilder)
             }
 
-            Commands.literal("weather").requires { it.hasPermission(2) }.let { weatherBuilder ->
-                Commands.literal("clear").let { clearBuilder ->
-                    clearBuilder.executes {
+            literal("weather") {
+                requires { it.hasPermission(2) }
+
+                literal("clear", allDimsWithAllArg) {
+                    executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setClear(uuidString, it.source, -1)
                     }
 
-                    clearBuilder.then(Commands.argument("duration", TimeArgument.time(1)).executes {
+                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setClear(uuidString, it.source, IntegerArgumentType.getInteger(it, "duration"))
                     })
-
-                    weatherBuilder.then(allDimsWithAllArg.then(clearBuilder))
                 }
 
-                Commands.literal("clear").let { clearBuilder ->
-                    clearBuilder.executes {
+                literal("clear", Commands.argument("dimension", DimensionArgument.dimension())) {
+                    executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setClear(level, it.source, -1)
                     }
 
-                    clearBuilder.then(Commands.argument("duration", TimeArgument.time(1)).executes {
+                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setClear(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                     })
-
-                    weatherBuilder.then(
-                        Commands.argument("dimension", DimensionArgument.dimension()).then(clearBuilder)
-                    )
                 }
 
-                Commands.literal("clear").let { clearBuilder ->
-                    clearBuilder.executes {
+                literal("clear") {
+                    executes {
                         setClear(THIS, it.source, -1)
                     }
 
-                    clearBuilder.then(Commands.argument("duration", TimeArgument.time(1)).executes {
+                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
                         setClear(THIS, it.source, IntegerArgumentType.getInteger(it, "duration"))
                     })
-
-                    weatherBuilder.then(clearBuilder)
                 }
+            }
 
-                Commands.literal("rain").let { rainBuilder ->
-                    rainBuilder.executes {
+            literal("weather") {
+                requires { it.hasPermission(2) }
+
+                literal("rain", allDimsWithAllArg) {
+                    executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setRain(uuidString, it.source, -1)
                     }
 
-                    rainBuilder.then(Commands.argument("duration", TimeArgument.time(1)).executes {
+                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setRain(uuidString, it.source, IntegerArgumentType.getInteger(it, "duration"))
                     })
-
-                    weatherBuilder.then(allDimsWithAllArg.then(rainBuilder))
                 }
 
-                Commands.literal("rain").let { rainBuilder ->
-                    rainBuilder.executes {
+                literal("rain", Commands.argument("dimension", DimensionArgument.dimension())) {
+                    executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setRain(level, it.source, -1)
                     }
 
-                    rainBuilder.then(Commands.argument("duration", TimeArgument.time(1)).executes {
+                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setRain(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                     })
-
-                    weatherBuilder.then(Commands.argument("dimension", DimensionArgument.dimension()).then(rainBuilder))
                 }
 
-                Commands.literal("rain").let { rainBuilder ->
-                    rainBuilder.executes {
+                literal("rain") {
+                    executes {
                         setRain(THIS, it.source, -1)
                     }
 
-                    rainBuilder.then(Commands.argument("duration", TimeArgument.time(1)).executes {
+                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
                         setRain(THIS, it.source, IntegerArgumentType.getInteger(it, "duration"))
                     })
-
-                    weatherBuilder.then(rainBuilder)
                 }
 
-                Commands.literal("thunder").let { thunderBuilder ->
-                    thunderBuilder.executes {
+                literal("thunder", allDimsWithAllArg) {
+                    executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setThunder(uuidString, it.source, -1)
                     }
 
-                    thunderBuilder.then(Commands.argument("duration", TimeArgument.time(1)).executes {
+                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
                         val uuidString = StringArgumentType.getString(it, "uuid")
                         setThunder(uuidString, it.source, IntegerArgumentType.getInteger(it, "duration"))
                     })
-
-                    weatherBuilder.then(allDimsWithAllArg.then(thunderBuilder))
                 }
 
-                Commands.literal("thunder").let { thunderBuilder ->
-                    thunderBuilder.executes {
+                literal("thunder", Commands.argument("dimension", DimensionArgument.dimension())) {
+                    executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setThunder(level, it.source, -1)
                     }
 
-                    thunderBuilder.then(Commands.argument("duration", TimeArgument.time(1)).executes {
+                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
                         val level = DimensionArgument.getDimension(it, "dimension")
                         setThunder(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                     })
-
-                    weatherBuilder.then(
-                        Commands.argument("dimension", DimensionArgument.dimension()).then(thunderBuilder)
-                    )
                 }
 
-                Commands.literal("thunder").let { thunderBuilder ->
-                    thunderBuilder.executes {
+                literal("thunder") {
+                    executes {
                         setThunder(THIS, it.source, -1)
                     }
 
-                    thunderBuilder.then(Commands.argument("duration", TimeArgument.time(1)).executes {
+                    then(Commands.argument("duration", TimeArgument.time(1)).executes {
                         setThunder(THIS, it.source, IntegerArgumentType.getInteger(it, "duration"))
                     })
-
-                    weatherBuilder.then(thunderBuilder)
                 }
-
-                builder.then(weatherBuilder)
             }
-            dispatcher.register(builder)
+
+            dispatcher.register(this)
         }
     }
 
