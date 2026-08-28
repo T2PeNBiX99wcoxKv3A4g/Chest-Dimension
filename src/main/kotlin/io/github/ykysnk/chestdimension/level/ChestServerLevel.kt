@@ -51,7 +51,7 @@ class ChestServerLevel(
     val chestServerLevelData: ChestServerLevelData? = serverLevelData as? ChestServerLevelData
 
     private fun loadDimData(tag: CompoundTag): ChestSavedData {
-        (serverLevelData as? ChestServerLevelData)?.load(tag)
+        chestServerLevelData?.load(tag)
         return ChestSavedData(serverLevelData)
     }
 
