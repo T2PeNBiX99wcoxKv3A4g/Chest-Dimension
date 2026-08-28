@@ -13,52 +13,52 @@ import net.minecraft.world.level.timers.TimerQueue
 import java.util.*
 
 class ChestServerLevelData(private val worldData: WorldData, private val wrapped: ServerLevelData) : ServerLevelData {
-    private var xSpawn = 0
+    private var chestXSpawn = 0
         set(value) {
             setDirty(field, value)
             field = value
         }
-    private var ySpawn = 1
+    private var chestYSpawn = 1
         set(value) {
             setDirty(field, value)
             field = value
         }
-    private var zSpawn = 0
+    private var chestZSpawn = 0
         set(value) {
             setDirty(field, value)
             field = value
         }
-    private var spawnAngle = 0f
+    private var chestSpawnAngle = 0f
         set(value) {
             setDirty(field, value)
             field = value
         }
-    private var dayTime: Long = 0L
+    private var chestDayTime: Long = 0L
         set(value) {
             setDirty(field, value)
             field = value
         }
-    private var clearWeatherTime = 0
+    private var chestClearWeatherTime = 0
         set(value) {
             setDirty(field, value)
             field = value
         }
-    private var raining = false
+    private var chestRaining = false
         set(value) {
             setDirty(field, value)
             field = value
         }
-    private var rainTime = 0
+    private var chestRainTime = 0
         set(value) {
             setDirty(field, value)
             field = value
         }
-    private var thundering = false
+    private var chestThundering = false
         set(value) {
             setDirty(field, value)
             field = value
         }
-    private var thunderTime = 0
+    private var chestThunderTime = 0
         set(value) {
             setDirty(field, value)
             field = value
@@ -84,48 +84,48 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun setThundering(newThundering: Boolean) {
         if (freezeWeather) return
-        thundering = newThundering
+        chestThundering = newThundering
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setThunderingForce(newThundering: Boolean) {
-        thundering = newThundering
+        chestThundering = newThundering
     }
 
-    override fun getRainTime(): Int = rainTime
+    override fun getRainTime(): Int = chestRainTime
 
     override fun setRainTime(time: Int) {
         if (freezeWeather) return
-        rainTime = time
+        chestRainTime = time
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setRainTimeForce(time: Int) {
-        rainTime = time
+        chestRainTime = time
     }
 
-    override fun getThunderTime(): Int = thunderTime
+    override fun getThunderTime(): Int = chestThunderTime
 
     override fun setThunderTime(time: Int) {
         if (freezeWeather) return
-        thunderTime = time
+        chestThunderTime = time
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setThunderTimeForce(time: Int) {
-        thunderTime = time
+        chestThunderTime = time
     }
 
-    override fun getClearWeatherTime(): Int = clearWeatherTime
+    override fun getClearWeatherTime(): Int = chestClearWeatherTime
 
     override fun setClearWeatherTime(time: Int) {
         if (freezeWeather) return
-        clearWeatherTime = time
+        chestClearWeatherTime = time
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setClearWeatherTimeForce(time: Int) {
-        clearWeatherTime = time
+        chestClearWeatherTime = time
     }
 
     override fun getWanderingTraderSpawnDelay(): Int = wrapped.wanderingTraderSpawnDelay
@@ -160,54 +160,54 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun setDayTime(time: Long) {
         if (freezeTime) return
-        dayTime = time
+        chestDayTime = time
     }
 
     @Suppress("unused")
     fun setDayTimeForce(time: Long) {
-        dayTime = time
+        chestDayTime = time
     }
 
     override fun setXSpawn(newXSpawn: Int) {
-        xSpawn = newXSpawn
+        chestXSpawn = newXSpawn
     }
 
     override fun setYSpawn(newYSpawn: Int) {
-        ySpawn = newYSpawn
+        chestYSpawn = newYSpawn
     }
 
     override fun setZSpawn(newZSpawn: Int) {
-        zSpawn = newZSpawn
+        chestZSpawn = newZSpawn
     }
 
     override fun setSpawnAngle(newSpawnAngle: Float) {
-        spawnAngle = newSpawnAngle
+        chestSpawnAngle = newSpawnAngle
     }
 
-    override fun getXSpawn(): Int = xSpawn
+    override fun getXSpawn(): Int = chestXSpawn
 
-    override fun getYSpawn(): Int = ySpawn
+    override fun getYSpawn(): Int = chestYSpawn
 
-    override fun getZSpawn(): Int = zSpawn
+    override fun getZSpawn(): Int = chestZSpawn
 
-    override fun getSpawnAngle(): Float = spawnAngle
+    override fun getSpawnAngle(): Float = chestSpawnAngle
 
     override fun getGameTime(): Long = wrapped.gameTime
 
-    override fun getDayTime(): Long = dayTime
+    override fun getDayTime(): Long = chestDayTime
 
-    override fun isThundering(): Boolean = thundering
+    override fun isThundering(): Boolean = chestThundering
 
-    override fun isRaining(): Boolean = raining
+    override fun isRaining(): Boolean = chestRaining
 
     override fun setRaining(newRaining: Boolean) {
         if (freezeWeather) return
-        raining = newRaining
+        chestRaining = newRaining
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setRainingForce(newRaining: Boolean) {
-        raining = newRaining
+        chestRaining = newRaining
     }
 
     override fun isHardcore(): Boolean = worldData.isHardcore
@@ -219,31 +219,31 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
     override fun isDifficultyLocked(): Boolean = worldData.isDifficultyLocked
 
     fun load(tag: CompoundTag) {
-        xSpawn = tag.getInt("SpawnX")
-        ySpawn = tag.getInt("SpawnY")
-        zSpawn = tag.getInt("SpawnZ")
-        spawnAngle = tag.getFloat("SpawnAngle")
-        dayTime = tag.getLong("DayTime")
-        clearWeatherTime = tag.getInt("clearWeatherTime")
-        raining = tag.getBoolean("raining")
-        rainTime = tag.getInt("rainTime")
-        thundering = tag.getBoolean("thundering")
-        thunderTime = tag.getInt("thunderTime")
+        chestXSpawn = tag.getInt("SpawnX")
+        chestYSpawn = tag.getInt("SpawnY")
+        chestZSpawn = tag.getInt("SpawnZ")
+        chestSpawnAngle = tag.getFloat("SpawnAngle")
+        chestDayTime = tag.getLong("DayTime")
+        chestClearWeatherTime = tag.getInt("clearWeatherTime")
+        chestRaining = tag.getBoolean("raining")
+        chestRainTime = tag.getInt("rainTime")
+        chestThundering = tag.getBoolean("thundering")
+        chestThunderTime = tag.getInt("thunderTime")
         freezeTime = tag.getBoolean("freezeTime")
         freezeWeather = tag.getBoolean("freezeWeather")
     }
 
     fun save(tag: CompoundTag): CompoundTag {
-        tag.putInt("SpawnX", xSpawn)
-        tag.putInt("SpawnY", ySpawn)
-        tag.putInt("SpawnZ", zSpawn)
-        tag.putFloat("SpawnAngle", spawnAngle)
-        tag.putLong("DayTime", dayTime)
-        tag.putInt("clearWeatherTime", clearWeatherTime)
-        tag.putBoolean("raining", raining)
-        tag.putInt("rainTime", rainTime)
-        tag.putBoolean("thundering", thundering)
-        tag.putInt("thunderTime", thunderTime)
+        tag.putInt("SpawnX", chestXSpawn)
+        tag.putInt("SpawnY", chestYSpawn)
+        tag.putInt("SpawnZ", chestZSpawn)
+        tag.putFloat("SpawnAngle", chestSpawnAngle)
+        tag.putLong("DayTime", chestDayTime)
+        tag.putInt("clearWeatherTime", chestClearWeatherTime)
+        tag.putBoolean("raining", chestRaining)
+        tag.putInt("rainTime", chestRainTime)
+        tag.putBoolean("thundering", chestThundering)
+        tag.putInt("thunderTime", chestThunderTime)
         tag.putBoolean("freezeTime", freezeTime)
         tag.putBoolean("freezeWeather", freezeWeather)
         return tag
