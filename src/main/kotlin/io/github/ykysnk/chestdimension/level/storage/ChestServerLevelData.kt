@@ -23,12 +23,27 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
     private var rainTime = 0
     private var thundering = false
     private var thunderTime = 0
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var freezeTime: Boolean = false
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var freezeWeather: Boolean = false
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     var chestSavedData: ChestSavedData? = null
         internal set
 
     override fun getLevelName(): String = worldData.levelName
 
     override fun setThundering(newThundering: Boolean) {
+        if (freezeWeather) return
         setDirty(thundering, newThundering)
         thundering = newThundering
     }
@@ -36,11 +51,13 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
     override fun getRainTime(): Int = rainTime
 
     override fun setRainTime(time: Int) {
+        if (freezeWeather) return
         setDirty(rainTime, time)
         rainTime = time
     }
 
     override fun setThunderTime(time: Int) {
+        if (freezeWeather) return
         setDirty(thunderTime, time)
         thunderTime = time
     }
@@ -85,6 +102,7 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
     override fun setGameTime(time: Long) {}
 
     override fun setDayTime(time: Long) {
+        if (freezeTime) return
         setDirty(dayTime, time)
         dayTime = time
     }
@@ -126,6 +144,7 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
     override fun isRaining(): Boolean = raining
 
     override fun setRaining(newRaining: Boolean) {
+        if (freezeWeather) return
         setDirty(raining, newRaining)
         raining = newRaining
     }
@@ -149,6 +168,8 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
         rainTime = tag.getInt("rainTime")
         thundering = tag.getBoolean("thundering")
         thunderTime = tag.getInt("thunderTime")
+        freezeTime = tag.getBoolean("freezeTime")
+        freezeWeather = tag.getBoolean("freezeWeather")
     }
 
     fun save(tag: CompoundTag): CompoundTag {
@@ -162,6 +183,8 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
         tag.putInt("rainTime", rainTime)
         tag.putBoolean("thundering", thundering)
         tag.putInt("thunderTime", thunderTime)
+        tag.putBoolean("freezeTime", freezeTime)
+        tag.putBoolean("freezeWeather", freezeWeather)
         return tag
     }
 
