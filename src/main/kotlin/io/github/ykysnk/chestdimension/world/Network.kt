@@ -9,6 +9,8 @@ import net.minecraft.resources.ResourceKey
 object Network {
     val SET_TIME = Constants.id("set_time")
     val SET_WEATHER = Constants.id("set_weather")
+    val FREEZE_TIME = Constants.id("freeze_time")
+    val FREEZE_WEATHER = Constants.id("freeze_weather")
 
     init {
         ServerPlayNetworking.registerGlobalReceiver(SET_TIME) { server, player, _, buf, _ ->
@@ -45,6 +47,32 @@ object Network {
                                 setWeatherParametersForce(0, 6000, true, true)
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        ServerPlayNetworking.registerGlobalReceiver(FREEZE_TIME) { server, player, _, buf, _ ->
+            val dimension = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation())
+            val value = buf.readBoolean()
+
+            server.execute {
+                (server.getLevel(dimension) as? ChestServerLevel)?.apply {
+                    chestServerLevelData?.apply {
+                        freezeTime = value
+                    }
+                }
+            }
+        }
+
+        ServerPlayNetworking.registerGlobalReceiver(FREEZE_WEATHER) { server, player, _, buf, _ ->
+            val dimension = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation())
+            val value = buf.readBoolean()
+
+            server.execute {
+                (server.getLevel(dimension) as? ChestServerLevel)?.apply {
+                    chestServerLevelData?.apply {
+                        freezeWeather = value
                     }
                 }
             }

@@ -21,3 +21,17 @@ fun Network.sendWeather(dimension: ResourceKey<Level>, weather: WeatherType) {
         writeEnum(weather)
     })
 }
+
+fun Network.freezeTime(dimension: ResourceKey<Level>, value: Boolean) {
+    ClientPlayNetworking.send(FREEZE_TIME, FriendlyByteBuf(Unpooled.buffer()).apply {
+        writeResourceKey(dimension)
+        writeBoolean(value)
+    })
+}
+
+fun Network.freezeWeather(dimension: ResourceKey<Level>, value: Boolean) {
+    ClientPlayNetworking.send(FREEZE_WEATHER, FriendlyByteBuf(Unpooled.buffer()).apply {
+        writeResourceKey(dimension)
+        writeBoolean(value)
+    })
+}
