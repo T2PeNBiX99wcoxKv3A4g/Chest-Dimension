@@ -12,7 +12,7 @@ object Network {
     init {
         ServerPlayNetworking.registerGlobalReceiver(SET_TIME) { server, player, _, buf, _ ->
             val dimension = ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation())
-            val time = buf.readInt()
+            val time = buf.readLong()
 
             server.execute {
                 val level = server.getLevel(dimension) ?: return@execute

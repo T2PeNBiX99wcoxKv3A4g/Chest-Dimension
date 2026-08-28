@@ -18,6 +18,6 @@ fun Network.sendSetTime(dimension: ResourceKey<Level>, time: Int) {
 fun Network.sendWeather(dimension: ResourceKey<Level>, weather: WeatherType) {
     ClientPlayNetworking.send(SET_WEATHER, FriendlyByteBuf(Unpooled.buffer()).apply {
         writeResourceKey(dimension)
-        writeVarInt(weather.ordinal)
+        writeEnum(weather)
     })
 }
