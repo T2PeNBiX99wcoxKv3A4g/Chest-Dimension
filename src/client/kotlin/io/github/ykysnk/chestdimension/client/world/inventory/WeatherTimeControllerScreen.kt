@@ -20,6 +20,8 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
         private val INVENTORY_TEXTURE = Constants.id("textures/gui/container/weather_time_controller.png")
     }
 
+    private var timeSlider: TimeSlider? = null
+
     init {
         imageHeight = 114 + ROWS * 18
         inventoryLabelY = imageHeight - 94
@@ -28,7 +30,10 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
     override fun init() {
         super.init()
 
-        addRenderableWidget(TimeSlider(leftPos + 8, topPos + 20, 160, 20, 6000) { sendSetTime(it) })
+        timeSlider = TimeSlider(leftPos + 8, topPos + 20, 160, 20) { sendSetTime(it) }
+        timeSlider!!.updateValue()
+
+        addRenderableWidget(timeSlider!!)
         addRenderableWidget(Button.builder(Component.literal("Day")) { sendSetTime(1000) }
             .bounds(leftPos + 8, topPos + 45, 50, 20).build())
         addRenderableWidget(Button.builder(Component.literal("Noon")) { sendSetTime(6000) }
@@ -61,6 +66,10 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
         renderBackground(guiGraphics)
         super.render(guiGraphics, mouseX, mouseY, partialTick)
         renderTooltip(guiGraphics, mouseX, mouseY)
+    }
+
+    override fun containerTick() {
+        timeSlider?.updateValue()
     }
 
     private fun sendSetTime(time: Int) {
