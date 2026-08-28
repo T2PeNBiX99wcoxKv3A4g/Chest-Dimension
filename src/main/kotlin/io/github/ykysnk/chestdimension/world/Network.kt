@@ -17,8 +17,10 @@ object Network {
 
             server.execute {
                 (server.getLevel(dimension) as? ChestServerLevel)?.apply {
-                    val currentDay = dayTime / 24000L
-                    dayTime = currentDay * 24000L + time
+                    chestServerLevelData?.apply {
+                        val currentDay = dayTime / 24000L
+                        setDayTimeForce(currentDay * 24000L + time)
+                    }
                 }
             }
         }
@@ -29,17 +31,19 @@ object Network {
 
             server.execute {
                 (server.getLevel(dimension) as? ChestServerLevel)?.apply {
-                    when (weather) {
-                        WeatherType.CLEAR -> {
-                            setWeatherParameters(6000, 0, false, false)
-                        }
+                    chestServerLevelData?.apply {
+                        when (weather) {
+                            WeatherType.CLEAR -> {
+                                setWeatherParametersForce(6000, 0, false, false)
+                            }
 
-                        WeatherType.RAIN -> {
-                            setWeatherParameters(0, 6000, true, false)
-                        }
+                            WeatherType.RAIN -> {
+                                setWeatherParametersForce(0, 6000, true, false)
+                            }
 
-                        WeatherType.THUNDER -> {
-                            setWeatherParameters(0, 6000, true, true)
+                            WeatherType.THUNDER -> {
+                                setWeatherParametersForce(0, 6000, true, true)
+                            }
                         }
                     }
                 }

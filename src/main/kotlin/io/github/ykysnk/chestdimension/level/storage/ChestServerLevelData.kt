@@ -48,6 +48,12 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
         thundering = newThundering
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun setThunderingForce(newThundering: Boolean) {
+        setDirty(thundering, newThundering)
+        thundering = newThundering
+    }
+
     override fun getRainTime(): Int = rainTime
 
     override fun setRainTime(time: Int) {
@@ -56,17 +62,35 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
         rainTime = time
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun setRainTimeForce(time: Int) {
+        setDirty(rainTime, time)
+        rainTime = time
+    }
+
+    override fun getThunderTime(): Int = thunderTime
+
     override fun setThunderTime(time: Int) {
         if (freezeWeather) return
         setDirty(thunderTime, time)
         thunderTime = time
     }
 
-    override fun getThunderTime(): Int = thunderTime
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun setThunderTimeForce(time: Int) {
+        setDirty(thunderTime, time)
+        thunderTime = time
+    }
 
     override fun getClearWeatherTime(): Int = clearWeatherTime
 
     override fun setClearWeatherTime(time: Int) {
+        if (freezeWeather) return
+        setDirty(clearWeatherTime, time)
+        clearWeatherTime = time
+    }
+
+    fun setClearWeatherTimeForce(time: Int) {
         setDirty(clearWeatherTime, time)
         clearWeatherTime = time
     }
@@ -103,6 +127,12 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun setDayTime(time: Long) {
         if (freezeTime) return
+        setDirty(dayTime, time)
+        dayTime = time
+    }
+
+    @Suppress("unused")
+    fun setDayTimeForce(time: Long) {
         setDirty(dayTime, time)
         dayTime = time
     }
@@ -149,6 +179,12 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
         raining = newRaining
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun setRainingForce(newRaining: Boolean) {
+        setDirty(raining, newRaining)
+        raining = newRaining
+    }
+
     override fun isHardcore(): Boolean = worldData.isHardcore
 
     override fun getGameRules(): GameRules = worldData.gameRules
@@ -186,6 +222,23 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
         tag.putBoolean("freezeTime", freezeTime)
         tag.putBoolean("freezeWeather", freezeWeather)
         return tag
+    }
+
+    @Suppress("unused")
+    fun setWeatherParameters(clearTime: Int, weatherTime: Int, isRaining: Boolean, isThundering: Boolean) {
+        setClearWeatherTime(clearTime)
+        setRainTime(weatherTime)
+        setThunderTime(weatherTime)
+        setRaining(isRaining)
+        setThundering(isThundering)
+    }
+
+    fun setWeatherParametersForce(clearTime: Int, weatherTime: Int, isRaining: Boolean, isThundering: Boolean) {
+        setClearWeatherTimeForce(clearTime)
+        setRainTimeForce(weatherTime)
+        setThunderTimeForce(weatherTime)
+        setRainingForce(isRaining)
+        setThunderingForce(isThundering)
     }
 
     private fun <T> setDirty(oldValue: T, newValue: T) {
