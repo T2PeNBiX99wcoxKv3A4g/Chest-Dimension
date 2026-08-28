@@ -47,6 +47,9 @@ class ChestServerLevel(
         "chest_dimension_level_data"
     )
 
+    @Suppress("unused")
+    val chestServerLevelData: ChestServerLevelData? = serverLevelData as? ChestServerLevelData
+
     private fun loadDimData(tag: CompoundTag): ChestSavedData {
         (serverLevelData as? ChestServerLevelData)?.load(tag)
         return ChestSavedData(serverLevelData)
