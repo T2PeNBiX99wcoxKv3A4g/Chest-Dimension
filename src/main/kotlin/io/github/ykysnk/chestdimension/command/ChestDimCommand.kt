@@ -875,34 +875,69 @@ object ChestDimCommand {
                 requires { it.hasPermission(2) }
 
                 literal("set") {
-                    literal("day") {
-                        executes {
-                            setTime(it.source.level, it.source, 1000)
+                    literal("dayskeep") {
+                        literal("day") {
+                            executes {
+                                setDayTime(it.source.level, it.source, 1000)
+                            }
+                        }
+
+                        literal("noon") {
+                            executes {
+                                setDayTime(it.source.level, it.source, 6000)
+                            }
+                        }
+
+                        literal("night") {
+                            executes {
+                                setDayTime(it.source.level, it.source, 13000)
+                            }
+                        }
+
+                        literal("midnight") {
+                            executes {
+                                setDayTime(it.source.level, it.source, 18000)
+                            }
+                        }
+
+                        argument("time", TimeArgument.time()) {
+                            executes {
+                                val time = IntegerArgumentType.getInteger(it, "time")
+                                setDayTime(it.source.level, it.source, time)
+                            }
                         }
                     }
 
-                    literal("noon") {
-                        executes {
-                            setTime(it.source.level, it.source, 6000)
+                    literal("daysreset") {
+                        literal("day") {
+                            executes {
+                                setTime(it.source.level, it.source, 1000)
+                            }
                         }
-                    }
 
-                    literal("night") {
-                        executes {
-                            setTime(it.source.level, it.source, 13000)
+                        literal("noon") {
+                            executes {
+                                setTime(it.source.level, it.source, 6000)
+                            }
                         }
-                    }
 
-                    literal("midnight") {
-                        executes {
-                            setTime(it.source.level, it.source, 18000)
+                        literal("night") {
+                            executes {
+                                setTime(it.source.level, it.source, 13000)
+                            }
                         }
-                    }
 
-                    argument("time", TimeArgument.time()) {
-                        executes {
-                            val time = IntegerArgumentType.getInteger(it, "time")
-                            setTime(it.source.level, it.source, time)
+                        literal("midnight") {
+                            executes {
+                                setTime(it.source.level, it.source, 18000)
+                            }
+                        }
+
+                        argument("time", TimeArgument.time()) {
+                            executes {
+                                val time = IntegerArgumentType.getInteger(it, "time")
+                                setTime(it.source.level, it.source, time)
+                            }
                         }
                     }
                 }
@@ -938,39 +973,79 @@ object ChestDimCommand {
 
                 uuidArg {
                     literal("set") {
-                        literal("day") {
-                            executes {
-                                val uuid = UuidArgument.getUuid(it, "uuid")
-                                setTime(uuid, it.source, 1000)
+                        literal("dayskeep") {
+                            literal("day") {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setDayTime(uuid, it.source, 1000)
+                                }
+                            }
+
+                            literal("noon") {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setDayTime(uuid, it.source, 6000)
+                                }
+                            }
+
+                            literal("night") {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setDayTime(uuid, it.source, 13000)
+                                }
+                            }
+
+                            literal("midnight") {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setDayTime(uuid, it.source, 18000)
+                                }
+                            }
+
+                            argument("time", TimeArgument.time()) {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    val time = IntegerArgumentType.getInteger(it, "time")
+                                    setDayTime(uuid, it.source, time)
+                                }
                             }
                         }
 
-                        literal("noon") {
-                            executes {
-                                val uuid = UuidArgument.getUuid(it, "uuid")
-                                setTime(uuid, it.source, 6000)
+                        literal("daysreset") {
+                            literal("day") {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setTime(uuid, it.source, 1000)
+                                }
                             }
-                        }
 
-                        literal("night") {
-                            executes {
-                                val uuid = UuidArgument.getUuid(it, "uuid")
-                                setTime(uuid, it.source, 13000)
+                            literal("noon") {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setTime(uuid, it.source, 6000)
+                                }
                             }
-                        }
 
-                        literal("midnight") {
-                            executes {
-                                val uuid = UuidArgument.getUuid(it, "uuid")
-                                setTime(uuid, it.source, 18000)
+                            literal("night") {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setTime(uuid, it.source, 13000)
+                                }
                             }
-                        }
 
-                        argument("time", TimeArgument.time()) {
-                            executes {
-                                val uuid = UuidArgument.getUuid(it, "uuid")
-                                val time = IntegerArgumentType.getInteger(it, "time")
-                                setTime(uuid, it.source, time)
+                            literal("midnight") {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    setTime(uuid, it.source, 18000)
+                                }
+                            }
+
+                            argument("time", TimeArgument.time()) {
+                                executes {
+                                    val uuid = UuidArgument.getUuid(it, "uuid")
+                                    val time = IntegerArgumentType.getInteger(it, "time")
+                                    setTime(uuid, it.source, time)
+                                }
                             }
                         }
                     }
@@ -1014,39 +1089,79 @@ object ChestDimCommand {
 
                 argument("dimension", DimensionArgument.dimension()) {
                     literal("set") {
-                        literal("day") {
-                            executes {
-                                val level = DimensionArgument.getDimension(it, "dimension")
-                                setTime(level, it.source, 1000)
+                        literal("dayskeep") {
+                            literal("day") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setDayTime(level, it.source, 1000)
+                                }
+                            }
+
+                            literal("noon") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setDayTime(level, it.source, 6000)
+                                }
+                            }
+
+                            literal("night") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setDayTime(level, it.source, 13000)
+                                }
+                            }
+
+                            literal("midnight") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setDayTime(level, it.source, 18000)
+                                }
+                            }
+
+                            argument("time", TimeArgument.time()) {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    val time = IntegerArgumentType.getInteger(it, "time")
+                                    setDayTime(level, it.source, time)
+                                }
                             }
                         }
 
-                        literal("noon") {
-                            executes {
-                                val level = DimensionArgument.getDimension(it, "dimension")
-                                setTime(level, it.source, 6000)
+                        literal("daysreset") {
+                            literal("day") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setTime(level, it.source, 1000)
+                                }
                             }
-                        }
 
-                        literal("night") {
-                            executes {
-                                val level = DimensionArgument.getDimension(it, "dimension")
-                                setTime(level, it.source, 13000)
+                            literal("noon") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setTime(level, it.source, 6000)
+                                }
                             }
-                        }
 
-                        literal("midnight") {
-                            executes {
-                                val level = DimensionArgument.getDimension(it, "dimension")
-                                setTime(level, it.source, 18000)
+                            literal("night") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setTime(level, it.source, 13000)
+                                }
                             }
-                        }
 
-                        argument("time", TimeArgument.time()) {
-                            executes {
-                                val level = DimensionArgument.getDimension(it, "dimension")
-                                val time = IntegerArgumentType.getInteger(it, "time")
-                                setTime(level, it.source, time)
+                            literal("midnight") {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    setTime(level, it.source, 18000)
+                                }
+                            }
+
+                            argument("time", TimeArgument.time()) {
+                                executes {
+                                    val level = DimensionArgument.getDimension(it, "dimension")
+                                    val time = IntegerArgumentType.getInteger(it, "time")
+                                    setTime(level, it.source, time)
+                                }
                             }
                         }
                     }
@@ -1087,34 +1202,69 @@ object ChestDimCommand {
 
                 literal("all") {
                     literal("set") {
-                        literal("day") {
-                            executes {
-                                setTime(it.source, 1000)
+                        literal("dayskeep") {
+                            literal("day") {
+                                executes {
+                                    setDayTime(it.source, 1000)
+                                }
+                            }
+
+                            literal("noon") {
+                                executes {
+                                    setDayTime(it.source, 6000)
+                                }
+                            }
+
+                            literal("night") {
+                                executes {
+                                    setDayTime(it.source, 13000)
+                                }
+                            }
+
+                            literal("midnight") {
+                                executes {
+                                    setDayTime(it.source, 18000)
+                                }
+                            }
+
+                            argument("time", TimeArgument.time()) {
+                                executes {
+                                    val time = IntegerArgumentType.getInteger(it, "time")
+                                    setDayTime(it.source, time)
+                                }
                             }
                         }
 
-                        literal("noon") {
-                            executes {
-                                setTime(it.source, 6000)
+                        literal("daysreset") {
+                            literal("day") {
+                                executes {
+                                    setTime(it.source, 1000)
+                                }
                             }
-                        }
 
-                        literal("night") {
-                            executes {
-                                setTime(it.source, 13000)
+                            literal("noon") {
+                                executes {
+                                    setTime(it.source, 6000)
+                                }
                             }
-                        }
 
-                        literal("midnight") {
-                            executes {
-                                setTime(it.source, 18000)
+                            literal("night") {
+                                executes {
+                                    setTime(it.source, 13000)
+                                }
                             }
-                        }
 
-                        argument("time", TimeArgument.time()) {
-                            executes {
-                                val time = IntegerArgumentType.getInteger(it, "time")
-                                setTime(it.source, time)
+                            literal("midnight") {
+                                executes {
+                                    setTime(it.source, 18000)
+                                }
+                            }
+
+                            argument("time", TimeArgument.time()) {
+                                executes {
+                                    val time = IntegerArgumentType.getInteger(it, "time")
+                                    setTime(it.source, time)
+                                }
                             }
                         }
                     }
@@ -1132,39 +1282,79 @@ object ChestDimCommand {
                 literal("chestdims") {
                     uuidArg {
                         literal("set") {
-                            literal("day") {
-                                executes {
-                                    val uuid = UuidArgument.getUuid(it, "uuid")
-                                    setTime(uuid, it.source, 1000)
+                            literal("dayskeep") {
+                                literal("day") {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        setDayTime(uuid, it.source, 1000)
+                                    }
+                                }
+
+                                literal("noon") {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        setDayTime(uuid, it.source, 6000)
+                                    }
+                                }
+
+                                literal("night") {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        setDayTime(uuid, it.source, 13000)
+                                    }
+                                }
+
+                                literal("midnight") {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        setDayTime(uuid, it.source, 18000)
+                                    }
+                                }
+
+                                argument("time", TimeArgument.time()) {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        val time = IntegerArgumentType.getInteger(it, "time")
+                                        setDayTime(uuid, it.source, time)
+                                    }
                                 }
                             }
 
-                            literal("noon") {
-                                executes {
-                                    val uuid = UuidArgument.getUuid(it, "uuid")
-                                    setTime(uuid, it.source, 6000)
+                            literal("daysreset") {
+                                literal("day") {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        setTime(uuid, it.source, 1000)
+                                    }
                                 }
-                            }
 
-                            literal("night") {
-                                executes {
-                                    val uuid = UuidArgument.getUuid(it, "uuid")
-                                    setTime(uuid, it.source, 13000)
+                                literal("noon") {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        setTime(uuid, it.source, 6000)
+                                    }
                                 }
-                            }
 
-                            literal("midnight") {
-                                executes {
-                                    val uuid = UuidArgument.getUuid(it, "uuid")
-                                    setTime(uuid, it.source, 18000)
+                                literal("night") {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        setTime(uuid, it.source, 13000)
+                                    }
                                 }
-                            }
 
-                            argument("time", TimeArgument.time()) {
-                                executes {
-                                    val uuid = UuidArgument.getUuid(it, "uuid")
-                                    val time = IntegerArgumentType.getInteger(it, "time")
-                                    setTime(uuid, it.source, time)
+                                literal("midnight") {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        setTime(uuid, it.source, 18000)
+                                    }
+                                }
+
+                                argument("time", TimeArgument.time()) {
+                                    executes {
+                                        val uuid = UuidArgument.getUuid(it, "uuid")
+                                        val time = IntegerArgumentType.getInteger(it, "time")
+                                        setTime(uuid, it.source, time)
+                                    }
                                 }
                             }
                         }
@@ -1211,39 +1401,79 @@ object ChestDimCommand {
                     literal("registry") {
                         argument("dimension", DimensionArgument.dimension()) {
                             literal("set") {
-                                literal("day") {
-                                    executes {
-                                        val level = DimensionArgument.getDimension(it, "dimension")
-                                        setTime(level, it.source, 1000)
+                                literal("dayskeep") {
+                                    literal("day") {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            setDayTime(level, it.source, 1000)
+                                        }
+                                    }
+
+                                    literal("noon") {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            setDayTime(level, it.source, 6000)
+                                        }
+                                    }
+
+                                    literal("night") {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            setDayTime(level, it.source, 13000)
+                                        }
+                                    }
+
+                                    literal("midnight") {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            setDayTime(level, it.source, 18000)
+                                        }
+                                    }
+
+                                    argument("time", TimeArgument.time()) {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            val time = IntegerArgumentType.getInteger(it, "time")
+                                            setDayTime(level, it.source, time)
+                                        }
                                     }
                                 }
 
-                                literal("noon") {
-                                    executes {
-                                        val level = DimensionArgument.getDimension(it, "dimension")
-                                        setTime(level, it.source, 6000)
+                                literal("daysreset") {
+                                    literal("day") {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            setTime(level, it.source, 1000)
+                                        }
                                     }
-                                }
 
-                                literal("night") {
-                                    executes {
-                                        val level = DimensionArgument.getDimension(it, "dimension")
-                                        setTime(level, it.source, 13000)
+                                    literal("noon") {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            setTime(level, it.source, 6000)
+                                        }
                                     }
-                                }
 
-                                literal("midnight") {
-                                    executes {
-                                        val level = DimensionArgument.getDimension(it, "dimension")
-                                        setTime(level, it.source, 18000)
+                                    literal("night") {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            setTime(level, it.source, 13000)
+                                        }
                                     }
-                                }
 
-                                argument("time", TimeArgument.time()) {
-                                    executes {
-                                        val level = DimensionArgument.getDimension(it, "dimension")
-                                        val time = IntegerArgumentType.getInteger(it, "time")
-                                        setTime(level, it.source, time)
+                                    literal("midnight") {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            setTime(level, it.source, 18000)
+                                        }
+                                    }
+
+                                    argument("time", TimeArgument.time()) {
+                                        executes {
+                                            val level = DimensionArgument.getDimension(it, "dimension")
+                                            val time = IntegerArgumentType.getInteger(it, "time")
+                                            setTime(level, it.source, time)
+                                        }
                                     }
                                 }
                             }
@@ -1286,64 +1516,129 @@ object ChestDimCommand {
                     literal("dynamic") {
                         allDimsArg {
                             literal("set") {
-                                literal("day") {
-                                    executes {
-                                        val dimension = StringArgumentType.getString(it, "dimension")
-                                        val level = getLevel(it.source, dimension)
-                                        if (level == null) {
-                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                literal("dayskeep") {
+                                    literal("day") {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            setDayTime(level, it.source, 1000)
                                         }
-                                        setTime(level, it.source, 1000)
+                                    }
+
+                                    literal("noon") {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            setDayTime(level, it.source, 6000)
+                                        }
+                                    }
+
+                                    literal("night") {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            setDayTime(level, it.source, 13000)
+                                        }
+                                    }
+
+                                    literal("midnight") {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            setDayTime(level, it.source, 18000)
+                                        }
+                                    }
+
+                                    argument("time", TimeArgument.time()) {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            val time = IntegerArgumentType.getInteger(it, "time")
+                                            setDayTime(level, it.source, time)
+                                        }
                                     }
                                 }
 
-                                literal("noon") {
-                                    executes {
-                                        val dimension = StringArgumentType.getString(it, "dimension")
-                                        val level = getLevel(it.source, dimension)
-                                        if (level == null) {
-                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                literal("daysreset") {
+                                    literal("day") {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            setTime(level, it.source, 1000)
                                         }
-                                        setTime(level, it.source, 6000)
                                     }
-                                }
 
-                                literal("night") {
-                                    executes {
-                                        val dimension = StringArgumentType.getString(it, "dimension")
-                                        val level = getLevel(it.source, dimension)
-                                        if (level == null) {
-                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                    literal("noon") {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            setTime(level, it.source, 6000)
                                         }
-                                        setTime(level, it.source, 13000)
                                     }
-                                }
 
-                                literal("midnight") {
-                                    executes {
-                                        val dimension = StringArgumentType.getString(it, "dimension")
-                                        val level = getLevel(it.source, dimension)
-                                        if (level == null) {
-                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                    literal("night") {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            setTime(level, it.source, 13000)
                                         }
-                                        setTime(level, it.source, 18000)
                                     }
-                                }
 
-                                argument("time", TimeArgument.time()) {
-                                    executes {
-                                        val dimension = StringArgumentType.getString(it, "dimension")
-                                        val level = getLevel(it.source, dimension)
-                                        if (level == null) {
-                                            it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                    literal("midnight") {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            setTime(level, it.source, 18000)
                                         }
-                                        val time = IntegerArgumentType.getInteger(it, "time")
-                                        setTime(level, it.source, time)
+                                    }
+
+                                    argument("time", TimeArgument.time()) {
+                                        executes {
+                                            val dimension = StringArgumentType.getString(it, "dimension")
+                                            val level = getLevel(it.source, dimension)
+                                            if (level == null) {
+                                                it.source.sendFailure(Component.literal("Dimension is not valid."))
+                                                return@executes 0
+                                            }
+                                            val time = IntegerArgumentType.getInteger(it, "time")
+                                            setTime(level, it.source, time)
+                                        }
                                     }
                                 }
                             }
@@ -2127,6 +2422,33 @@ object ChestDimCommand {
         val i = getDayTime(level)
         source.sendSuccess({ Component.translatable("commands.time.set", i) }, true)
         return i
+    }
+
+    private fun setDayTime(source: CommandSourceStack, time: Int): Int {
+        for (serverLevel in source.server.allLevels) {
+            val currentDay = serverLevel.dayTime / 24000L
+            val set = currentDay * 24000L + time
+            serverLevel.dayTime = set
+        }
+
+        val currentDay = source.level.dayTime / 24000L
+        val set = currentDay * 24000L + time
+
+        source.sendSuccess({ Component.translatable("commands.time.set", set) }, true)
+        return getDayTime(source.level)
+    }
+
+    private fun setDayTime(uuid: UUID, source: CommandSourceStack, time: Int): Int {
+        val level = getLevel(source, uuid)
+        return setDayTime(level, source, time)
+    }
+
+    private fun setDayTime(level: ServerLevel, source: CommandSourceStack, time: Int): Int {
+        val currentDay = level.dayTime / 24000L
+        val set = currentDay * 24000L + time
+        level.dayTime = set
+        source.sendSuccess({ Component.translatable("commands.time.set", set) }, true)
+        return getDayTime(level)
     }
 
     private fun getDuration(level: ServerLevel, time: Int, timeProvider: IntProvider): Int {
