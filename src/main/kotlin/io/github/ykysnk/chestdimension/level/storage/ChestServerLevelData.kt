@@ -14,15 +14,55 @@ import java.util.*
 
 class ChestServerLevelData(private val worldData: WorldData, private val wrapped: ServerLevelData) : ServerLevelData {
     private var xSpawn = 0
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     private var ySpawn = 1
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     private var zSpawn = 0
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     private var spawnAngle = 0f
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     private var dayTime: Long = 0L
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     private var clearWeatherTime = 0
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     private var raining = false
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     private var rainTime = 0
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     private var thundering = false
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
     private var thunderTime = 0
+        set(value) {
+            setDirty(field, value)
+            field = value
+        }
 
     @Suppress("MemberVisibilityCanBePrivate")
     var freezeTime: Boolean = false
@@ -44,13 +84,11 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun setThundering(newThundering: Boolean) {
         if (freezeWeather) return
-        setDirty(thundering, newThundering)
         thundering = newThundering
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setThunderingForce(newThundering: Boolean) {
-        setDirty(thundering, newThundering)
         thundering = newThundering
     }
 
@@ -58,13 +96,11 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun setRainTime(time: Int) {
         if (freezeWeather) return
-        setDirty(rainTime, time)
         rainTime = time
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setRainTimeForce(time: Int) {
-        setDirty(rainTime, time)
         rainTime = time
     }
 
@@ -72,13 +108,11 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun setThunderTime(time: Int) {
         if (freezeWeather) return
-        setDirty(thunderTime, time)
         thunderTime = time
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setThunderTimeForce(time: Int) {
-        setDirty(thunderTime, time)
         thunderTime = time
     }
 
@@ -86,12 +120,11 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun setClearWeatherTime(time: Int) {
         if (freezeWeather) return
-        setDirty(clearWeatherTime, time)
         clearWeatherTime = time
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setClearWeatherTimeForce(time: Int) {
-        setDirty(clearWeatherTime, time)
         clearWeatherTime = time
     }
 
@@ -127,33 +160,27 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun setDayTime(time: Long) {
         if (freezeTime) return
-        setDirty(dayTime, time)
         dayTime = time
     }
 
     @Suppress("unused")
     fun setDayTimeForce(time: Long) {
-        setDirty(dayTime, time)
         dayTime = time
     }
 
     override fun setXSpawn(newXSpawn: Int) {
-        setDirty(xSpawn, newXSpawn)
         xSpawn = newXSpawn
     }
 
     override fun setYSpawn(newYSpawn: Int) {
-        setDirty(ySpawn, newYSpawn)
         ySpawn = newYSpawn
     }
 
     override fun setZSpawn(newZSpawn: Int) {
-        setDirty(zSpawn, newZSpawn)
         zSpawn = newZSpawn
     }
 
     override fun setSpawnAngle(newSpawnAngle: Float) {
-        setDirty(spawnAngle, newSpawnAngle)
         spawnAngle = newSpawnAngle
     }
 
@@ -175,13 +202,11 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun setRaining(newRaining: Boolean) {
         if (freezeWeather) return
-        setDirty(raining, newRaining)
         raining = newRaining
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setRainingForce(newRaining: Boolean) {
-        setDirty(raining, newRaining)
         raining = newRaining
     }
 
