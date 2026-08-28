@@ -12,6 +12,7 @@ import io.github.ykysnk.chestdimension.extensions.*
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -41,7 +42,7 @@ object ChestDimCommand {
     private val ERROR_INVULNERABLE = SimpleCommandExceptionType(Component.translatable("commands.damage.invulnerable"))
 
     @Suppress("SpellCheckingInspection")
-    fun register(
+    private fun register(
         dispatcher: CommandDispatcher<CommandSourceStack>,
         registryAccess: CommandBuildContext,
         environment: Commands.CommandSelection
@@ -2537,5 +2538,11 @@ object ChestDimCommand {
         }
         if (count == 0) throw ERROR_INVULNERABLE.create()
         return count
+    }
+
+    init {
+        CommandRegistrationCallback.EVENT.register { dispatcher, registryAccess, environment ->
+            register(dispatcher, registryAccess, environment)
+        }
     }
 }

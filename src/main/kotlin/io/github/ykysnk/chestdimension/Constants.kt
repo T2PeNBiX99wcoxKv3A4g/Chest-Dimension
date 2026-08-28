@@ -3,6 +3,7 @@
 package io.github.ykysnk.chestdimension
 
 import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.command.ChestDimCommand
 import io.github.ykysnk.chestdimension.item.ItemGroups
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
@@ -36,7 +37,16 @@ object Constants {
     }
 
     val ForceInitialize: Unit by lazy {
-        LOGGER.debug("{} {} {} {} {} {}", Blocks, Items, ItemGroups, ChestLevelStorage, ChestLevelManager, Network)
+        LOGGER.debug(
+            "{} {} {} {} {} {} {}",
+            Blocks,
+            Items,
+            ItemGroups,
+            ChestLevelStorage,
+            ChestLevelManager,
+            Network,
+            ChestDimCommand
+        )
     }
 
     private var getServer: MinecraftServer? = null
