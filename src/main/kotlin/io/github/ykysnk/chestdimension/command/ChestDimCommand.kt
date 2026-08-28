@@ -2388,9 +2388,9 @@ object ChestDimCommand {
 
     private fun setTime(source: CommandSourceStack, time: Int): Int {
         for (serverLevel in source.server.allLevels) serverLevel.dayTime = time.toLong()
-
-        source.sendSuccess({ Component.translatable("commands.time.set", time) }, true)
-        return getDayTime(source.level)
+        val dayTime = getDayTime(source.level)
+        source.sendSuccess({ Component.translatable("commands.time.set", dayTime) }, true)
+        return dayTime
     }
 
     private fun setTime(uuid: UUID, source: CommandSourceStack, time: Int): Int {
@@ -2406,10 +2406,9 @@ object ChestDimCommand {
 
     private fun addTime(source: CommandSourceStack, amount: Int): Int {
         for (serverLevel in source.server.allLevels) serverLevel.dayTime += amount.toLong()
-
-        val i = getDayTime(source.level)
-        source.sendSuccess({ Component.translatable("commands.time.set", i) }, true)
-        return i
+        val dayTime = getDayTime(source.level)
+        source.sendSuccess({ Component.translatable("commands.time.set", dayTime) }, true)
+        return dayTime
     }
 
     private fun addTime(uuid: UUID, source: CommandSourceStack, amount: Int): Int {
@@ -2419,23 +2418,20 @@ object ChestDimCommand {
 
     private fun addTime(level: ServerLevel, source: CommandSourceStack, amount: Int): Int {
         level.dayTime += amount.toLong()
-        val i = getDayTime(level)
-        source.sendSuccess({ Component.translatable("commands.time.set", i) }, true)
-        return i
+        val dayTime = getDayTime(level)
+        source.sendSuccess({ Component.translatable("commands.time.set", dayTime) }, true)
+        return dayTime
     }
 
     private fun setDayTime(source: CommandSourceStack, time: Int): Int {
         for (serverLevel in source.server.allLevels) {
             val currentDay = serverLevel.dayTime / 24000L
-            val set = currentDay * 24000L + time
-            serverLevel.dayTime = set
+            serverLevel.dayTime = currentDay * 24000L + time
         }
 
-        val currentDay = source.level.dayTime / 24000L
-        val set = currentDay * 24000L + time
-
-        source.sendSuccess({ Component.translatable("commands.time.set", set) }, true)
-        return getDayTime(source.level)
+        val dayTime = getDayTime(source.level)
+        source.sendSuccess({ Component.translatable("commands.time.set", dayTime) }, true)
+        return dayTime
     }
 
     private fun setDayTime(uuid: UUID, source: CommandSourceStack, time: Int): Int {
@@ -2445,10 +2441,10 @@ object ChestDimCommand {
 
     private fun setDayTime(level: ServerLevel, source: CommandSourceStack, time: Int): Int {
         val currentDay = level.dayTime / 24000L
-        val set = currentDay * 24000L + time
-        level.dayTime = set
-        source.sendSuccess({ Component.translatable("commands.time.set", set) }, true)
-        return getDayTime(level)
+        level.dayTime = currentDay * 24000L + time
+        val dayTime = getDayTime(level)
+        source.sendSuccess({ Component.translatable("commands.time.set", dayTime) }, true)
+        return dayTime
     }
 
     private fun getDuration(level: ServerLevel, time: Int, timeProvider: IntProvider): Int {
