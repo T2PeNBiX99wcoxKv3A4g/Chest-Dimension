@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "chest-dimension:block/weather_time_controller"
+    }
+  }
+}

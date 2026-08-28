@@ -12,5 +12,6 @@ class BlockLootTableProvider(output: FabricDataOutput) : FabricBlockLootTablePro
         dropSelf(Blocks.CHEST_PLATFORM_ENTER_PLATE)
         dropSelf(Blocks.TELEPORT_PRESSURE_PLATE)
         dropSelf(Blocks.CHEST_DIMENSION)
+        dropSelf(Blocks.WEATHER_TIME_CONTROLLER)
     }
 }

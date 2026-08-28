@@ -24,4 +24,7 @@ object Items : RegistryHelper<Item>() {
 
     @JvmField
     val CHEST_DIMENSION: Item = register { MCItems.registerBlock(ChestDimensionBlockItem()) }
+
+    @JvmField
+    val WEATHER_TIME_CONTROLLER: Item = register { MCItems.registerBlock(Blocks.WEATHER_TIME_CONTROLLER) }
 }

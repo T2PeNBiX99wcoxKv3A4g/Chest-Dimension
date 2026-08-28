@@ -23,5 +23,6 @@ class BlockTagProvider(output: FabricDataOutput, registries: CompletableFuture<H
             .add(Blocks.CHEST_PLATFORM_ENTER_PLATE)
             .add(Blocks.TELEPORT_PRESSURE_PLATE)
             .add(Blocks.CHEST_DIMENSION)
+            .add(Blocks.WEATHER_TIME_CONTROLLER)
     }
 }

@@ -42,6 +42,8 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
                 chestPlatformEnterPlateVariant
             )
         )
+
+        blockStateModelGenerator.createTrivialCube(Blocks.WEATHER_TIME_CONTROLLER)
     }
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerators) {

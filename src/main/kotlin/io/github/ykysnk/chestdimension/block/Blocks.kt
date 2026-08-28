@@ -23,6 +23,7 @@ object Blocks : RegistryHelper<Block>() {
         "chest_platform",
         Block(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0f, 1200.0f).sound(SoundType.WOOD))
     )
+
     val CHEST_PLATFORM_WALL: Block = register(
         "chest_platform_wall",
         WallBlock(
@@ -59,6 +60,14 @@ object Blocks : RegistryHelper<Block>() {
         "chest_dimension",
         ChestDimensionBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.0f, 1200.0f).sound(SoundType.WOOD)
+        )
+    )
+
+    val WEATHER_TIME_CONTROLLER: Block = register(
+        "weather_time_controller",
+        WeatherTimeControllerBlock(
+            BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).forceSolidOn()
+                .strength(2.0f, 1200.0f).sound(SoundType.WOOD)
         )
     )
 }

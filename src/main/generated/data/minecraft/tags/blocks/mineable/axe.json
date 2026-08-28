@@ -6,6 +6,7 @@
     "chest-dimension:chest_platform_fence",
     "chest-dimension:chest_platform_enter_plate",
     "chest-dimension:teleport_pressure_plate",
-    "chest-dimension:chest_dimension"
+    "chest-dimension:chest_dimension",
+    "chest-dimension:weather_time_controller"
   ]
 }
