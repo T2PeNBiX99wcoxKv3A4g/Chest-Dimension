@@ -1,6 +1,7 @@
 package io.github.ykysnk.chestdimension.world
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.level.ChestServerLevel
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
@@ -15,9 +16,10 @@ object Network {
             val time = buf.readLong()
 
             server.execute {
-                val level = server.getLevel(dimension) ?: return@execute
-                val currentDay = level.dayTime / 24000L
-                level.dayTime = currentDay * 24000L + time
+                (server.getLevel(dimension) as? ChestServerLevel)?.apply {
+                    val currentDay = dayTime / 24000L
+                    dayTime = currentDay * 24000L + time
+                }
             }
         }
 
@@ -26,19 +28,19 @@ object Network {
             val weather = buf.readEnum(WeatherType::class.java)
 
             server.execute {
-                val level = server.getLevel(dimension) ?: return@execute
+                (server.getLevel(dimension) as? ChestServerLevel)?.apply {
+                    when (weather) {
+                        WeatherType.CLEAR -> {
+                            setWeatherParameters(6000, 0, false, false)
+                        }
 
-                when (weather) {
-                    WeatherType.CLEAR -> {
-                        level.setWeatherParameters(6000, 0, false, false)
-                    }
+                        WeatherType.RAIN -> {
+                            setWeatherParameters(0, 6000, true, false)
+                        }
 
-                    WeatherType.RAIN -> {
-                        level.setWeatherParameters(0, 6000, true, false)
-                    }
-
-                    WeatherType.THUNDER -> {
-                        level.setWeatherParameters(0, 6000, true, true)
+                        WeatherType.THUNDER -> {
+                            setWeatherParameters(0, 6000, true, true)
+                        }
                     }
                 }
             }

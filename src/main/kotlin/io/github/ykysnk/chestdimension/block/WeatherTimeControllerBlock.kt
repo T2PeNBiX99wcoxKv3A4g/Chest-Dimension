@@ -23,9 +23,9 @@ class WeatherTimeControllerBlock(properties: Properties) : Block(properties) {
         hit: BlockHitResult
     ): InteractionResult {
         if (!level.isClientSide) {
-            (player as? ServerPlayer)?.let { serverPlayer ->
+            (player as? ServerPlayer)?.apply {
                 (level as? ServerLevel)?.let {
-                    serverPlayer.openMenu(WeatherTimeControllerFactory(it))
+                    openMenu(WeatherTimeControllerFactory(it))
                 }
             }
         }
