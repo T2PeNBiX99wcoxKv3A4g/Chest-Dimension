@@ -72,7 +72,8 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${providers.gradleProperty("fabric_kotlin_version").get()}")
     modImplementation("com.terraformersmc:modmenu:${providers.gradleProperty("mod_menu_version").get()}")
     modImplementation("dev.isxander:yet-another-config-lib:${providers.gradleProperty("yacl_version").get()}")
-    modImplementation("com.simibubi.create:create-fabric:${providers.gradleProperty("create_version").get()}")
+    modCompileOnly("com.simibubi.create:create-fabric:${providers.gradleProperty("create_version").get()}")
+//    modRuntimeOnly("com.simibubi.create:create-fabric:${providers.gradleProperty("create_version").get()}")
     include(implementation("net.mamoe.yamlkt:yamlkt:${providers.gradleProperty("yamlkt_version").get()}")!!)
 }
 
