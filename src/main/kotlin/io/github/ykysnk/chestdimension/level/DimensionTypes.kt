@@ -22,9 +22,9 @@ object DimensionTypes {
             1.0, // coordinateScale
             true, // bedWorks
             true, // respawnAnchorWorks
-            -2032, // minY
-            4064, // height
-            4064, // logicalHeight
+            -128, // minY
+            2160, // height
+            2160, // logicalHeight
             BlockTags.INFINIBURN_OVERWORLD, // infiniburn
             BuiltinDimensionTypes.OVERWORLD_EFFECTS,
             0.0f, // ambientLight
