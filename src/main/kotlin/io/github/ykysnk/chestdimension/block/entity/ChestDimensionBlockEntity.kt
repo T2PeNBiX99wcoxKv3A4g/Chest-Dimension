@@ -130,10 +130,10 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
 
     override fun setLevel(level: Level) {
         super.setLevel(level)
-        (level as? ServerLevel)?.let {
+        (level as? ServerLevel)?.apply {
             ChestLevelManager.setActive(uuid)
-            if (haveSameChest()) return@let
-            UUIDManager.setChestData(uuid, it.dimension(), blockPos)
+            if (haveSameChest()) return@apply
+            UUIDManager.setChestData(uuid, dimension(), blockPos)
             UUIDManager.save()
         }
     }

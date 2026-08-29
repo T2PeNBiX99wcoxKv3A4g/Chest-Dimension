@@ -6,6 +6,7 @@ import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
 import io.github.ykysnk.chestdimension.extensions.*
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
@@ -59,13 +60,13 @@ object ChestLevelManager {
         val generator = ChestChunkGenerator(biomeSource)
         val levelStem = LevelStem(dimensionType, generator)
 
-        for ((uuid, data) in UUIDManager.getMap()) {
-            val uuid2 = runCatching { UUID.fromString(uuid) }.getOrElse {
-                Constants.LOGGER.warn("Invalid UUID in levels.yaml: $uuid (${it.localizedMessage})", it)
+        for ((uuidString, data) in UUIDManager.getMap()) {
+            val uuid = runCatching { UUID.fromString(uuidString) }.getOrElse {
+                Constants.LOGGER.warn("Invalid UUID in levels.yaml: $uuidString (${it.localizedMessage})", it)
                 continue
             }
-            if (!UUIDManager.isActive(uuid2)) continue
-            val worldKey = createWorldKey(uuid2)
+            if (!UUIDManager.isActive(uuid)) continue
+            val worldKey = createWorldKey(uuid)
             val seed = data.seed
             val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
             val level = ChestServerLevel(
@@ -82,8 +83,8 @@ object ChestLevelManager {
             )
 
             server.levels[worldKey] = level
-            loaded[uuid2] = LoadedChestWorld(uuid2, level)
-            levelToUUID[worldKey] = uuid2
+            loaded[uuid] = LoadedChestWorld(uuid, level)
+            levelToUUID[worldKey] = uuid
         }
     }
 
@@ -327,14 +328,40 @@ object ChestLevelManager {
     private fun createWorldKey(uuid: UUID): ResourceKey<Level> =
         ResourceKey.create(Registries.DIMENSION, Constants.id("chest/$uuid"))
 
+    private var hasCheckLevels = false
+
+    private fun checkLevels() {
+        if (hasCheckLevels) return
+        val badData = hashSetOf<UUID>()
+        val reallyBadData = hashSetOf<String>()
+        UUIDManager.getMap().forEach { (uuidString, data) ->
+            val uuid = runCatching { UUID.fromString(uuidString) }.getOrElse {
+                reallyBadData.add(uuidString)
+                Constants.LOGGER.warn("Invalid UUID in levels.yaml: $uuidString (${it.localizedMessage})", it)
+                return@forEach
+            }
+            val level = UUIDManager.getExitChestDimension(uuid) ?: return@forEach
+            val pos = UUIDManager.getExitChestPosition(uuid) ?: return@forEach
+            if (level.getBlockState(pos).block is ChestDimensionBlock) return@forEach
+            badData.add(uuid)
+        }
+        badData.forEach { setInactive(it) }
+        reallyBadData.forEach { UUIDManager.remove(it) }
+        hasCheckLevels = true
+    }
+
     private fun clear() {
         loaded.clear()
         levelToUUID.clear()
     }
 
     init {
+        ServerTickEvents.START_SERVER_TICK.register {
+            checkLevels()
+        }
         ServerLifecycleEvents.SERVER_STOPPING.register {
             clear()
+            hasCheckLevels = false
         }
     }
 }

@@ -115,6 +115,13 @@ object UUIDManager {
 
     operator fun get(uuid: UUID) = data.levels[uuid.toString()]
 
+    @Suppress("unused")
+    fun remove(uuid: UUID) = remove(uuid.toString())
+
+    fun remove(uuidString: String) {
+        data.levels.remove(uuidString)
+    }
+
     fun getMap() = data.levels.toMap()
 
     fun getInactiveList() = data.inactiveLevels.toList()
