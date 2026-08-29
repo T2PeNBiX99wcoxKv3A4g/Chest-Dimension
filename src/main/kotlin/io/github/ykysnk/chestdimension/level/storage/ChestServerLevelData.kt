@@ -1,9 +1,10 @@
 package io.github.ykysnk.chestdimension.level.storage
 
 import io.github.ykysnk.chestdimension.level.saveddata.ChestSavedData
+import io.github.ykysnk.chestdimension.utils.NBTHelper
+import io.github.ykysnk.chestdimension.utils.save
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.Difficulty
@@ -288,12 +289,7 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
         spawnPosList.clear()
 
         val list = tag.getList("spawnPosList", Tag.TAG_COMPOUND.toInt())
-
-        for (i in list.indices) {
-            val posTag = list.getCompound(i)
-
-            spawnPosList.add(BlockPos(posTag.getInt("x"), posTag.getInt("y"), posTag.getInt("z")))
-        }
+        spawnPosList.addAll(NBTHelper.getHashSet(list, { key, tag -> tag.getCompound(key) }, NBTHelper::getBlockPos))
     }
 
     fun save(tag: CompoundTag): CompoundTag {
@@ -309,19 +305,7 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
         tag.putInt("thunderTime", privateThunderTime)
         tag.putBoolean("freezeTime", privateFreezeTime)
         tag.putBoolean("freezeWeather", privateFreezeWeather)
-
-        val spawnPosListTag = ListTag()
-
-        for (pos in spawnPosList) {
-            val posTag = CompoundTag()
-            posTag.putInt("x", pos.x)
-            posTag.putInt("y", pos.y)
-            posTag.putInt("z", pos.z)
-
-            spawnPosListTag.add(posTag)
-        }
-
-        tag.put("spawnPosList", spawnPosListTag)
+        tag.put("spawnPosList", spawnPosList.save())
 
         return tag
     }
