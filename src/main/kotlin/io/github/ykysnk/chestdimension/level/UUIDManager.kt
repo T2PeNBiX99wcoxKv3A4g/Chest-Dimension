@@ -2,6 +2,7 @@ package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.data.BlockPosData.Companion.toData
+import io.github.ykysnk.chestdimension.data.ChestDimensionPosition
 import io.github.ykysnk.chestdimension.data.DimensionData.Companion.toData
 import io.github.ykysnk.chestdimension.data.LevelData
 import io.github.ykysnk.chestdimension.data.Levels
@@ -51,22 +52,29 @@ object UUIDManager {
     }
 
     @Suppress("unused")
-    fun haveChestData(uuid: UUID): Boolean = data.levels[uuid.toString()]?.let {
-        return it.chestDimension != null && it.chestPos != null
+    fun haveChestData(uuid: UUID) = haveChestData(uuid, Constants.Server.worldData.levelName)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun haveChestData(uuid: UUID, levelName: String): Boolean = data.levels[uuid.toString()]?.let { levels ->
+        val list = levels.chestDimensionPositions[levelName]
+        return list?.dimension != null && list.blockPos != null
     } ?: false
 
-    fun setChestData(uuid: UUID, key: ResourceKey<Level>, pos: BlockPos) {
+    fun setChestData(uuid: UUID, key: ResourceKey<Level>, pos: BlockPos) =
+        setChestData(uuid, Constants.Server.worldData.levelName, key, pos)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun setChestData(uuid: UUID, levelName: String, key: ResourceKey<Level>, pos: BlockPos) {
         val uuidString = uuid.toString()
-        data.levels[uuidString]?.let {
-            data.levels[uuidString] = it.copy(chestDimension = key.toData(), chestPos = pos.toData())
-        }
+        data.levels[uuidString]?.chestDimensionPositions[levelName] = ChestDimensionPosition(key.toData(), pos.toData())
     }
 
-    fun clearChestData(uuid: UUID) {
+    fun clearChestData(uuid: UUID) = clearChestData(uuid, Constants.Server.worldData.levelName)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun clearChestData(uuid: UUID, levelName: String) {
         val uuidString = uuid.toString()
-        data.levels[uuidString]?.let {
-            data.levels[uuidString] = it.copy(chestDimension = null, chestPos = null)
-        }
+        data.levels[uuidString]?.chestDimensionPositions?.remove(levelName)
     }
 
     fun isActive(uuid: UUID) = !data.inactiveLevels.contains(uuid.toString())
@@ -79,16 +87,27 @@ object UUIDManager {
         data.inactiveLevels.remove(uuid.toString())
     }
 
-    fun getExitChestPosition(uuid: UUID): BlockPos? {
+    fun getExitChestPosition(uuid: UUID): BlockPos? = getExitChestPosition(uuid, Constants.Server.worldData.levelName)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun getExitChestPosition(uuid: UUID, levelName: String): BlockPos? {
         val data = data.levels[uuid.toString()] ?: return null
-        return data.chestPos?.blockPos
+        return data.chestDimensionPositions[levelName]?.blockPos?.blockPos
     }
 
     fun getExitChestDimensionKey(uuid: UUID): ResourceKey<Level>? =
-        data.levels[uuid.toString()]?.chestDimension?.resourceKey
+        getExitChestDimensionKey(uuid, Constants.Server.worldData.levelName)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun getExitChestDimensionKey(uuid: UUID, levelName: String): ResourceKey<Level>? =
+        data.levels[uuid.toString()]?.chestDimensionPositions[levelName]?.dimension?.resourceKey
 
     fun getExitChestDimension(uuid: UUID): ServerLevel? =
-        data.levels[uuid.toString()]?.chestDimension?.resourceKey?.let(Constants.Server::getLevel)
+        getExitChestDimension(uuid, Constants.Server.worldData.levelName)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun getExitChestDimension(uuid: UUID, levelName: String): ServerLevel? =
+        data.levels[uuid.toString()]?.chestDimensionPositions[levelName]?.dimension?.resourceKey?.let(Constants.Server::getLevel)
 
     operator fun set(uuid: UUID, levelData: LevelData) {
         data.levels[uuid.toString()] = levelData

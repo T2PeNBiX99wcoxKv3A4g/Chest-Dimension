@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class LevelData(
     val seed: Long,
-    val chestDimensionPositions: HashSet<ChestDimensionPosition> = hashSetOf(),
+    val chestDimensionPositions: HashMap<String, ChestDimensionPosition> = hashMapOf(),
 )
