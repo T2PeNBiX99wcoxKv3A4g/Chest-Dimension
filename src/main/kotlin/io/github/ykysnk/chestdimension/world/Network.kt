@@ -19,7 +19,7 @@ object Network {
 
             server.execute {
                 (server.getLevel(dimension) as? ChestServerLevel)?.apply {
-                    chestServerLevelData?.apply {
+                    chestServerLevelData.apply {
                         val currentDay = dayTime / 24000L
                         setDayTimeForce(currentDay * 24000L + time)
                     }
@@ -33,7 +33,7 @@ object Network {
 
             server.execute {
                 (server.getLevel(dimension) as? ChestServerLevel)?.apply {
-                    chestServerLevelData?.apply {
+                    chestServerLevelData.apply {
                         when (weather) {
                             WeatherType.CLEAR -> {
                                 setWeatherParametersForce(6000, 0, false, false)
@@ -58,7 +58,7 @@ object Network {
 
             server.execute {
                 (server.getLevel(dimension) as? ChestServerLevel)?.apply {
-                    chestServerLevelData?.apply {
+                    chestServerLevelData.apply {
                         freezeTime = value
                     }
                 }
@@ -71,7 +71,7 @@ object Network {
 
             server.execute {
                 (server.getLevel(dimension) as? ChestServerLevel)?.apply {
-                    chestServerLevelData?.apply {
+                    chestServerLevelData.apply {
                         freezeWeather = value
                     }
                 }

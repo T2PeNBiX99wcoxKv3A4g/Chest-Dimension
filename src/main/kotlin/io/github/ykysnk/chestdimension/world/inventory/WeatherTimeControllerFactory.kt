@@ -25,7 +25,7 @@ class WeatherTimeControllerFactory(
         var getFreezeTime = false
         var getFreezeWeather = false
         (level as? ChestServerLevel)?.apply {
-            chestServerLevelData?.apply {
+            chestServerLevelData.apply {
                 getFreezeTime = freezeTime
                 getFreezeWeather = freezeWeather
             }
@@ -38,7 +38,7 @@ class WeatherTimeControllerFactory(
         var getFreezeTime = false
         var getFreezeWeather = false
         (level as? ChestServerLevel)?.apply {
-            chestServerLevelData?.apply {
+            chestServerLevelData.apply {
                 getFreezeTime = freezeTime
                 getFreezeWeather = freezeWeather
             }

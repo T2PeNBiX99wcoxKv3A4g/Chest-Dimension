@@ -41,18 +41,21 @@ class ChestServerLevel(
     randomSequences
 ) {
     @Suppress("unused")
-    private val chestSavedData = dataStorage.computeIfAbsent(
-        { loadDimData(it) },
-        { ChestSavedData(serverLevelData) },
-        "chest_dimension_level_data"
-    )
+    val chestServerLevelData: ChestServerLevelData =
+        serverLevelData as? ChestServerLevelData
+            ?: throw IllegalArgumentException("serverLevelData are not ChestServerLevelData")
 
-    @Suppress("unused")
-    val chestServerLevelData: ChestServerLevelData? = serverLevelData as? ChestServerLevelData
+    init {
+        dataStorage.computeIfAbsent(
+            { loadDimData(it) },
+            { ChestSavedData(chestServerLevelData) },
+            "chest_dimension_level_data"
+        )
+    }
 
     private fun loadDimData(tag: CompoundTag): ChestSavedData {
-        chestServerLevelData?.load(tag)
-        return ChestSavedData(serverLevelData)
+        chestServerLevelData.load(tag)
+        return ChestSavedData(chestServerLevelData)
     }
 
     override fun toString(): String = "ChestServerLevel[${serverLevelData.levelName}]"
