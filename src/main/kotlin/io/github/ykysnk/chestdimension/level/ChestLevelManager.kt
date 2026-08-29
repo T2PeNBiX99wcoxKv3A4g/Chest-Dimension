@@ -119,8 +119,8 @@ object ChestLevelManager {
         server.levels[worldKey] = level
         loaded[uuid] = LoadedChestWorld(uuid, level)
         levelToUUID[worldKey] = uuid
+        level.chestServerLevelData.addSpawnPos(BlockPos(0, 1, 0))
         UUIDManager.add(uuid, seed)
-        UUIDManager.addSpawnPos(uuid, BlockPos(0, 1, 0))
         UUIDManager.save()
         return level
     }
@@ -256,13 +256,10 @@ object ChestLevelManager {
 
     fun teleportEntitiesToEnter(level: Level, entities: List<Entity>): Boolean {
         if (level.isClientSide || level !is ServerLevel || !isInsideChestDimension(level)) return false
-        val uuid = findUUIDByLevel(level)
-        uuid?.let {
-            val spawnPosList = UUIDManager.getSpawnPosList(it)
-            spawnPosList?.let { list ->
-                entities.forEach { entity ->
-                    handleEntityTeleportToEnter(entity, level, list)
-                }
+        (level as? ChestServerLevel)?.apply {
+            val spawnPosList = chestServerLevelData.getSpawnPosList()
+            entities.forEach { entity ->
+                handleEntityTeleportToEnter(entity, this, spawnPosList)
             }
             return true
         }
@@ -271,14 +268,16 @@ object ChestLevelManager {
 
     fun addSpawnPos(level: Level, pos: BlockPos) {
         if (level.isClientSide) return
-        val uuid = findUUIDByLevel(level)
-        uuid?.let { UUIDManager.addSpawnPos(it, pos) }
+        (level as? ChestServerLevel)?.apply {
+            chestServerLevelData.addSpawnPos(pos)
+        }
     }
 
     fun removeSpawnPos(level: Level, pos: BlockPos) {
         if (level.isClientSide) return
-        val uuid = findUUIDByLevel(level)
-        uuid?.let { UUIDManager.removeSpawnPos(it, pos) }
+        (level as? ChestServerLevel)?.apply {
+            chestServerLevelData.removeSpawnPos(pos)
+        }
     }
 
     fun setInactive(uuid: UUID) {

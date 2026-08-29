@@ -1,7 +1,10 @@
 package io.github.ykysnk.chestdimension.level.storage
 
 import io.github.ykysnk.chestdimension.level.saveddata.ChestSavedData
+import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.Tag
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.Difficulty
 import net.minecraft.world.level.GameRules
@@ -97,6 +100,7 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
             setDirty(privateFreezeWeather, value)
             privateFreezeWeather = value
         }
+    private var spawnPosList: HashSet<BlockPos> = HashSet()
     lateinit var chestSavedData: ChestSavedData
         internal set
 
@@ -238,37 +242,6 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun isDifficultyLocked(): Boolean = worldData.isDifficultyLocked
 
-    fun load(tag: CompoundTag) {
-        privateXSpawn = tag.getInt("SpawnX")
-        privateYSpawn = tag.getInt("SpawnY")
-        privateZSpawn = tag.getInt("SpawnZ")
-        privateSpawnAngle = tag.getFloat("SpawnAngle")
-        privateDayTime = tag.getLong("DayTime")
-        privateClearWeatherTime = tag.getInt("clearWeatherTime")
-        privateRaining = tag.getBoolean("raining")
-        privateRainTime = tag.getInt("rainTime")
-        privateThundering = tag.getBoolean("thundering")
-        privateThunderTime = tag.getInt("thunderTime")
-        privateFreezeTime = tag.getBoolean("freezeTime")
-        privateFreezeWeather = tag.getBoolean("freezeWeather")
-    }
-
-    fun save(tag: CompoundTag): CompoundTag {
-        tag.putInt("SpawnX", privateXSpawn)
-        tag.putInt("SpawnY", privateYSpawn)
-        tag.putInt("SpawnZ", privateZSpawn)
-        tag.putFloat("SpawnAngle", privateSpawnAngle)
-        tag.putLong("DayTime", privateDayTime)
-        tag.putInt("clearWeatherTime", privateClearWeatherTime)
-        tag.putBoolean("raining", privateRaining)
-        tag.putInt("rainTime", privateRainTime)
-        tag.putBoolean("thundering", privateThundering)
-        tag.putInt("thunderTime", privateThunderTime)
-        tag.putBoolean("freezeTime", privateFreezeTime)
-        tag.putBoolean("freezeWeather", privateFreezeWeather)
-        return tag
-    }
-
     @Suppress("unused")
     fun setWeatherParameters(clearTime: Int, weatherTime: Int, isRaining: Boolean, isThundering: Boolean) {
         setClearWeatherTime(clearTime)
@@ -286,8 +259,79 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
         setThunderingForce(isThundering)
     }
 
+    fun addSpawnPos(pos: BlockPos) {
+        spawnPosList.add(pos)
+        setDirty()
+    }
+
+    fun removeSpawnPos(pos: BlockPos) {
+        spawnPosList.remove(pos)
+        setDirty()
+    }
+
+    fun getSpawnPosList(): List<BlockPos> = spawnPosList.toList()
+
+    fun load(tag: CompoundTag) {
+        privateXSpawn = tag.getInt("SpawnX")
+        privateYSpawn = tag.getInt("SpawnY")
+        privateZSpawn = tag.getInt("SpawnZ")
+        privateSpawnAngle = tag.getFloat("SpawnAngle")
+        privateDayTime = tag.getLong("DayTime")
+        privateClearWeatherTime = tag.getInt("clearWeatherTime")
+        privateRaining = tag.getBoolean("raining")
+        privateRainTime = tag.getInt("rainTime")
+        privateThundering = tag.getBoolean("thundering")
+        privateThunderTime = tag.getInt("thunderTime")
+        privateFreezeTime = tag.getBoolean("freezeTime")
+        privateFreezeWeather = tag.getBoolean("freezeWeather")
+
+        spawnPosList.clear()
+
+        val list = tag.getList("spawnPosList", Tag.TAG_COMPOUND.toInt())
+
+        for (i in list.indices) {
+            val posTag = list.getCompound(i)
+
+            spawnPosList.add(BlockPos(posTag.getInt("x"), posTag.getInt("y"), posTag.getInt("z")))
+        }
+    }
+
+    fun save(tag: CompoundTag): CompoundTag {
+        tag.putInt("SpawnX", privateXSpawn)
+        tag.putInt("SpawnY", privateYSpawn)
+        tag.putInt("SpawnZ", privateZSpawn)
+        tag.putFloat("SpawnAngle", privateSpawnAngle)
+        tag.putLong("DayTime", privateDayTime)
+        tag.putInt("clearWeatherTime", privateClearWeatherTime)
+        tag.putBoolean("raining", privateRaining)
+        tag.putInt("rainTime", privateRainTime)
+        tag.putBoolean("thundering", privateThundering)
+        tag.putInt("thunderTime", privateThunderTime)
+        tag.putBoolean("freezeTime", privateFreezeTime)
+        tag.putBoolean("freezeWeather", privateFreezeWeather)
+
+        val spawnPosListTag = ListTag()
+
+        for (pos in spawnPosList) {
+            val posTag = CompoundTag()
+            posTag.putInt("x", pos.x)
+            posTag.putInt("y", pos.y)
+            posTag.putInt("z", pos.z)
+
+            spawnPosListTag.add(posTag)
+        }
+
+        tag.put("spawnPosList", spawnPosListTag)
+
+        return tag
+    }
+
     private fun <T> setDirty(oldValue: T, newValue: T) {
         if (oldValue == newValue) return
+        setDirty()
+    }
+
+    private fun setDirty() {
         if (!::chestSavedData.isInitialized) throw NullPointerException("ChestSavedData is not initialized")
         chestSavedData.setDirty()
     }

@@ -6,6 +6,5 @@ import kotlinx.serialization.Serializable
 data class LevelData(
     val seed: Long,
     val chestDimension: DimensionData? = null,
-    val chestPos: BlockPosData? = null,
-    val spawnPosList: HashSet<BlockPosData> = HashSet()
+    val chestPos: BlockPosData? = null
 )

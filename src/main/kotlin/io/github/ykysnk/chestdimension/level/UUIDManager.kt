@@ -69,18 +69,6 @@ object UUIDManager {
         }
     }
 
-    fun addSpawnPos(uuid: UUID, pos: BlockPos) {
-        data.levels[uuid.toString()]?.spawnPosList?.add(pos.toData())
-    }
-
-    fun removeSpawnPos(uuid: UUID, pos: BlockPos) {
-        data.levels[uuid.toString()]?.spawnPosList?.remove(pos.toData())
-    }
-
-    fun getSpawnPosList(uuid: UUID): List<BlockPos>? {
-        return data.levels[uuid.toString()]?.spawnPosList?.map { it.blockPos }
-    }
-
     fun isActive(uuid: UUID) = !data.inactiveLevels.contains(uuid.toString())
 
     fun setInactive(uuid: UUID) {
