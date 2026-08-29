@@ -334,7 +334,7 @@ object ChestLevelManager {
         if (hasCheckLevels) return
         val badData = hashSetOf<UUID>()
         val reallyBadData = hashSetOf<String>()
-        UUIDManager.getMap().forEach { (uuidString, data) ->
+        UUIDManager.getMap().forEach { (uuidString, _) ->
             val uuid = runCatching { UUID.fromString(uuidString) }.getOrElse {
                 reallyBadData.add(uuidString)
                 Constants.LOGGER.warn("Invalid UUID in levels.yaml: $uuidString (${it.localizedMessage})", it)
