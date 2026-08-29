@@ -356,7 +356,7 @@ object ChestLevelManager {
     }
 
     init {
-        ServerTickEvents.START_SERVER_TICK.register {
+        ServerTickEvents.END_SERVER_TICK.register {
             checkLevels()
         }
         ServerLifecycleEvents.SERVER_STOPPING.register {
