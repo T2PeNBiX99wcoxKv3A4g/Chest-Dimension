@@ -39,6 +39,18 @@ internal inline fun ArgumentBuilder<CommandSourceStack, *>.uuidArg(block: Requir
         apply(block)
     }
 
+internal inline fun ArgumentBuilder<CommandSourceStack, *>.uuidArgOnlyExist(block: RequiredArgumentBuilder<CommandSourceStack, UUID>.() -> Unit) =
+    argument("uuid", UuidArgument.uuid()) {
+        suggests { _, builder ->
+            val tempSet = hashSetOf<String>()
+            UUIDManager.getMap().keys.forEach(tempSet::add)
+            tempSet.forEach(builder::suggest)
+            builder.buildFuture()
+        }
+
+        apply(block)
+    }
+
 internal inline fun ArgumentBuilder<CommandSourceStack, *>.allDimsArg(block: RequiredArgumentBuilder<CommandSourceStack, String>.() -> Unit) =
     argument("dimension", StringArgumentType.string()) {
         suggests { context, builder ->

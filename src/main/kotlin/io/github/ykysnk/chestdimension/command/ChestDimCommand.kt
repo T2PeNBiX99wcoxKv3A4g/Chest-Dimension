@@ -86,7 +86,7 @@ object ChestDimCommand {
                         }
                     }
 
-                    uuidArg {
+                    uuidArgOnlyExist {
                         argument("pos", Vec3Argument.vec3()) {
                             executes {
                                 val player = it.source.playerOrException
@@ -131,7 +131,7 @@ object ChestDimCommand {
                     }
 
                     literal("chestdims") {
-                        uuidArg {
+                        uuidArgOnlyExist {
                             argument("pos", Vec3Argument.vec3()) {
                                 executes {
                                     val player = it.source.playerOrException
@@ -272,7 +272,7 @@ object ChestDimCommand {
                         }
                     }
 
-                    uuidArg {
+                    uuidArgOnlyExist {
                         argument("pos", BlockPosArgument.blockPos()) {
                             executes {
                                 val player = it.source.playerOrException
@@ -361,7 +361,7 @@ object ChestDimCommand {
                     }
 
                     literal("chestdims") {
-                        uuidArg {
+                        uuidArgOnlyExist {
                             argument("pos", BlockPosArgument.blockPos()) {
                                 executes {
                                     val player = it.source.playerOrException
@@ -554,7 +554,7 @@ object ChestDimCommand {
                         }
                     }
 
-                    uuidArg {
+                    uuidArgOnlyExist {
                         executes {
                             val player = it.source.playerOrException
                             val uuid = UuidArgument.getUuid(it, "uuid")
@@ -627,7 +627,7 @@ object ChestDimCommand {
                     }
 
                     literal("chestdims") {
-                        uuidArg {
+                        uuidArgOnlyExist {
                             executes {
                                 val player = it.source.playerOrException
                                 val uuid = UuidArgument.getUuid(it, "uuid")
@@ -766,7 +766,7 @@ object ChestDimCommand {
                 literal("enter") {
                     requires { it.hasPermission(2) }
 
-                    uuidArg {
+                    uuidArgOnlyExist {
                         executes {
                             val player = it.source.playerOrException
                             val uuid = UuidArgument.getUuid(it, "uuid")
@@ -972,7 +972,7 @@ object ChestDimCommand {
                     }
                 }
 
-                uuidArg {
+                uuidArgOnlyExist {
                     literal("set") {
                         literal("dayskeep") {
                             literal("day") {
@@ -1281,7 +1281,7 @@ object ChestDimCommand {
                 }
 
                 literal("chestdims") {
-                    uuidArg {
+                    uuidArgOnlyExist {
                         literal("set") {
                             literal("dayskeep") {
                                 literal("day") {
@@ -1740,7 +1740,7 @@ object ChestDimCommand {
                     }
                 }
 
-                uuidArg {
+                uuidArgOnlyExist {
                     literal("clear") {
                         executes {
                             val uuid = UuidArgument.getUuid(it, "uuid")
@@ -1867,7 +1867,7 @@ object ChestDimCommand {
                 }
 
                 literal("chestdims") {
-                    uuidArg {
+                    uuidArgOnlyExist {
                         literal("clear") {
                             executes {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
@@ -2138,6 +2138,29 @@ object ChestDimCommand {
                         it.source.sendSuccess({ Component.literal("Ping: ${player.latency}ms") }, true)
                         1
                     }
+                }
+            }
+
+            literal("id") {
+                executes {
+                    val player = it.source.playerOrException
+                    val uuid = ChestLevelManager.findUUIDByLevel(player.serverLevel())
+                    if (uuid == null) {
+                        it.source.sendFailure(Component.literal("No chest dimension found"))
+                        return@executes 0
+                    }
+                    val uuidComponent: MutableComponent = Component.literal(uuid.toString()).withStyle { style ->
+                        style.withUnderlined(true)
+                            .withClickEvent(ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, uuid.toString()))
+                            .withHoverEvent(
+                                HoverEvent(
+                                    HoverEvent.Action.SHOW_TEXT,
+                                    Component.literal("Click to copy UUID")
+                                )
+                            )
+                    }
+                    it.source.sendSuccess({ Component.literal("World UUID: ").append(uuidComponent) }, true)
+                    1
                 }
             }
 
