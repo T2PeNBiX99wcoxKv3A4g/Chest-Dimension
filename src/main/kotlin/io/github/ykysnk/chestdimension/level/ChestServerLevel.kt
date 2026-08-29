@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.progress.ChunkProgressListener
+import net.minecraft.util.ProgressListener
 import net.minecraft.world.RandomSequences
 import net.minecraft.world.level.CustomSpawner
 import net.minecraft.world.level.GameRules
@@ -62,5 +63,11 @@ class ChestServerLevel(
 
     override fun tickTime() {
         if (levelData.gameRules.getBoolean(GameRules.RULE_DAYLIGHT)) dayTime = levelData.dayTime + 1L
+    }
+
+    override fun save(progress: ProgressListener?, flush: Boolean, skipSave: Boolean) {
+        super.save(progress, flush, skipSave)
+        if (!skipSave) return
+        UUIDManager.saveNow()
     }
 }

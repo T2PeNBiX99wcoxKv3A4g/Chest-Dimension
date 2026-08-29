@@ -40,7 +40,7 @@ object UUIDManager {
         }
     }
 
-    private fun saveNow() = saveNow(data)
+    fun saveNow() = saveNow(data)
 
     private fun saveNow(levels: Levels) {
         val text = Yaml.encodeToString(levels)
