@@ -2141,7 +2141,7 @@ object ChestDimCommand {
                 }
             }
 
-            literal("id") {
+            literal("uuid") {
                 executes {
                     val player = it.source.playerOrException
                     val uuid = ChestLevelManager.findUUIDByLevel(player.serverLevel())
