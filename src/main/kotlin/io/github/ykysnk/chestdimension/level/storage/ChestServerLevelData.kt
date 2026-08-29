@@ -13,119 +13,139 @@ import net.minecraft.world.level.timers.TimerQueue
 import java.util.*
 
 class ChestServerLevelData(private val worldData: WorldData, private val wrapped: ServerLevelData) : ServerLevelData {
-    private var chestXSpawn = 0
+    private var privateXSpawn = 0
+    private var dirtyXSpawn: Int
+        get() = privateXSpawn
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateXSpawn, value)
+            privateXSpawn = value
         }
-    private var chestYSpawn = 1
+    private var privateYSpawn = 1
+    private var dirtyYSpawn: Int
+        get() = privateYSpawn
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateYSpawn, value)
+            privateYSpawn = value
         }
-    private var chestZSpawn = 0
+    private var privateZSpawn = 0
+    private var dirtyZSpawn: Int
+        get() = privateZSpawn
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateZSpawn, value)
+            privateZSpawn = value
         }
-    private var chestSpawnAngle = 0f
+    private var privateSpawnAngle = 0f
+    private var dirtySpawnAngle: Float
+        get() = privateSpawnAngle
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateSpawnAngle, value)
+            privateSpawnAngle = value
         }
-    private var chestDayTime: Long = 0L
+    private var privateDayTime: Long = 0L
+    private var dirtyDayTime: Long
+        get() = privateDayTime
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateDayTime, value)
+            privateDayTime = value
         }
-    private var chestClearWeatherTime = 0
+    private var privateClearWeatherTime = 0
+    private var dirtyClearWeatherTime: Int
+        get() = privateClearWeatherTime
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateClearWeatherTime, value)
+            privateClearWeatherTime = value
         }
-    private var chestRaining = false
+    private var privateRaining = false
+    private var dirtyRaining: Boolean
+        get() = privateRaining
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateRaining, value)
+            privateRaining = value
         }
-    private var chestRainTime = 0
+    private var privateRainTime = 0
+    private var dirtyRainTime: Int
+        get() = privateRainTime
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateRainTime, value)
+            privateRainTime = value
         }
-    private var chestThundering = false
+    private var privateThundering = false
+    private var dirtyThundering: Boolean
+        get() = privateThundering
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateThundering, value)
+            privateThundering = value
         }
-    private var chestThunderTime = 0
+    private var privateThunderTime = 0
+    private var dirtyThunderTime: Int
+        get() = privateThunderTime
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateThunderTime, value)
+            privateThunderTime = value
         }
-
-    @Suppress("MemberVisibilityCanBePrivate")
-    var freezeTime: Boolean = false
+    private var privateFreezeTime: Boolean = false
+    var freezeTime: Boolean
+        get() = privateFreezeTime
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateFreezeTime, value)
+            privateFreezeTime = value
         }
-
-    @Suppress("MemberVisibilityCanBePrivate")
-    var freezeWeather: Boolean = false
+    private var privateFreezeWeather: Boolean = false
+    var freezeWeather: Boolean
+        get() = privateFreezeWeather
         set(value) {
-            setDirty(field, value)
-            field = value
+            setDirty(privateFreezeWeather, value)
+            privateFreezeWeather = value
         }
     lateinit var chestSavedData: ChestSavedData
         internal set
 
     override fun getLevelName(): String = worldData.levelName
 
-    override fun setThundering(newThundering: Boolean) {
+    override fun setThundering(value: Boolean) {
         if (freezeWeather) return
-        chestThundering = newThundering
+        dirtyThundering = value
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun setThunderingForce(newThundering: Boolean) {
-        chestThundering = newThundering
+    fun setThunderingForce(value: Boolean) {
+        dirtyThundering = value
     }
 
-    override fun getRainTime(): Int = chestRainTime
+    override fun getRainTime(): Int = dirtyRainTime
 
-    override fun setRainTime(time: Int) {
+    override fun setRainTime(value: Int) {
         if (freezeWeather) return
-        chestRainTime = time
+        dirtyRainTime = value
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun setRainTimeForce(time: Int) {
-        chestRainTime = time
+    fun setRainTimeForce(value: Int) {
+        dirtyRainTime = value
     }
 
-    override fun getThunderTime(): Int = chestThunderTime
+    override fun getThunderTime(): Int = dirtyThunderTime
 
-    override fun setThunderTime(time: Int) {
+    override fun setThunderTime(value: Int) {
         if (freezeWeather) return
-        chestThunderTime = time
+        dirtyThunderTime = value
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun setThunderTimeForce(time: Int) {
-        chestThunderTime = time
+    fun setThunderTimeForce(value: Int) {
+        dirtyThunderTime = value
     }
 
-    override fun getClearWeatherTime(): Int = chestClearWeatherTime
+    override fun getClearWeatherTime(): Int = dirtyClearWeatherTime
 
-    override fun setClearWeatherTime(time: Int) {
+    override fun setClearWeatherTime(value: Int) {
         if (freezeWeather) return
-        chestClearWeatherTime = time
+        dirtyClearWeatherTime = value
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun setClearWeatherTimeForce(time: Int) {
-        chestClearWeatherTime = time
+    fun setClearWeatherTimeForce(value: Int) {
+        dirtyClearWeatherTime = value
     }
 
     override fun getWanderingTraderSpawnDelay(): Int = wrapped.wanderingTraderSpawnDelay
@@ -152,62 +172,62 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     override fun getAllowCommands(): Boolean = worldData.allowCommands
 
-    override fun setGameType(type: GameType) {}
+    override fun setGameType(value: GameType) {}
 
     override fun getScheduledEvents(): TimerQueue<MinecraftServer> = wrapped.scheduledEvents
 
-    override fun setGameTime(time: Long) {}
+    override fun setGameTime(value: Long) {}
 
-    override fun setDayTime(time: Long) {
+    override fun setDayTime(value: Long) {
         if (freezeTime) return
-        chestDayTime = time
+        dirtyDayTime = value
     }
 
     @Suppress("unused")
-    fun setDayTimeForce(time: Long) {
-        chestDayTime = time
+    fun setDayTimeForce(value: Long) {
+        dirtyDayTime = value
     }
 
-    override fun setXSpawn(newXSpawn: Int) {
-        chestXSpawn = newXSpawn
+    override fun setXSpawn(value: Int) {
+        dirtyXSpawn = value
     }
 
-    override fun setYSpawn(newYSpawn: Int) {
-        chestYSpawn = newYSpawn
+    override fun setYSpawn(value: Int) {
+        dirtyYSpawn = value
     }
 
-    override fun setZSpawn(newZSpawn: Int) {
-        chestZSpawn = newZSpawn
+    override fun setZSpawn(value: Int) {
+        dirtyZSpawn = value
     }
 
-    override fun setSpawnAngle(newSpawnAngle: Float) {
-        chestSpawnAngle = newSpawnAngle
+    override fun setSpawnAngle(value: Float) {
+        dirtySpawnAngle = value
     }
 
-    override fun getXSpawn(): Int = chestXSpawn
+    override fun getXSpawn(): Int = dirtyXSpawn
 
-    override fun getYSpawn(): Int = chestYSpawn
+    override fun getYSpawn(): Int = dirtyYSpawn
 
-    override fun getZSpawn(): Int = chestZSpawn
+    override fun getZSpawn(): Int = dirtyZSpawn
 
-    override fun getSpawnAngle(): Float = chestSpawnAngle
+    override fun getSpawnAngle(): Float = dirtySpawnAngle
 
     override fun getGameTime(): Long = wrapped.gameTime
 
-    override fun getDayTime(): Long = chestDayTime
+    override fun getDayTime(): Long = dirtyDayTime
 
-    override fun isThundering(): Boolean = chestThundering
+    override fun isThundering(): Boolean = dirtyThundering
 
-    override fun isRaining(): Boolean = chestRaining
+    override fun isRaining(): Boolean = dirtyRaining
 
-    override fun setRaining(newRaining: Boolean) {
+    override fun setRaining(value: Boolean) {
         if (freezeWeather) return
-        chestRaining = newRaining
+        dirtyRaining = value
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun setRainingForce(newRaining: Boolean) {
-        chestRaining = newRaining
+    fun setRainingForce(value: Boolean) {
+        dirtyRaining = value
     }
 
     override fun isHardcore(): Boolean = worldData.isHardcore
@@ -219,33 +239,33 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
     override fun isDifficultyLocked(): Boolean = worldData.isDifficultyLocked
 
     fun load(tag: CompoundTag) {
-        chestXSpawn = tag.getInt("SpawnX")
-        chestYSpawn = tag.getInt("SpawnY")
-        chestZSpawn = tag.getInt("SpawnZ")
-        chestSpawnAngle = tag.getFloat("SpawnAngle")
-        chestDayTime = tag.getLong("DayTime")
-        chestClearWeatherTime = tag.getInt("clearWeatherTime")
-        chestRaining = tag.getBoolean("raining")
-        chestRainTime = tag.getInt("rainTime")
-        chestThundering = tag.getBoolean("thundering")
-        chestThunderTime = tag.getInt("thunderTime")
-        freezeTime = tag.getBoolean("freezeTime")
-        freezeWeather = tag.getBoolean("freezeWeather")
+        privateXSpawn = tag.getInt("SpawnX")
+        privateYSpawn = tag.getInt("SpawnY")
+        privateZSpawn = tag.getInt("SpawnZ")
+        privateSpawnAngle = tag.getFloat("SpawnAngle")
+        privateDayTime = tag.getLong("DayTime")
+        privateClearWeatherTime = tag.getInt("clearWeatherTime")
+        privateRaining = tag.getBoolean("raining")
+        privateRainTime = tag.getInt("rainTime")
+        privateThundering = tag.getBoolean("thundering")
+        privateThunderTime = tag.getInt("thunderTime")
+        privateFreezeTime = tag.getBoolean("freezeTime")
+        privateFreezeWeather = tag.getBoolean("freezeWeather")
     }
 
     fun save(tag: CompoundTag): CompoundTag {
-        tag.putInt("SpawnX", chestXSpawn)
-        tag.putInt("SpawnY", chestYSpawn)
-        tag.putInt("SpawnZ", chestZSpawn)
-        tag.putFloat("SpawnAngle", chestSpawnAngle)
-        tag.putLong("DayTime", chestDayTime)
-        tag.putInt("clearWeatherTime", chestClearWeatherTime)
-        tag.putBoolean("raining", chestRaining)
-        tag.putInt("rainTime", chestRainTime)
-        tag.putBoolean("thundering", chestThundering)
-        tag.putInt("thunderTime", chestThunderTime)
-        tag.putBoolean("freezeTime", freezeTime)
-        tag.putBoolean("freezeWeather", freezeWeather)
+        tag.putInt("SpawnX", privateXSpawn)
+        tag.putInt("SpawnY", privateYSpawn)
+        tag.putInt("SpawnZ", privateZSpawn)
+        tag.putFloat("SpawnAngle", privateSpawnAngle)
+        tag.putLong("DayTime", privateDayTime)
+        tag.putInt("clearWeatherTime", privateClearWeatherTime)
+        tag.putBoolean("raining", privateRaining)
+        tag.putInt("rainTime", privateRainTime)
+        tag.putBoolean("thundering", privateThundering)
+        tag.putInt("thunderTime", privateThunderTime)
+        tag.putBoolean("freezeTime", privateFreezeTime)
+        tag.putBoolean("freezeWeather", privateFreezeWeather)
         return tag
     }
 
@@ -268,6 +288,7 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     private fun <T> setDirty(oldValue: T, newValue: T) {
         if (oldValue == newValue) return
+        if (!::chestSavedData.isInitialized) throw NullPointerException("ChestSavedData is not initialized")
         chestSavedData.setDirty()
     }
 }
