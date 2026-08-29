@@ -17,10 +17,10 @@ class TeleportPressurePlateBlockEntity(pos: BlockPos, blockState: BlockState) :
             val copyCache = entities.toList()
             if (!ChestLevelManager.teleportEntitiesToExit(currentLevel, copyCache)) {
                 val chestEntity = blockPos.getBlockEntityNearBy<ChestDimensionBlockEntity>(currentLevel)
-                chestEntity?.let {
-                    val world = ChestLevelManager.getOrCreate(Constants.Server, it.uuid)
+                chestEntity?.apply {
+                    val world = ChestLevelManager.getOrCreate(Constants.Server, uuid)
                     if (chestEntity.haveSameChest()) return@let
-                    UUIDManager.setChestData(it.uuid, currentLevel.dimension(), chestEntity.blockPos)
+                    UUIDManager.setChestData(uuid, currentLevel.dimension(), chestEntity.blockPos)
                     UUIDManager.save()
                     ChestLevelManager.teleportEntitiesToEnter(world, copyCache)
                 }
