@@ -20,8 +20,7 @@ object ChestLevelStorage {
     private var storageAccess: LevelStorageSource.LevelStorageAccess? = null
     val access: LevelStorageSource.LevelStorageAccess
         get() {
-            if (storageAccess == null)
-                initialize()
+            initialize()
             return storageAccess ?: throw IllegalStateException("Storage access not initialized")
         }
 
