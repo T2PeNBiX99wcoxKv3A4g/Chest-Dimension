@@ -21,7 +21,7 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
         private val INVENTORY_TEXTURE = Constants.id("textures/gui/container/weather_time_controller.png")
     }
 
-    private var timeSlider: TimeSlider? = null
+    private lateinit var timeSlider: TimeSlider
 
     init {
         imageHeight = 114 + ROWS * 18
@@ -33,9 +33,9 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
 
         PosSpaceOffsetHelper(8, 23).let { xOffsetHelper ->
             timeSlider = TimeSlider(leftPos + xOffsetHelper.get(), topPos + 20, 160, 20) { sendSetTime(it) }
-            timeSlider!!.updateValue()
+            timeSlider.updateValue()
 
-            addRenderableWidget(timeSlider!!)
+            addRenderableWidget(timeSlider)
 
             PosSpaceOffsetHelper(45, 23).let { yOffsetHelper ->
                 addRenderableWidget(
@@ -159,7 +159,7 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
     }
 
     override fun containerTick() {
-        timeSlider?.updateValue()
+        timeSlider.updateValue()
     }
 
     private fun sendSetTime(time: Int) {

@@ -77,7 +77,7 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
             setDirty(field, value)
             field = value
         }
-    var chestSavedData: ChestSavedData? = null
+    lateinit var chestSavedData: ChestSavedData
         internal set
 
     override fun getLevelName(): String = worldData.levelName
@@ -268,6 +268,6 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
 
     private fun <T> setDirty(oldValue: T, newValue: T) {
         if (oldValue == newValue) return
-        chestSavedData?.setDirty()
+        chestSavedData.setDirty()
     }
 }

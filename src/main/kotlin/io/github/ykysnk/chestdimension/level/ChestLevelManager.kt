@@ -39,7 +39,7 @@ object ChestLevelManager {
     }
     private val loaded = mutableMapOf<UUID, LoadedChestWorld>()
     private val levelToUUID = mutableMapOf<ResourceKey<Level>, UUID>()
-    private var chunkProgressListener: ChunkProgressListener? = null
+    private lateinit var chunkProgressListener: ChunkProgressListener
     private val defaultSpawnPos by lazy { BlockPos(0, 1, 0) }
     private val biome by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.CHEST_BIOME)
@@ -94,7 +94,7 @@ object ChestLevelManager {
 
         val storage = ChestLevelStorage.access
         val worldKey = createWorldKey(uuid)
-        val listener = chunkProgressListener ?: server.progressListenerFactory.create(11)
+        val listener = chunkProgressListener
         val isDebugWorld = server.worldData.isDebugWorld
         val worldOptions = WorldOptions.defaultWithRandomSeed()
         val seed = worldOptions.seed()
@@ -292,7 +292,7 @@ object ChestLevelManager {
         val data = UUIDManager[uuid] ?: return
         val server = Constants.Server
         val storage = ChestLevelStorage.access
-        val listener = chunkProgressListener ?: server.progressListenerFactory.create(11)
+        val listener = chunkProgressListener
         val isDebugWorld = server.worldData.isDebugWorld
         val biomeSource = FixedBiomeSource(biome)
         val generator = ChestChunkGenerator(biomeSource)
