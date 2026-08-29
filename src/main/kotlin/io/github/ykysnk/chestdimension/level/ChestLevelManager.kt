@@ -347,6 +347,7 @@ object ChestLevelManager {
         }
         badData.forEach { setInactive(it) }
         reallyBadData.forEach { UUIDManager.remove(it) }
+        UUIDManager.save()
         hasCheckLevels = true
     }
 
