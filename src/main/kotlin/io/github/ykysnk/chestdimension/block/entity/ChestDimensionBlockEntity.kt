@@ -84,7 +84,7 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
     var destroyByItSelf: Boolean = false
         private set
 
-    val playerCache: HashSet<Player> = HashSet()
+    val playerCache: HashSet<Player> = hashSetOf()
 
     override fun triggerEvent(id: Int, type: Int): Boolean {
         if (id == 1) {
