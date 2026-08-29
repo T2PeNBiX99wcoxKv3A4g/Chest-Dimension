@@ -1,13 +1,13 @@
 package io.github.ykysnk.chestdimension.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import io.github.ykysnk.chestdimension.level.ChestLevelManager;
 import io.github.ykysnk.chestdimension.level.ChestServerLevel;
-import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.progress.ChunkProgressListener;
 import net.minecraft.server.players.PlayerList;
-import net.minecraft.world.level.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,10 +34,9 @@ public abstract class MinecraftServerMixin {
         cir.setReturnValue(new ArrayList<>((Collection<ServerLevel>) cir.getReturnValue()));
     }
 
-    @Inject(method = "synchronizeTime", at = @At("HEAD"), cancellable = true)
-    private void synchronizeTime(ServerLevel level, CallbackInfo ci) {
-        if (!(level instanceof ChestServerLevel chestServerLevel)) return;
-        playerList.broadcastAll(new ClientboundSetTimePacket(level.getGameTime(), level.getDayTime(), !chestServerLevel.getChestServerLevelData().getFreezeTime() && level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)), level.dimension());
-        ci.cancel();
+    @ModifyExpressionValue(method = "synchronizeTime", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/GameRules;getBoolean(Lnet/minecraft/world/level/GameRules$Key;)Z"))
+    private boolean synchronizeTime(boolean original, @Local(argsOnly = true) ServerLevel level) {
+        if (!(level instanceof ChestServerLevel chestServerLevel)) return original;
+        return !chestServerLevel.getChestServerLevelData().getFreezeTime() && original;
     }
 }
