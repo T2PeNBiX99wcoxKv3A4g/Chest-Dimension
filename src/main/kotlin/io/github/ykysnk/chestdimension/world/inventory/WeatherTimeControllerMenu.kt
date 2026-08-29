@@ -10,12 +10,20 @@ import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-class WeatherTimeControllerMenu(containerId: Int, inventory: Inventory, val dimension: ResourceKey<Level>) :
+class WeatherTimeControllerMenu(
+    containerId: Int,
+    inventory: Inventory,
+    val dimension: ResourceKey<Level>,
+    val freezeTime: Boolean,
+    val freezeWeather: Boolean
+) :
     AbstractContainerMenu(MenuTypes.WEATHER_TIME_CONTROLLER, containerId) {
     constructor(containerId: Int, inventory: Inventory, buf: FriendlyByteBuf) : this(
         containerId,
         inventory,
-        ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation())
+        ResourceKey.create(Registries.DIMENSION, buf.readResourceLocation()),
+        buf.readBoolean(),
+        buf.readBoolean()
     )
 
     companion object {

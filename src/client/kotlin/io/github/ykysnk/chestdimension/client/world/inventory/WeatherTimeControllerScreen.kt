@@ -31,89 +31,113 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
     override fun init() {
         super.init()
 
-        timeSlider = TimeSlider(leftPos + 8, topPos + 20, 160, 20) { sendSetTime(it) }
-        timeSlider!!.updateValue()
+        PosSpaceOffsetHelper(8, 23).let { xOffsetHelper ->
+            timeSlider = TimeSlider(leftPos + xOffsetHelper.get(), topPos + 20, 160, 20) { sendSetTime(it) }
+            timeSlider!!.updateValue()
 
-        addRenderableWidget(timeSlider!!)
+            addRenderableWidget(timeSlider!!)
 
-        val offsetHelper = PosSpaceOffsetHelper(8, 23)
+            PosSpaceOffsetHelper(45, 23).let { yOffsetHelper ->
+                addRenderableWidget(
+                    IconButton(
+                        leftPos + xOffsetHelper.get(),
+                        topPos + yOffsetHelper.get(),
+                        20,
+                        20,
+                        INVENTORY_TEXTURE,
+                        180,
+                        0
+                    ) { sendSetTime(1000) })
 
-        addRenderableWidget(
-            IconButton(
-                leftPos + offsetHelper.next(),
-                topPos + 45,
-                20,
-                20,
-                INVENTORY_TEXTURE,
-                180,
-                0
-            ) { sendSetTime(1000) })
+                addRenderableWidget(
+                    IconButton(
+                        leftPos + xOffsetHelper.next(),
+                        topPos + yOffsetHelper.get(),
+                        20,
+                        20,
+                        INVENTORY_TEXTURE,
+                        196,
+                        0
+                    ) { sendSetTime(6000) })
 
-        addRenderableWidget(
-            IconButton(
-                leftPos + offsetHelper.next(),
-                topPos + 45,
-                20,
-                20,
-                INVENTORY_TEXTURE,
-                196,
-                0
-            ) { sendSetTime(6000) })
+                addRenderableWidget(
+                    IconButton(
+                        leftPos + xOffsetHelper.next(),
+                        topPos + yOffsetHelper.get(),
+                        20,
+                        20,
+                        INVENTORY_TEXTURE,
+                        212,
+                        0
+                    ) { sendSetTime(13000) })
 
-        addRenderableWidget(
-            IconButton(
-                leftPos + offsetHelper.next(),
-                topPos + 45,
-                20,
-                20,
-                INVENTORY_TEXTURE,
-                212,
-                0
-            ) { sendSetTime(13000) })
+                addRenderableWidget(
+                    IconButton(
+                        leftPos + xOffsetHelper.next(),
+                        topPos + yOffsetHelper.get(),
+                        20,
+                        20,
+                        INVENTORY_TEXTURE,
+                        228,
+                        0
+                    ) { sendSetTime(18000) })
 
-        addRenderableWidget(
-            IconButton(
-                leftPos + offsetHelper.next(),
-                topPos + 45,
-                20,
-                20,
-                INVENTORY_TEXTURE,
-                228,
-                0
-            ) { sendSetTime(18000) })
+                addRenderableWidget(
+                    IconButton(
+                        leftPos + xOffsetHelper.next(),
+                        topPos + yOffsetHelper.get(),
+                        20,
+                        20,
+                        INVENTORY_TEXTURE,
+                        180,
+                        16
+                    ) { sendWeather(WeatherType.CLEAR) })
 
-        addRenderableWidget(
-            IconButton(
-                leftPos + offsetHelper.next(),
-                topPos + 45,
-                20,
-                20,
-                INVENTORY_TEXTURE,
-                180,
-                16
-            ) { sendWeather(WeatherType.CLEAR) })
+                addRenderableWidget(
+                    IconButton(
+                        leftPos + xOffsetHelper.next(),
+                        topPos + yOffsetHelper.get(),
+                        20,
+                        20,
+                        INVENTORY_TEXTURE,
+                        196,
+                        16
+                    ) { sendWeather(WeatherType.RAIN) })
 
-        addRenderableWidget(
-            IconButton(
-                leftPos + offsetHelper.next(),
-                topPos + 45,
-                20,
-                20,
-                INVENTORY_TEXTURE,
-                196,
-                16
-            ) { sendWeather(WeatherType.RAIN) })
+                addRenderableWidget(
+                    IconButton(
+                        leftPos + xOffsetHelper.next(),
+                        topPos + yOffsetHelper.get(),
+                        20,
+                        20,
+                        INVENTORY_TEXTURE,
+                        212,
+                        16
+                    ) { sendWeather(WeatherType.THUNDER) })
 
-        addRenderableWidget(
-            IconButton(
-                leftPos + offsetHelper.next(),
-                topPos + 45,
-                20,
-                20,
-                INVENTORY_TEXTURE,
-                212,
-                16
-            ) { sendWeather(WeatherType.THUNDER) })
+                addRenderableWidget(
+                    FallbackCheckbox(
+                        leftPos + 8,
+                        topPos + yOffsetHelper.next(),
+                        100,
+                        20,
+                        Component.literal("Freeze Time"),
+                        menu.freezeTime
+                    ) { freezeTime(it) }
+                )
+
+                addRenderableWidget(
+                    FallbackCheckbox(
+                        leftPos + 8,
+                        topPos + yOffsetHelper.next(),
+                        100,
+                        20,
+                        Component.literal("Freeze Weather"),
+                        menu.freezeWeather
+                    ) { freezeWeather(it) }
+                )
+            }
+        }
     }
 
     override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {

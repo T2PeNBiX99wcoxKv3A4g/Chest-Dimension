@@ -1,6 +1,7 @@
 package io.github.ykysnk.chestdimension.world.inventory
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.level.ChestServerLevel
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
@@ -21,9 +22,27 @@ class WeatherTimeControllerFactory(
 
     override fun writeScreenOpeningData(player: ServerPlayer, buf: FriendlyByteBuf) {
         buf.writeResourceLocation(level.dimension().location())
+        var getFreezeTime = false
+        var getFreezeWeather = false
+        (level as? ChestServerLevel)?.apply {
+            chestServerLevelData?.apply {
+                getFreezeTime = freezeTime
+                getFreezeWeather = freezeWeather
+            }
+        }
+        buf.writeBoolean(getFreezeTime)
+        buf.writeBoolean(getFreezeWeather)
     }
 
     override fun createMenu(containerId: Int, inventory: Inventory, player: Player): AbstractContainerMenu {
-        return WeatherTimeControllerMenu(containerId, inventory, level.dimension())
+        var getFreezeTime = false
+        var getFreezeWeather = false
+        (level as? ChestServerLevel)?.apply {
+            chestServerLevelData?.apply {
+                getFreezeTime = freezeTime
+                getFreezeWeather = freezeWeather
+            }
+        }
+        return WeatherTimeControllerMenu(containerId, inventory, level.dimension(), getFreezeTime, getFreezeWeather)
     }
 }
