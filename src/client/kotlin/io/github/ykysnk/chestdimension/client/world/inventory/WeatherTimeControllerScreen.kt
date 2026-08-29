@@ -1,6 +1,8 @@
 package io.github.ykysnk.chestdimension.client.world.inventory
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.client.extensions.freezeTime
+import io.github.ykysnk.chestdimension.client.extensions.freezeWeather
 import io.github.ykysnk.chestdimension.client.extensions.sendSetTime
 import io.github.ykysnk.chestdimension.client.extensions.sendWeather
 import io.github.ykysnk.chestdimension.world.Network
@@ -8,7 +10,6 @@ import io.github.ykysnk.chestdimension.world.WeatherType
 import io.github.ykysnk.chestdimension.world.inventory.WeatherTimeControllerMenu
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
@@ -34,20 +35,85 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
         timeSlider!!.updateValue()
 
         addRenderableWidget(timeSlider!!)
-        addRenderableWidget(Button.builder(Component.literal("Day")) { sendSetTime(1000) }
-            .bounds(leftPos + 8, topPos + 45, 50, 20).build())
-        addRenderableWidget(Button.builder(Component.literal("Noon")) { sendSetTime(6000) }
-            .bounds(leftPos + 63, topPos + 45, 50, 20).build())
-        addRenderableWidget(Button.builder(Component.literal("Night")) { sendSetTime(13000) }
-            .bounds(leftPos + 118, topPos + 45, 50, 20).build())
-        addRenderableWidget(Button.builder(Component.literal("Midnight")) { sendSetTime(18000) }
-            .bounds(leftPos + 8, topPos + 70, 75, 20).build())
-        addRenderableWidget(Button.builder(Component.literal("Clear")) { sendWeather(WeatherType.CLEAR) }
-            .bounds(leftPos + 8, topPos + 95, 50, 20).build())
-        addRenderableWidget(Button.builder(Component.literal("Rain")) { sendWeather(WeatherType.RAIN) }
-            .bounds(leftPos + 63, topPos + 95, 50, 20).build())
-        addRenderableWidget(Button.builder(Component.literal("Thunder")) { sendWeather(WeatherType.THUNDER) }
-            .bounds(leftPos + 118, topPos + 95, 50, 20).build())
+
+        val offsetHelper = PosSpaceOffsetHelper(8, 23)
+
+        addRenderableWidget(
+            IconButton(
+                leftPos + offsetHelper.next(),
+                topPos + 45,
+                20,
+                20,
+                INVENTORY_TEXTURE,
+                180,
+                0
+            ) { sendSetTime(1000) })
+
+        addRenderableWidget(
+            IconButton(
+                leftPos + offsetHelper.next(),
+                topPos + 45,
+                20,
+                20,
+                INVENTORY_TEXTURE,
+                196,
+                0
+            ) { sendSetTime(6000) })
+
+        addRenderableWidget(
+            IconButton(
+                leftPos + offsetHelper.next(),
+                topPos + 45,
+                20,
+                20,
+                INVENTORY_TEXTURE,
+                212,
+                0
+            ) { sendSetTime(13000) })
+
+        addRenderableWidget(
+            IconButton(
+                leftPos + offsetHelper.next(),
+                topPos + 45,
+                20,
+                20,
+                INVENTORY_TEXTURE,
+                228,
+                0
+            ) { sendSetTime(18000) })
+
+        addRenderableWidget(
+            IconButton(
+                leftPos + offsetHelper.next(),
+                topPos + 45,
+                20,
+                20,
+                INVENTORY_TEXTURE,
+                180,
+                16
+            ) { sendWeather(WeatherType.CLEAR) })
+
+        addRenderableWidget(
+            IconButton(
+                leftPos + offsetHelper.next(),
+                topPos + 45,
+                20,
+                20,
+                INVENTORY_TEXTURE,
+                196,
+                16
+            ) { sendWeather(WeatherType.RAIN) })
+
+        addRenderableWidget(
+            IconButton(
+                leftPos + offsetHelper.next(),
+                topPos + 45,
+                20,
+                20,
+                INVENTORY_TEXTURE,
+                212,
+                16
+            ) { sendWeather(WeatherType.THUNDER) })
     }
 
     override fun renderBg(guiGraphics: GuiGraphics, partialTick: Float, mouseX: Int, mouseY: Int) {
@@ -80,5 +146,13 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
 
     private fun sendWeather(weather: WeatherType) {
         Network.sendWeather(menu.dimension, weather)
+    }
+
+    private fun freezeTime(value: Boolean) {
+        Network.freezeTime(menu.dimension, value)
+    }
+
+    private fun freezeWeather(value: Boolean) {
+        Network.freezeWeather(menu.dimension, value)
     }
 }
