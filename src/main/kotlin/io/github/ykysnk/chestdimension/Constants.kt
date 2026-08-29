@@ -21,6 +21,7 @@ import kotlin.io.path.createDirectories
 object Constants {
     init {
         ServerLifecycleEvents.SERVER_STARTING.register { getServer = it }
+        ServerLifecycleEvents.SERVER_STOPPED.register { getServer = null }
     }
 
     const val MOD_ID: String = "chest-dimension"
