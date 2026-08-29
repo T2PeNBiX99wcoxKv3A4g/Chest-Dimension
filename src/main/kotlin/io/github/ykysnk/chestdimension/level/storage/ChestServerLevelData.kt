@@ -100,7 +100,7 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
             setDirty(privateFreezeWeather, value)
             privateFreezeWeather = value
         }
-    private var spawnPosList: HashSet<BlockPos> = HashSet()
+    private val spawnPosList: HashSet<BlockPos> = hashSetOf()
     lateinit var chestSavedData: ChestSavedData
         internal set
 
