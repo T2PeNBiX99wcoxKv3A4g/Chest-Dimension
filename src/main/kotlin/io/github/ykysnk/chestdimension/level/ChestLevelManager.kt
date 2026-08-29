@@ -160,8 +160,13 @@ object ChestLevelManager {
 
         level.setBlock(BlockPos(0, platformY + 1, 0), Blocks.CHEST_PLATFORM_ENTER_PLATE.defaultBlockState(), 3)
         level.setBlock(
-            BlockPos(maxX - 1, platformY + 1, minZ + 1),
+            BlockPos(maxX - 2, platformY + 1, minZ + 2),
             Blocks.TELEPORT_PRESSURE_PLATE.defaultBlockState(),
+            3
+        )
+        level.setBlock(
+            BlockPos(minX + 2, platformY + 1, minZ + 2),
+            Blocks.WEATHER_TIME_CONTROLLER.defaultBlockState(),
             3
         )
     }
