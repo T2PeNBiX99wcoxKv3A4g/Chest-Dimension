@@ -31,7 +31,7 @@ internal inline fun ArgumentBuilder<CommandSourceStack, *>.uuidArg(block: Requir
         suggests { _, builder ->
             val tempSet = hashSetOf<String>()
             UUIDManager.getMap().keys.forEach(tempSet::add)
-            UUIDManager.getInactiveList().forEach(tempSet::add)
+            UUIDManager.getInactiveMap().values.forEach { it.forEach(tempSet::add) }
             tempSet.forEach(builder::suggest)
             builder.buildFuture()
         }

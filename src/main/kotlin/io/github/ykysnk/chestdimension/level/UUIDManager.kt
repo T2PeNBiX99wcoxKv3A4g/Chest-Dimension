@@ -77,14 +77,26 @@ object UUIDManager {
         data.levels[uuidString]?.chestDimensionPositions?.remove(levelName)
     }
 
-    fun isActive(uuid: UUID) = !data.inactiveLevels.contains(uuid.toString())
+    fun isActive(uuid: UUID) = isActive(uuid, Constants.Server.worldData.levelName)
 
-    fun setInactive(uuid: UUID) {
-        data.inactiveLevels.add(uuid.toString())
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun isActive(uuid: UUID, levelName: String): Boolean {
+        val list = data.inactiveLevels[levelName] ?: return true
+        return !list.contains(uuid.toString())
     }
 
-    fun setActive(uuid: UUID) {
-        data.inactiveLevels.remove(uuid.toString())
+    fun setInactive(uuid: UUID) = setInactive(uuid, Constants.Server.worldData.levelName)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun setInactive(uuid: UUID, levelName: String) {
+        data.inactiveLevels[levelName]?.add(uuid.toString())
+    }
+
+    fun setActive(uuid: UUID) = setActive(uuid, Constants.Server.worldData.levelName)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun setActive(uuid: UUID, levelName: String) {
+        data.inactiveLevels[levelName]?.remove(uuid.toString())
     }
 
     fun getExitChestPosition(uuid: UUID): BlockPos? = getExitChestPosition(uuid, Constants.Server.worldData.levelName)
@@ -124,7 +136,7 @@ object UUIDManager {
 
     fun getMap() = data.levels.toMap()
 
-    fun getInactiveList() = data.inactiveLevels.toList()
+    fun getInactiveMap() = data.inactiveLevels.mapValues { (_, value) -> value.toSet() }
 
     fun randomUUID(): UUID {
         while (true) {
