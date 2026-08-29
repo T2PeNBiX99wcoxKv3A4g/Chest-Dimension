@@ -340,8 +340,19 @@ object ChestLevelManager {
                 Constants.LOGGER.warn("Invalid UUID in levels.yaml: $uuidString (${it.localizedMessage})", it)
                 return@forEach
             }
-            val level = UUIDManager.getExitChestDimension(uuid) ?: return@forEach
-            val pos = UUIDManager.getExitChestPosition(uuid) ?: return@forEach
+            if (!UUIDManager.isActive(uuid)) return@forEach
+            val level = UUIDManager.getExitChestDimension(uuid)
+            if (level == null) {
+                badData.add(uuid)
+                Constants.LOGGER.warn("Invalid dimension in levels.yaml: $uuidString")
+                return@forEach
+            }
+            val pos = UUIDManager.getExitChestPosition(uuid)
+            if (pos == null) {
+                badData.add(uuid)
+                Constants.LOGGER.warn("Invalid position in levels.yaml: $uuidString")
+                return@forEach
+            }
             if (level.getBlockState(pos).block is ChestDimensionBlock) return@forEach
             badData.add(uuid)
         }
