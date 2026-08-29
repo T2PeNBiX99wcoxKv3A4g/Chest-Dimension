@@ -119,7 +119,6 @@ object ChestLevelManager {
         server.levels[worldKey] = level
         loaded[uuid] = LoadedChestWorld(uuid, level)
         levelToUUID[worldKey] = uuid
-        level.chestServerLevelData.addSpawnPos(BlockPos(0, 1, 0))
         UUIDManager.add(uuid, seed)
         UUIDManager.save()
         return level
