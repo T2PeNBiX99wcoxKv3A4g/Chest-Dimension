@@ -140,7 +140,10 @@ object UUIDManager {
 
     fun getMap() = data.levels.toMap()
 
-    fun getInactiveMap() = data.inactiveLevels.mapValues { (_, value) -> value.toSet() }
+    fun getInactiveList() = getInactiveList(Constants.Server.worldData.levelName)
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun getInactiveList(levelName: String) = data.inactiveLevels[levelName]?.toSet() ?: setOf()
 
     fun randomUUID(): UUID {
         while (true) {
