@@ -1,27 +1,23 @@
 package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
-import io.github.ykysnk.chestdimension.data.BlockPosData.Companion.toData
 import io.github.ykysnk.chestdimension.data.ChestDimensionPosition
-import io.github.ykysnk.chestdimension.data.DimensionData.Companion.toData
 import io.github.ykysnk.chestdimension.data.LevelData
 import io.github.ykysnk.chestdimension.data.Levels
 import kotlinx.coroutines.*
-import kotlinx.serialization.decodeFromString
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
-import net.mamoe.yamlkt.Yaml
 import net.minecraft.core.BlockPos
+import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
+import java.io.File
 import java.nio.file.Files
 import java.util.*
-import kotlin.io.path.readText
-import kotlin.io.path.writeText
 import kotlin.time.Duration.Companion.minutes
 
 object UUIDManager {
-    private val dataPath = Constants.ConfigDir.resolve("levels.yaml")
+    private val dataPath = Constants.ConfigDir.resolve("levels.dat")
     private var scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var data: Levels = Levels()
 
@@ -30,7 +26,9 @@ object UUIDManager {
             saveNow()
             return
         }
-        data = Yaml.decodeFromString(dataPath.readText())
+
+        val tag = NbtIo.readCompressed(File(dataPath.toUri()))
+        data = Levels.load(tag)
     }
 
     fun save() {
@@ -43,8 +41,7 @@ object UUIDManager {
     fun saveNow() = saveNow(data)
 
     private fun saveNow(levels: Levels) {
-        val text = Yaml.encodeToString(levels)
-        dataPath.writeText(text)
+        NbtIo.writeCompressed(levels.save(), File(dataPath.toUri()))
     }
 
     fun add(uuid: UUID, seed: Long) {
@@ -66,7 +63,7 @@ object UUIDManager {
     @Suppress("MemberVisibilityCanBePrivate")
     fun setChestData(uuid: UUID, levelName: String, key: ResourceKey<Level>, pos: BlockPos) {
         val uuidString = uuid.toString()
-        data.levels[uuidString]?.chestDimensionPositions[levelName] = ChestDimensionPosition(key.toData(), pos.toData())
+        data.levels[uuidString]?.chestDimensionPositions[levelName] = ChestDimensionPosition(key, pos)
     }
 
     fun clearChestData(uuid: UUID) = clearChestData(uuid, Constants.Server.worldData.levelName)
@@ -108,7 +105,7 @@ object UUIDManager {
     @Suppress("MemberVisibilityCanBePrivate")
     fun getExitChestPosition(uuid: UUID, levelName: String): BlockPos? {
         val data = data.levels[uuid.toString()] ?: return null
-        return data.chestDimensionPositions[levelName]?.blockPos?.blockPos
+        return data.chestDimensionPositions[levelName]?.blockPos
     }
 
     fun getExitChestDimensionKey(uuid: UUID): ResourceKey<Level>? =
@@ -116,14 +113,14 @@ object UUIDManager {
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun getExitChestDimensionKey(uuid: UUID, levelName: String): ResourceKey<Level>? =
-        data.levels[uuid.toString()]?.chestDimensionPositions[levelName]?.dimension?.resourceKey
+        data.levels[uuid.toString()]?.chestDimensionPositions[levelName]?.dimension
 
     fun getExitChestDimension(uuid: UUID): ServerLevel? =
         getExitChestDimension(uuid, Constants.Server.worldData.levelName)
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun getExitChestDimension(uuid: UUID, levelName: String): ServerLevel? =
-        data.levels[uuid.toString()]?.chestDimensionPositions[levelName]?.dimension?.resourceKey?.let(Constants.Server::getLevel)
+        data.levels[uuid.toString()]?.chestDimensionPositions[levelName]?.dimension?.let(Constants.Server::getLevel)
 
     operator fun set(uuid: UUID, levelData: LevelData) {
         data.levels[uuid.toString()] = levelData
