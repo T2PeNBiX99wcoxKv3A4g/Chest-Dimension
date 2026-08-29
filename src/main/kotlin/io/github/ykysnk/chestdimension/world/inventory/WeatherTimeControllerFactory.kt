@@ -5,14 +5,13 @@ import io.github.ykysnk.chestdimension.level.ChestServerLevel
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 
 class WeatherTimeControllerFactory(
-    private val level: ServerLevel
+    private val level: ChestServerLevel
 ) : ExtendedScreenHandlerFactory {
     override fun getDisplayName(): Component {
         return Component.translatable(
@@ -24,12 +23,12 @@ class WeatherTimeControllerFactory(
         buf.writeResourceLocation(level.dimension().location())
         var getFreezeTime = false
         var getFreezeWeather = false
-        (level as? ChestServerLevel)?.apply {
-            chestServerLevelData.apply {
-                getFreezeTime = freezeTime
-                getFreezeWeather = freezeWeather
-            }
+
+        level.chestServerLevelData.apply {
+            getFreezeTime = freezeTime
+            getFreezeWeather = freezeWeather
         }
+
         buf.writeBoolean(getFreezeTime)
         buf.writeBoolean(getFreezeWeather)
     }
@@ -37,12 +36,12 @@ class WeatherTimeControllerFactory(
     override fun createMenu(containerId: Int, inventory: Inventory, player: Player): AbstractContainerMenu {
         var getFreezeTime = false
         var getFreezeWeather = false
-        (level as? ChestServerLevel)?.apply {
-            chestServerLevelData.apply {
-                getFreezeTime = freezeTime
-                getFreezeWeather = freezeWeather
-            }
+
+        level.chestServerLevelData.apply {
+            getFreezeTime = freezeTime
+            getFreezeWeather = freezeWeather
         }
+
         return WeatherTimeControllerMenu(containerId, inventory, level.dimension(), getFreezeTime, getFreezeWeather)
     }
 }

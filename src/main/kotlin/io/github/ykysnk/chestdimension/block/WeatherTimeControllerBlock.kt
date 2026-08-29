@@ -1,8 +1,9 @@
 package io.github.ykysnk.chestdimension.block
 
+import io.github.ykysnk.chestdimension.level.ChestServerLevel
 import io.github.ykysnk.chestdimension.world.inventory.WeatherTimeControllerFactory
 import net.minecraft.core.BlockPos
-import net.minecraft.server.level.ServerLevel
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -24,9 +25,14 @@ class WeatherTimeControllerBlock(properties: Properties) : Block(properties) {
     ): InteractionResult {
         if (!level.isClientSide) {
             (player as? ServerPlayer)?.apply {
-                (level as? ServerLevel)?.let {
-                    openMenu(WeatherTimeControllerFactory(it))
+                (level as? ChestServerLevel)?.apply {
+                    openMenu(WeatherTimeControllerFactory(this))
+                    return InteractionResult.CONSUME
                 }
+                player.displayClientMessage(
+                    Component.literal("Only can be use inside chest dimension"),
+                    true
+                )
             }
         }
 
