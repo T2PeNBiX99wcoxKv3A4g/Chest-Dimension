@@ -8,33 +8,35 @@ import java.nio.file.Path
 
 object ChestLevelStorage {
     init {
-        ServerLifecycleEvents.SERVER_STARTED.register {
+        ServerLifecycleEvents.SERVER_STARTING.register {
             initialize()
         }
-        ServerLifecycleEvents.SERVER_STOPPING.register {
+        ServerLifecycleEvents.SERVER_STOPPED.register {
             clear()
         }
     }
 
     private val root: Path = Constants.ConfigDir
+    private var storageAccess: LevelStorageSource.LevelStorageAccess? = null
+    val access: LevelStorageSource.LevelStorageAccess
+        get() {
+            if (storageAccess == null)
+                initialize()
+            return storageAccess ?: throw IllegalStateException("Storage access not initialized")
+        }
 
-    private lateinit var storageSource: LevelStorageSource
-
-    private fun initialize() {
-        if (::storageSource.isInitialized) return
+    private val storageSource: LevelStorageSource by lazy {
         Files.createDirectories(root)
-        storageSource = LevelStorageSource.createDefault(root)
+        LevelStorageSource.createDefault(root)
     }
 
-    private fun source(): LevelStorageSource {
-        if (!::storageSource.isInitialized)
-            initialize()
-        return storageSource
+    private fun initialize() {
+        if (storageAccess != null) return
+        storageAccess = storageSource.createAccess("save")
     }
 
     private fun clear() {
-        access.close()
+        storageAccess?.close()
+        storageAccess = null
     }
-
-    val access: LevelStorageSource.LevelStorageAccess by lazy { source().createAccess("save") }
 }
