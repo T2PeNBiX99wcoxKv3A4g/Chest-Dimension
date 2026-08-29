@@ -89,6 +89,8 @@ object UUIDManager {
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setInactive(uuid: UUID, levelName: String) {
+        if (!data.inactiveLevels.containsKey(levelName))
+            data.inactiveLevels[levelName] = hashSetOf()
         data.inactiveLevels[levelName]?.add(uuid.toString())
     }
 
@@ -96,6 +98,8 @@ object UUIDManager {
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setActive(uuid: UUID, levelName: String) {
+        if (!data.inactiveLevels.containsKey(levelName))
+            data.inactiveLevels[levelName] = hashSetOf()
         data.inactiveLevels[levelName]?.remove(uuid.toString())
     }
 
