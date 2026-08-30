@@ -43,16 +43,16 @@ object NBTHelper {
 
     @Suppress("unused")
     fun <T, T2> getMutableList(tag: ListTag, value: (Int, ListTag) -> T2, load: (T2) -> T): MutableList<T> {
-        val set = mutableListOf<T>()
-        for (i in tag.indices) set.add(load(value(i, tag)))
-        return set
+        val list = mutableListOf<T>()
+        for (i in tag.indices) list.add(load(value(i, tag)))
+        return list
     }
 
     @Suppress("unused")
     fun <T, T2> getMutableList(tag: ListTag, value: (Int, ListTag) -> T2, load: (Int, T2) -> T): MutableList<T> {
-        val set = mutableListOf<T>()
-        for (i in tag.indices) set.add(load(i, value(i, tag)))
-        return set
+        val list = mutableListOf<T>()
+        for (i in tag.indices) list.add(load(i, value(i, tag)))
+        return list
     }
 }
 
