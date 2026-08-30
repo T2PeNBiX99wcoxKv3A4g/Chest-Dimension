@@ -64,7 +64,7 @@ fun Vec3i.save(): CompoundTag {
     return tag
 }
 
-inline fun <reified T> HashSet<T>.save(): ListTag {
+inline fun <reified T> List<T>.save(): ListTag {
     val tag = ListTag()
     for (name in this) {
         when {
@@ -88,7 +88,9 @@ inline fun <reified T> HashSet<T>.save(): ListTag {
     return tag
 }
 
-inline fun <reified T> HashMap<String, T>.save(): CompoundTag {
+inline fun <reified T> Set<T>.save(): ListTag = toList().save()
+
+inline fun <reified T> Map<String, T>.save(): CompoundTag {
     val tag = CompoundTag()
     for ((key, value) in this) {
         when {
@@ -113,7 +115,14 @@ inline fun <reified T> HashMap<String, T>.save(): CompoundTag {
 }
 
 @JvmName("save2")
-inline fun <reified T> HashMap<String, HashSet<T>>.save(): CompoundTag {
+inline fun <reified T> Map<String, List<T>>.save(): CompoundTag {
+    val tag = CompoundTag()
+    for ((key, value) in this) tag.put(key, value.save())
+    return tag
+}
+
+@JvmName("save3")
+inline fun <reified T> Map<String, Set<T>>.save(): CompoundTag {
     val tag = CompoundTag()
     for ((key, value) in this) tag.put(key, value.save())
     return tag
