@@ -86,18 +86,14 @@ object UUIDManager {
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setInactive(uuid: UUID, levelName: String) {
-        if (!data.inactiveLevels.containsKey(levelName))
-            data.inactiveLevels[levelName] = hashSetOf()
-        data.inactiveLevels[levelName]?.add(uuid.toString())
+        data.inactiveLevels.getOrPut(levelName) { hashSetOf() }.add(uuid.toString())
     }
 
     fun setActive(uuid: UUID) = setActive(uuid, Constants.Server.worldData.levelName)
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setActive(uuid: UUID, levelName: String) {
-        if (!data.inactiveLevels.containsKey(levelName))
-            data.inactiveLevels[levelName] = hashSetOf()
-        data.inactiveLevels[levelName]?.remove(uuid.toString())
+        data.inactiveLevels.getOrPut(levelName) { hashSetOf() }.remove(uuid.toString())
     }
 
     fun getExitChestPosition(uuid: UUID): BlockPos? = getExitChestPosition(uuid, Constants.Server.worldData.levelName)
