@@ -4,10 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import io.github.ykysnk.chestdimension.block.TeleportDoorBlock
 import io.github.ykysnk.chestdimension.block.entity.TeleportDoorBlockEntity
+import io.github.ykysnk.chestdimension.client.compat.IrisCompat
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer
 import net.minecraft.core.Direction
 import net.minecraft.world.level.block.DoorBlock
 import org.joml.Matrix4f
@@ -23,7 +25,10 @@ class TeleportDoorRenderer(context: BlockEntityRendererProvider.Context) :
         packedOverlay: Int
     ) {
         val matrix4f = poseStack.last().pose()
-        renderPortal(blockEntity, matrix4f, buffer.getBuffer(RenderType.endPortal()))
+        val renderType = if (IrisCompat.isModLoaded && IrisCompat.getCurrentPack().isPresent) RenderType.entitySolid(
+            TheEndPortalRenderer.END_PORTAL_LOCATION
+        ) else RenderType.endPortal()
+        renderPortal(blockEntity, matrix4f, buffer.getBuffer(renderType))
     }
 
     private fun renderPortal(blockEntity: TeleportDoorBlockEntity, pose: Matrix4f, consumer: VertexConsumer) {

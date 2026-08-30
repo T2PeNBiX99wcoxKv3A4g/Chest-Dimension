@@ -29,6 +29,17 @@ repositories {
     maven("https://maven.createmod.net/")
     maven("https://raw.githubusercontent.com/Fuzss/modresources/main/maven")
     maven("https://maven.jamieswhiteshirt.com/libs-release/")
+    exclusiveContent {
+        forRepository {
+            maven("https://api.modrinth.com/maven") {
+                name = "Modrinth"
+            }
+        }
+        filter {
+            includeGroup("maven.modrinth")
+        }
+    }
+    maven("https://maven.covers1624.net/")
 }
 
 loom {
@@ -74,6 +85,11 @@ dependencies {
     modImplementation("dev.isxander:yet-another-config-lib:${providers.gradleProperty("yacl_version").get()}")
     modCompileOnly("com.simibubi.create:create-fabric:${providers.gradleProperty("create_version").get()}")
 //    modRuntimeOnly("com.simibubi.create:create-fabric:${providers.gradleProperty("create_version").get()}")
+    modImplementation("maven.modrinth:sodium:${providers.gradleProperty("sodium_version").get()}")
+    modImplementation("maven.modrinth:iris:${providers.gradleProperty("iris_version").get()}")
+    modImplementation("org.antlr:antlr4-runtime:${providers.gradleProperty("antlr4_version").get()}")
+    modImplementation("io.github.douira:glsl-transformer:${providers.gradleProperty("glsl_transformer_version").get()}")
+    modImplementation("org.anarres:jcpp:${providers.gradleProperty("jcpp_version").get()}")
     include(implementation("net.mamoe.yamlkt:yamlkt:${providers.gradleProperty("yamlkt_version").get()}")!!)
 }
 
@@ -424,4 +440,12 @@ tasks.named<KotlinCompile>("compileKotlin") {
 
 tasks.named<Jar>("sourcesJar") {
     dependsOn(generateFallbackTranslations)
+}
+
+loom {
+    runs {
+        named("client") {
+            vmArg("-Dsodium.checks.issue2561=false")
+        }
+    }
 }
