@@ -31,4 +31,7 @@ object BlockEntityTypes {
             "teleport_pressure_plate",
             BlockEntityType.Builder.of(::TeleportPressurePlateBlockEntity, Blocks.TELEPORT_PRESSURE_PLATE)
         )
+
+    val TELEPORT_DOOR: BlockEntityType<TeleportDoorBlockEntity> =
+        register("teleport_door", BlockEntityType.Builder.of(::TeleportDoorBlockEntity, Blocks.TELEPORT_DOOR))
 }
