@@ -32,7 +32,7 @@ object ChestDimensionClient : ClientModInitializer {
     override fun onInitializeClient() {
         ForceInitialize
 
-        if (IrisCompat.isModLoaded) Constants.LOGGER.debug("{}", IrisCompat)
+        Constants.LOGGER.debug("{}", IrisCompat)
 
         // TODO: Create new ChestRenderer
         BlockEntityRenderers.register(BlockEntityTypes.CHEST_DIMENSION, ::ChestRenderer)
