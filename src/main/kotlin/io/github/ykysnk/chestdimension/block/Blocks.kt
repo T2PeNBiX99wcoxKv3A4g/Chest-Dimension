@@ -14,7 +14,6 @@ import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.level.block.Blocks as MCBlocks
 
-// TODO: Weather and time control
 object Blocks : RegistryHelper<Block>() {
     private fun register(name: String, block: Block) =
         register { Registry.register(BuiltInRegistries.BLOCK, Constants.id(name), block) }
@@ -68,6 +67,14 @@ object Blocks : RegistryHelper<Block>() {
         WeatherTimeControllerBlock(
             BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).forceSolidOn()
                 .strength(2.0f, 1200.0f).sound(SoundType.WOOD)
+        )
+    )
+
+    val TELEPORT_DOOR: Block = register(
+        "teleport_door",
+        TeleportDoorBlock(
+            BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).strength(3.0f, 1200.0f)
+                .noOcclusion().pushReaction(PushReaction.DESTROY), BlockSetType.OAK
         )
     )
 }

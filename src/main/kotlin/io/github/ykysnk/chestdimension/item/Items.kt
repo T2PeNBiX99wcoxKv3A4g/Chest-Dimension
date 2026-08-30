@@ -2,6 +2,7 @@ package io.github.ykysnk.chestdimension.item
 
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
+import net.minecraft.world.item.DoubleHighBlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items as MCItems
 
@@ -27,4 +28,8 @@ object Items : RegistryHelper<Item>() {
 
     @JvmField
     val WEATHER_TIME_CONTROLLER: Item = register { MCItems.registerBlock(Blocks.WEATHER_TIME_CONTROLLER) }
+
+    @JvmField
+    val TELEPORT_DOOR: Item =
+        register { MCItems.registerBlock(DoubleHighBlockItem(Blocks.TELEPORT_DOOR, Item.Properties())) }
 }

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_right",
+  "textures": {
+    "bottom": "chest-dimension:block/teleport_door_bottom",
+    "top": "chest-dimension:block/teleport_door_top"
+  }
+}

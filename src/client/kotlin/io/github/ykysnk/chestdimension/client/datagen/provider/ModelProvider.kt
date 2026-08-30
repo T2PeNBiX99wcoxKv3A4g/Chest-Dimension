@@ -44,6 +44,7 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
         )
 
         blockStateModelGenerator.createTrivialCube(Blocks.WEATHER_TIME_CONTROLLER)
+        blockStateModelGenerator.createDoor(Blocks.TELEPORT_DOOR)
     }
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerators) {
