@@ -2,7 +2,7 @@
 
 package io.github.ykysnk.chestdimension.utils
 
-class SimpleResourceLocation(private val setNamespace: String, private val setPath: String) {
+data class SimpleResourceLocation(private val setNamespace: String, private val setPath: String) {
     constructor(setPath: String) : this("minecraft", setPath)
 
     val namespace: String
