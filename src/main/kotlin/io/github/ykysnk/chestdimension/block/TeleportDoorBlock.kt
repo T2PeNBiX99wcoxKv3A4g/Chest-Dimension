@@ -69,10 +69,10 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         if (level.isClientSide) return
         (level as? ServerLevel)?.apply {
             val box = getTouchAABB(state, pos)
-            val list = level.getEntitiesOfClass(Entity::class.java, box.move(pos), EntitySelector.NO_SPECTATORS)
+            val list = getEntitiesOfClass(Entity::class.java, box.move(pos), EntitySelector.NO_SPECTATORS)
             list.forEach {
                 val oldPos = it.position()
-                it.teleportToLevel(level, Vec3(oldPos.x, oldPos.y + 20, oldPos.z))
+                it.teleportToLevel(this, Vec3(oldPos.x, oldPos.y + 20, oldPos.z))
                 Constants.LOGGER.info("Entities inside teleport door: {}", it)
             }
             Constants.LOGGER.info("Entities inside teleport door: {}", list.size)
