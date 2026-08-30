@@ -80,7 +80,7 @@ inline fun <reified T> HashSet<T>.save(): ListTag {
             T::class == Double::class -> tag.add(DoubleTag.valueOf(name as Double))
             T::class == Boolean::class -> tag.add(ByteTag.valueOf(name as Boolean))
             UUID::class.java.isAssignableFrom(T::class.java) -> tag.add(NbtUtils.createUUID(name as UUID))
-            Vec3i::class.java.isAssignableFrom(T::class.java) -> tag.add((name as BlockPos).save())
+            Vec3i::class.java.isAssignableFrom(T::class.java) -> tag.add((name as Vec3i).save())
             NbtSave::class.java.isAssignableFrom(T::class.java) -> tag.add((name as NbtSave).save())
             else -> throw ArrayIndexOutOfBoundsException("Type ${T::class} is not supported")
         }
