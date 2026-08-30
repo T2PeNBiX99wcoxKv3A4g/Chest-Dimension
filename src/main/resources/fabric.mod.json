@@ -40,6 +40,10 @@
     {
       "config": "${mod_id}.client.mixins.json",
       "environment": "client"
+    },
+    {
+      "config": "${mod_id}.client.iris.mixins.json",
+      "environment": "client"
     }
   ],
   "depends": {

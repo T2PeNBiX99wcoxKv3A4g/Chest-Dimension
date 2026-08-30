@@ -1,9 +1,11 @@
 package io.github.ykysnk.chestdimension.client
 
+import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.Constants.ForceInitialize
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
 import io.github.ykysnk.chestdimension.block.entity.ChestDimensionBlockEntity
+import io.github.ykysnk.chestdimension.client.iris.IrisCompat
 import io.github.ykysnk.chestdimension.client.renderer.blockentity.TeleportDoorRenderer
 import io.github.ykysnk.chestdimension.client.world.inventory.WeatherTimeControllerScreen
 import io.github.ykysnk.chestdimension.item.Items
@@ -29,6 +31,8 @@ object ChestDimensionClient : ClientModInitializer {
 
     override fun onInitializeClient() {
         ForceInitialize
+
+        if (IrisCompat.isModLoaded) Constants.LOGGER.debug("{}", IrisCompat)
 
         // TODO: Create new ChestRenderer
         BlockEntityRenderers.register(BlockEntityTypes.CHEST_DIMENSION, ::ChestRenderer)

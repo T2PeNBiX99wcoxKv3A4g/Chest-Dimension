@@ -1,9 +1,10 @@
 {
   "required": true,
-  "package": "io.github.ykysnk.chestdimension.client.mixin",
+  "package": "io.github.ykysnk.chestdimension.client.iris.mixin",
+  "plugin": "io.github.ykysnk.chestdimension.client.iris.IrisMixinPlugin",
   "compatibilityLevel": "JAVA_25",
   "client": [
-    "ExampleClientMixin"
+    "IdMapMixin"
   ],
   "injectors": {
     "defaultRequire": 1
