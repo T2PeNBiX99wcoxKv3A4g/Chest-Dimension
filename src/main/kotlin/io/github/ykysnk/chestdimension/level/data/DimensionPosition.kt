@@ -12,13 +12,13 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
 
 data class DimensionPosition(
-    val dimension: ResourceKey<Level>? = null,
-    val blockPos: BlockPos? = null
+    val dimension: ResourceKey<Level>,
+    val blockPos: BlockPos
 ) : NbtSave {
     override fun save(): CompoundTag {
         val tag = CompoundTag()
-        dimension?.let { tag.putString("dimension", it.location().toString()) }
-        blockPos?.let { tag.put("blockPos", it.save()) }
+        tag.putString("dimension", dimension.location().toString())
+        tag.put("blockPos", blockPos.save())
         return tag
     }
 
