@@ -4,8 +4,8 @@ import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.level.data.ChestDimensionPosition
 import io.github.ykysnk.chestdimension.level.data.LevelData
 import io.github.ykysnk.chestdimension.level.data.Levels
-import kotlinx.coroutines.*
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import io.github.ykysnk.chestdimension.utils.AbstractManager
+import kotlinx.coroutines.launch
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceKey
@@ -14,14 +14,9 @@ import net.minecraft.world.level.Level
 import java.io.File
 import java.nio.file.Files
 import java.util.*
-import kotlin.time.Duration.Companion.minutes
 
-object UUIDManager {
-    private val dataPath = Constants.ConfigDir.resolve("levels.dat")
-    private var scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private var data: Levels = Levels()
-
-    private fun load() {
+object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()) {
+    override fun load() {
         if (!Files.exists(dataPath)) {
             saveNow()
             return
@@ -31,17 +26,15 @@ object UUIDManager {
         data = Levels.load(tag)
     }
 
-    fun save() {
+    override fun save() {
         scope.launch {
             val snapshot = data.deepCopy()
             saveNow(snapshot)
         }
     }
 
-    fun saveNow() = saveNow(data)
-
-    private fun saveNow(levels: Levels) {
-        NbtIo.writeCompressed(levels.save(), File(dataPath.toUri()))
+    override fun saveNow(saveData: Levels) {
+        NbtIo.writeCompressed(saveData.save(), File(dataPath.toUri()))
     }
 
     fun add(uuid: UUID, seed: Long) {
@@ -141,25 +134,6 @@ object UUIDManager {
         while (true) {
             val uuid = UUID.randomUUID()
             if (!data.levels.containsKey(uuid.toString())) return uuid
-        }
-    }
-
-    init {
-        load()
-        ServerLifecycleEvents.SERVER_STARTING.register {
-            scope.launch {
-                while (isActive) {
-                    delay(5.minutes)
-                    save()
-                }
-            }
-        }
-        ServerLifecycleEvents.SERVER_STOPPING.register {
-            saveNow()
-            scope.cancel()
-        }
-        ServerLifecycleEvents.START_DATA_PACK_RELOAD.register { _, _ ->
-            save()
         }
     }
 }
