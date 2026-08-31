@@ -12,7 +12,7 @@ object BlockTags : RegistryHelper<TagKey<Block>>() {
         register(TagKey.create(Registries.BLOCK, location))
 
     @Suppress("unused")
-    private fun create(namespace: String, name: String): TagKey<Block> = create(id(namespace, name))
+    private fun create(namespace: NameSpaces, name: String): TagKey<Block> = create(id(namespace, name))
 
     @Suppress("unused")
     private fun create(name: String): TagKey<Block> = create(id(name))
