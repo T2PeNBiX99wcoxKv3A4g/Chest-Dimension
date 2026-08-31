@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_post",
+  "textures": {
+    "edge": "chest-dimension:block/blast_resistant_glass_pane_top",
+    "pane": "chest-dimension:block/blast_resistant_glass"
+  }
+}

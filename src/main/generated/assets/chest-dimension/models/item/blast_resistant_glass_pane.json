@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "chest-dimension:block/blast_resistant_glass"
+  }
+}

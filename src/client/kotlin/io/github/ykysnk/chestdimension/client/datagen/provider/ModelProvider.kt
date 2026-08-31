@@ -24,6 +24,7 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
             ModelLocationUtils.getModelLocation(Blocks.CHEST_DIMENSION),
             MCBlocks.OAK_PLANKS
         ).createWithoutBlockItem(Blocks.CHEST_DIMENSION)
+        blockStateModelGenerator.createGlassBlocks(Blocks.BLAST_RESISTANT_GLASS, Blocks.BLAST_RESISTANT_GLASS_PANE)
 
         val chestPlatformEnterPlateTextureMapping = TextureMapping()
         chestPlatformEnterPlateTextureMapping.put(TextureSlot.TEXTURE, id("block/chest_platform_enter_plate"))
