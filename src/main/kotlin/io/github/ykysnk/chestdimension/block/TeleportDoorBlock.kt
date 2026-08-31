@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3
 class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(properties, type), EntityBlock {
     companion object {
         private const val DOOR_THICKNESS = 3.0 / 16.0
-        private const val TOUCH_THICKNESS = 0.1 / 16.0
+        private const val TOUCH_THICKNESS = 0.5 / 16.0
         private const val TOUCH_OFFSET = DOOR_THICKNESS - TOUCH_THICKNESS
         private val SOUTH_TOUCH_AABB = AABB(0.0, 0.0, TOUCH_OFFSET, 1.0, 1.0, TOUCH_OFFSET + TOUCH_THICKNESS)
         private val NORTH_TOUCH_AABB =
