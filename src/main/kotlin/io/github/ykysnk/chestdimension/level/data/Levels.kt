@@ -13,7 +13,10 @@ data class Levels(
     var inactiveLevels: HashMap<String, HashSet<String>> = hashMapOf()
 ) : NbtSave, DeepCopy<Levels> {
     override fun deepCopy(): Levels =
-        Levels(HashMap(levels), HashMap(inactiveLevels.mapValues { it.value.toHashSet() }))
+        Levels(
+            HashMap(levels.mapValues { it.value.copy() }),
+            HashMap(inactiveLevels.mapValues { it.value.toHashSet() })
+        )
 
     override fun save(): CompoundTag {
         val tag = CompoundTag()

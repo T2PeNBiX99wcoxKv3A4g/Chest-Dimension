@@ -8,21 +8,21 @@ import net.minecraft.nbt.CompoundTag
 
 data class LevelData(
     val seed: Long,
-    val chestDimensionPositions: HashMap<String, ChestDimensionPosition> = hashMapOf(),
+    val dimensionPositions: HashMap<String, DimensionPosition> = hashMapOf(),
 ) : NbtSave {
     override fun save(): CompoundTag {
         val tag = CompoundTag()
         tag.putLong("seed", seed)
-        tag.put("chestDimensionPositions", chestDimensionPositions.save())
+        tag.put("dimensionPositions", dimensionPositions.save())
         return tag
     }
 
     companion object : NbtLoad<LevelData> {
         override fun load(tag: CompoundTag): LevelData {
             val seed = tag.getLong("seed")
-            val chestDimensionPositions = tag.getCompound("chestDimensionPositions")
-                .let { NBTHelper.getHashMap(it, { key, tag -> tag.getCompound(key) }, ChestDimensionPosition::load) }
-            return LevelData(seed, chestDimensionPositions)
+            val dimensionPositions = tag.getCompound("dimensionPositions")
+                .let { NBTHelper.getHashMap(it, { key, tag -> tag.getCompound(key) }, DimensionPosition::load) }
+            return LevelData(seed, dimensionPositions)
         }
     }
 }

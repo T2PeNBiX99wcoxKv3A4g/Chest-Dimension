@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.Level
 
-data class ChestDimensionPosition(
+data class DimensionPosition(
     val dimension: ResourceKey<Level>? = null,
     val blockPos: BlockPos? = null
 ) : NbtSave {
@@ -22,12 +22,12 @@ data class ChestDimensionPosition(
         return tag
     }
 
-    companion object : NbtLoad<ChestDimensionPosition> {
-        override fun load(tag: CompoundTag): ChestDimensionPosition {
+    companion object : NbtLoad<DimensionPosition> {
+        override fun load(tag: CompoundTag): DimensionPosition {
             val dimension = ResourceLocation.tryParse(tag.getString("dimension"))
                 ?.let { ResourceKey.create(Registries.DIMENSION, it) } ?: Level.OVERWORLD
             val blockPos = tag.getCompound("blockPos").let { NBTHelper.getBlockPos(it) }
-            return ChestDimensionPosition(dimension, blockPos)
+            return DimensionPosition(dimension, blockPos)
         }
     }
 }
