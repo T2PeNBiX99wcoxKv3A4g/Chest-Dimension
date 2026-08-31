@@ -286,11 +286,13 @@ object ChestLevelManager {
     }
 
     fun setInactive(uuid: UUID) {
+        if (!UUIDManager.isExist(uuid)) return
         UUIDManager.setInactive(uuid)
         UUIDManager.clearChestData(uuid)
     }
 
     fun setActive(uuid: UUID) {
+        if (!UUIDManager.isExist(uuid)) return
         UUIDManager.setActive(uuid)
         if (loaded.containsKey(uuid)) return
         val data = UUIDManager[uuid] ?: return
