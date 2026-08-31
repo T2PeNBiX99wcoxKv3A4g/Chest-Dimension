@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.world.inventory
 
-import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.id
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -10,7 +10,7 @@ object MenuTypes {
     val WEATHER_TIME_CONTROLLER: MenuType<WeatherTimeControllerMenu> =
         Registry.register(
             BuiltInRegistries.MENU,
-            Constants.id("weather_time_controller"),
+            id("weather_time_controller"),
             ExtendedScreenHandlerType(::WeatherTimeControllerMenu)
         )
 }

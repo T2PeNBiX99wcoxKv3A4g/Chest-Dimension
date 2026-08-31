@@ -1,16 +1,16 @@
 package io.github.ykysnk.chestdimension.world
 
-import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.ChestServerLevel
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 
 object Network {
-    val SET_TIME = Constants.id("set_time")
-    val SET_WEATHER = Constants.id("set_weather")
-    val FREEZE_TIME = Constants.id("freeze_time")
-    val FREEZE_WEATHER = Constants.id("freeze_weather")
+    val SET_TIME = id("set_time")
+    val SET_WEATHER = id("set_weather")
+    val FREEZE_TIME = id("freeze_time")
+    val FREEZE_WEATHER = id("freeze_weather")
 
     init {
         ServerPlayNetworking.registerGlobalReceiver(SET_TIME) { server, player, _, buf, _ ->

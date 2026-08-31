@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.level
 
-import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.id
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.BlockTags
@@ -10,7 +10,7 @@ import net.minecraft.world.level.dimension.DimensionType
 import java.util.*
 
 object DimensionTypes {
-    val CHEST: ResourceKey<DimensionType> = ResourceKey.create(Registries.DIMENSION_TYPE, Constants.id("chest"))
+    val CHEST: ResourceKey<DimensionType> = ResourceKey.create(Registries.DIMENSION_TYPE, id("chest"))
 
     val ChestDimensionType by lazy {
         DimensionType(

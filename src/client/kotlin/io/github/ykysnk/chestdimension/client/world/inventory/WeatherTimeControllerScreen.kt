@@ -1,10 +1,10 @@
 package io.github.ykysnk.chestdimension.client.world.inventory
 
-import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.client.extensions.freezeTime
 import io.github.ykysnk.chestdimension.client.extensions.freezeWeather
 import io.github.ykysnk.chestdimension.client.extensions.sendSetTime
 import io.github.ykysnk.chestdimension.client.extensions.sendWeather
+import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.world.Network
 import io.github.ykysnk.chestdimension.world.WeatherType
 import io.github.ykysnk.chestdimension.world.inventory.WeatherTimeControllerMenu
@@ -18,7 +18,7 @@ class WeatherTimeControllerScreen(menu: WeatherTimeControllerMenu, inventory: In
     AbstractContainerScreen<WeatherTimeControllerMenu>(menu, inventory, title) {
     companion object {
         private const val ROWS = 6
-        private val INVENTORY_TEXTURE = Constants.id("textures/gui/container/weather_time_controller.png")
+        private val INVENTORY_TEXTURE = id("textures/gui/container/weather_time_controller.png")
     }
 
     private lateinit var timeSlider: TimeSlider

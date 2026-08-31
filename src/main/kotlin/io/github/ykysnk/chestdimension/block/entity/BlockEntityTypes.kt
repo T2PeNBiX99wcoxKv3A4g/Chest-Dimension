@@ -2,6 +2,7 @@ package io.github.ykysnk.chestdimension.block.entity
 
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.id
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -14,7 +15,7 @@ object BlockEntityTypes {
             Constants.LOGGER.warn("Block entity type {} requires at least one valid block to be defined!", key)
 
         @Suppress("TYPE_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constants.id(key), builder.build(null))
+        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id(key), builder.build(null))
     }
 
     val CHEST_PLATFORM_ENTER_PLATE: BlockEntityType<PlatformEnterPlateBlockEntity> =

@@ -4,6 +4,7 @@ import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
 import io.github.ykysnk.chestdimension.extensions.*
+import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
@@ -333,7 +334,7 @@ object ChestLevelManager {
         level.dimension().location().toString().startsWith("${Constants.MOD_ID}:chest/")
 
     private fun createWorldKey(uuid: UUID): ResourceKey<Level> =
-        ResourceKey.create(Registries.DIMENSION, Constants.id("chest/$uuid"))
+        ResourceKey.create(Registries.DIMENSION, id("chest/$uuid"))
 
     private var hasCheckLevels = false
 

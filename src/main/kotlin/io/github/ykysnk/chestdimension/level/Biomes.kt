@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.level
 
-import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.id
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.biome.Biome
@@ -9,7 +9,7 @@ import net.minecraft.world.level.biome.BiomeSpecialEffects
 import net.minecraft.world.level.biome.MobSpawnSettings
 
 object Biomes {
-    val CHEST_BIOME: ResourceKey<Biome> = ResourceKey.create(Registries.BIOME, Constants.id("chest_biome"))
+    val CHEST_BIOME: ResourceKey<Biome> = ResourceKey.create(Registries.BIOME, id("chest_biome"))
 
     val ChestBiomeType: Biome by lazy {
         Biome.BiomeBuilder()
