@@ -444,7 +444,7 @@ tasks.named<Jar>("sourcesJar") {
 
 loom {
     runs {
-        named("client") {
+        configureEach {
             vmArg("-Dsodium.checks.issue2561=false")
         }
     }
