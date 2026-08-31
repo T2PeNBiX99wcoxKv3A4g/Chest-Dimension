@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Blocks as MCBlocks
 
 object Blocks : RegistryHelper<Block>() {
     private fun register(name: String, block: Block) =
-        register { Registry.register(BuiltInRegistries.BLOCK, Constants.id(name), block) }
+        register(Registry.register(BuiltInRegistries.BLOCK, id(name), block))
 
     val CHEST_PLATFORM: Block = register(
         "chest_platform",

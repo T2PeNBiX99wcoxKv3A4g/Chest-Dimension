@@ -30,15 +30,18 @@ object Items : RegistryHelper<Item>() {
     val BLAST_RESISTANT_GLASS_FENCE: Item = register(MCItems.registerBlock(Blocks.BLAST_RESISTANT_GLASS_FENCE))
 
     @JvmField
-    val TELEPORT_PRESSURE_PLATE: Item = register { MCItems.registerBlock(Blocks.TELEPORT_PRESSURE_PLATE) }
+    val BLAST_RESISTANT_GLASS_PANE: Item = register(MCItems.registerBlock(Blocks.BLAST_RESISTANT_GLASS_PANE))
 
     @JvmField
-    val CHEST_DIMENSION: Item = register { MCItems.registerBlock(ChestDimensionBlockItem()) }
+    val TELEPORT_PRESSURE_PLATE: Item = register(MCItems.registerBlock(Blocks.TELEPORT_PRESSURE_PLATE))
 
     @JvmField
-    val WEATHER_TIME_CONTROLLER: Item = register { MCItems.registerBlock(Blocks.WEATHER_TIME_CONTROLLER) }
+    val CHEST_DIMENSION: Item = register(MCItems.registerBlock(ChestDimensionBlockItem()))
+
+    @JvmField
+    val WEATHER_TIME_CONTROLLER: Item = register(MCItems.registerBlock(Blocks.WEATHER_TIME_CONTROLLER))
 
     @JvmField
     val TELEPORT_DOOR: Item =
-        register { MCItems.registerBlock(DoubleHighBlockItem(Blocks.TELEPORT_DOOR, Item.Properties())) }
+        register(MCItems.registerBlock(DoubleHighBlockItem(Blocks.TELEPORT_DOOR, Item.Properties())))
 }
