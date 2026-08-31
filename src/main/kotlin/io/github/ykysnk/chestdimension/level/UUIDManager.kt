@@ -1,9 +1,9 @@
 package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
-import io.github.ykysnk.chestdimension.data.ChestDimensionPosition
-import io.github.ykysnk.chestdimension.data.LevelData
-import io.github.ykysnk.chestdimension.data.Levels
+import io.github.ykysnk.chestdimension.level.data.ChestDimensionPosition
+import io.github.ykysnk.chestdimension.level.data.LevelData
+import io.github.ykysnk.chestdimension.level.data.Levels
 import kotlinx.coroutines.*
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.BlockPos

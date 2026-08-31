@@ -1,4 +1,4 @@
-package io.github.ykysnk.chestdimension.data
+package io.github.ykysnk.chestdimension.level.data
 
 import kotlinx.serialization.Serializable
 import net.minecraft.core.registries.Registries

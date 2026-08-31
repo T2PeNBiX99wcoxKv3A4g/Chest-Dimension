@@ -1,5 +1,7 @@
-package io.github.ykysnk.chestdimension.data
+package io.github.ykysnk.chestdimension.level.data
 
+import io.github.ykysnk.chestdimension.data.NbtLoad
+import io.github.ykysnk.chestdimension.data.NbtSave
 import io.github.ykysnk.chestdimension.utils.NBTHelper
 import io.github.ykysnk.chestdimension.utils.save
 import net.minecraft.nbt.CompoundTag
