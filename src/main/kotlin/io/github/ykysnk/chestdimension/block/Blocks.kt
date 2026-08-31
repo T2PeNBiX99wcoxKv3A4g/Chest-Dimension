@@ -4,12 +4,10 @@ import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.FenceBlock
-import net.minecraft.world.level.block.SoundType
-import net.minecraft.world.level.block.WallBlock
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.properties.BlockSetType
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.level.block.Blocks as MCBlocks
@@ -34,7 +32,7 @@ object Blocks : RegistryHelper<Block>() {
     val CHEST_PLATFORM_FENCE: Block = register(
         "chest_platform_fence",
         FenceBlock(
-            BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).forceSolidOn()
+            BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor())
                 .strength(2.0f, 1200.0f).sound(SoundType.WOOD)
         )
     )
@@ -44,6 +42,41 @@ object Blocks : RegistryHelper<Block>() {
         PlatformEnterPlateBlock(
             BlockBehaviour.Properties.of().mapColor(MCBlocks.OAK_PLANKS.defaultMapColor()).forceSolidOn().noCollission()
                 .strength(0.5f, 1200.0f).pushReaction(PushReaction.DESTROY)
+        )
+    )
+
+    val BLAST_RESISTANT_GLASS: Block = register(
+        "blast_resistant_glass",
+        GlassBlock(
+            BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).strength(0.3f, 1200.0f)
+                .sound(SoundType.GLASS).noOcclusion().isValidSpawn(MCBlocks::never).isRedstoneConductor(MCBlocks::never)
+                .isSuffocating(MCBlocks::never).isViewBlocking(MCBlocks::never)
+        )
+    )
+
+    val BLAST_RESISTANT_GLASS_WALL: Block = register(
+        "blast_resistant_glass_wall",
+        GlassWallBlock(
+            BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).strength(0.3f, 1200.0f)
+                .sound(SoundType.GLASS).noOcclusion().isValidSpawn(MCBlocks::never).isRedstoneConductor(MCBlocks::never)
+                .isSuffocating(MCBlocks::never).isViewBlocking(MCBlocks::never).forceSolidOn()
+        )
+    )
+
+    val BLAST_RESISTANT_GLASS_FENCE: Block = register(
+        "blast_resistant_glass_fence",
+        GlassFenceBlock(
+            BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).strength(0.3f, 1200.0f)
+                .sound(SoundType.GLASS).noOcclusion().isValidSpawn(MCBlocks::never).isRedstoneConductor(MCBlocks::never)
+                .isSuffocating(MCBlocks::never).isViewBlocking(MCBlocks::never)
+        )
+    )
+
+    val BLAST_RESISTANT_GLASS_PANE: Block = register(
+        "blast_resistant_glass_pane",
+        IronBarsBlock(
+            BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).strength(0.3f, 1200.0f)
+                .sound(SoundType.GLASS).noOcclusion()
         )
     )
 

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "chest-dimension:block/blast_resistant_glass"
+  }
+}

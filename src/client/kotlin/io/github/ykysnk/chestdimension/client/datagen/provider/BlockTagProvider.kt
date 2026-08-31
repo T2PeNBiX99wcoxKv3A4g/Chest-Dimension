@@ -10,8 +10,8 @@ import java.util.concurrent.CompletableFuture
 class BlockTagProvider(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>) :
     FabricTagProvider.BlockTagProvider(output, registries) {
     override fun addTags(provider: HolderLookup.Provider) {
-        getOrCreateTagBuilder(BlockTags.WALLS).add(Blocks.CHEST_PLATFORM_WALL)
-        getOrCreateTagBuilder(BlockTags.FENCES).add(Blocks.CHEST_PLATFORM_FENCE)
+        getOrCreateTagBuilder(BlockTags.WALLS).add(Blocks.CHEST_PLATFORM_WALL).add(Blocks.BLAST_RESISTANT_GLASS_WALL)
+        getOrCreateTagBuilder(BlockTags.FENCES).add(Blocks.CHEST_PLATFORM_FENCE).add(Blocks.BLAST_RESISTANT_GLASS_FENCE)
         getOrCreateTagBuilder(BlockTags.PRESSURE_PLATES).add(Blocks.TELEPORT_PRESSURE_PLATE)
         getOrCreateTagBuilder(BlockTags.WOODEN_PRESSURE_PLATES).add(Blocks.TELEPORT_PRESSURE_PLATE)
         getOrCreateTagBuilder(BlockTags.WALL_POST_OVERRIDE).add(Blocks.TELEPORT_PRESSURE_PLATE)

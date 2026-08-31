@@ -1,7 +1,7 @@
-// 1.20.1	2026-08-30T10:15:39.6468878	Chest Dimension/Tags for minecraft:block
+// 1.20.1	2026-08-31T21:13:02.6718353	Chest Dimension/Tags for minecraft:block
+6509b90c96d84ae1e52936a239cab6363402b3b9 data\minecraft\tags\blocks\fences.json
 b8e03f23746eec288392eb53282d0ac81005ed2e data\minecraft\tags\blocks\pressure_plates.json
-094c472dd18e9f52a315b7440edc8dd6e4437408 data\minecraft\tags\blocks\fences.json
 e88694b6c646f1025fe4c37f483ce6c85a3435ed data\minecraft\tags\blocks\mineable\axe.json
-940524b6c0bf08ba68e8c2f01d05b869bfd09adc data\minecraft\tags\blocks\walls.json
+dcac69fde7d0e1f52da107fa87b79719c90800b9 data\minecraft\tags\blocks\walls.json
 b8e03f23746eec288392eb53282d0ac81005ed2e data\minecraft\tags\blocks\wooden_pressure_plates.json
 1ae12de73c04e2a4d4d575909c031d436f409230 data\minecraft\tags\blocks\wall_post_override.json
