@@ -1,5 +1,6 @@
 package io.github.ykysnk.chestdimension.level.data
 
+import io.github.ykysnk.chestdimension.data.DeepCopy
 import io.github.ykysnk.chestdimension.data.NbtLoad
 import io.github.ykysnk.chestdimension.data.NbtSave
 import io.github.ykysnk.chestdimension.utils.NBTHelper
@@ -10,9 +11,9 @@ import net.minecraft.nbt.Tag
 data class Levels(
     var levels: HashMap<String, LevelData> = hashMapOf(),
     var inactiveLevels: HashMap<String, HashSet<String>> = hashMapOf()
-) : NbtSave {
-    fun deepCopy(): Levels =
-        Levels(HashMap(levels), HashMap(inactiveLevels.mapValues { (_, value) -> value.toHashSet() }))
+) : NbtSave, DeepCopy<Levels> {
+    override fun deepCopy(): Levels =
+        Levels(HashMap(levels), HashMap(inactiveLevels.mapValues { it.value.toHashSet() }))
 
     override fun save(): CompoundTag {
         val tag = CompoundTag()
