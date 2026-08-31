@@ -69,9 +69,9 @@ object UUIDManager {
     fun clearChestData(uuid: UUID) = clearChestData(uuid, Constants.Server.worldData.levelName)
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun clearChestData(uuid: UUID, levelName: String) {
+    fun clearChestData(uuid: UUID, levelName: String): ChestDimensionPosition? {
         val uuidString = uuid.toString()
-        data.levels[uuidString]?.chestDimensionPositions?.remove(levelName)
+        return data.levels[uuidString]?.chestDimensionPositions?.remove(levelName)
     }
 
     fun isActive(uuid: UUID) = isActive(uuid, Constants.Server.worldData.levelName)
@@ -92,9 +92,10 @@ object UUIDManager {
     fun setActive(uuid: UUID) = setActive(uuid, Constants.Server.worldData.levelName)
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun setActive(uuid: UUID, levelName: String) {
+    fun setActive(uuid: UUID, levelName: String) =
         data.inactiveLevels.getOrPut(levelName) { hashSetOf() }.remove(uuid.toString())
-    }
+
+    fun isExist(uuid: UUID) = data.levels[uuid.toString()] != null
 
     fun getExitChestPosition(uuid: UUID): BlockPos? = getExitChestPosition(uuid, Constants.Server.worldData.levelName)
 
@@ -127,9 +128,7 @@ object UUIDManager {
     @Suppress("unused")
     fun remove(uuid: UUID) = remove(uuid.toString())
 
-    fun remove(uuidString: String) {
-        data.levels.remove(uuidString)
-    }
+    fun remove(uuidString: String) = data.levels.remove(uuidString)
 
     fun getMap() = data.levels.toMap()
 
