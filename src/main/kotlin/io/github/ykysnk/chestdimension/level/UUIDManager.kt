@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate", "unused")
+
 package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
@@ -42,17 +44,14 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
         data.levels[uuid.toString()] = LevelData(seed)
     }
 
-    @Suppress("unused")
     fun haveChestData(uuid: UUID) = haveChestData(uuid, Constants.Server.worldData.levelName)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun haveChestData(uuid: UUID, levelName: String): Boolean =
         data.levels[uuid.toString()]?.let { levels -> levels.dimensionPositions[levelName] != null } ?: false
 
     fun setChestData(uuid: UUID, key: ResourceKey<Level>, pos: BlockPos) =
         setChestData(uuid, Constants.Server.worldData.levelName, key, pos)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun setChestData(uuid: UUID, levelName: String, key: ResourceKey<Level>, pos: BlockPos) {
         val uuidString = uuid.toString()
         data.levels[uuidString]?.dimensionPositions[levelName] = DimensionPosition(key, pos)
@@ -60,7 +59,6 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
 
     fun clearChestData(uuid: UUID) = clearChestData(uuid, Constants.Server.worldData.levelName)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun clearChestData(uuid: UUID, levelName: String): DimensionPosition? {
         val uuidString = uuid.toString()
         return data.levels[uuidString]?.dimensionPositions?.remove(levelName)
@@ -68,7 +66,6 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
 
     fun isActive(uuid: UUID) = isActive(uuid, Constants.Server.worldData.levelName)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun isActive(uuid: UUID, levelName: String): Boolean {
         val list = data.inactiveLevels[levelName] ?: return true
         return !list.contains(uuid.toString())
@@ -76,14 +73,12 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
 
     fun setInactive(uuid: UUID) = setInactive(uuid, Constants.Server.worldData.levelName)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun setInactive(uuid: UUID, levelName: String) {
         data.inactiveLevels.getOrPut(levelName) { hashSetOf() }.add(uuid.toString())
     }
 
     fun setActive(uuid: UUID) = setActive(uuid, Constants.Server.worldData.levelName)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun setActive(uuid: UUID, levelName: String) =
         data.inactiveLevels.getOrPut(levelName) { hashSetOf() }.remove(uuid.toString())
 
@@ -91,7 +86,6 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
 
     fun getExitChestPosition(uuid: UUID): BlockPos? = getExitChestPosition(uuid, Constants.Server.worldData.levelName)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun getExitChestPosition(uuid: UUID, levelName: String): BlockPos? {
         val data = data.levels[uuid.toString()] ?: return null
         return data.dimensionPositions[levelName]?.blockPos
@@ -100,14 +94,12 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
     fun getExitChestDimensionKey(uuid: UUID): ResourceKey<Level>? =
         getExitChestDimensionKey(uuid, Constants.Server.worldData.levelName)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun getExitChestDimensionKey(uuid: UUID, levelName: String): ResourceKey<Level>? =
         data.levels[uuid.toString()]?.dimensionPositions[levelName]?.dimension
 
     fun getExitChestDimension(uuid: UUID): ServerLevel? =
         getExitChestDimension(uuid, Constants.Server.worldData.levelName)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun getExitChestDimension(uuid: UUID, levelName: String): ServerLevel? =
         data.levels[uuid.toString()]?.dimensionPositions[levelName]?.dimension?.let(Constants.Server::getLevel)
 
@@ -117,7 +109,6 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
 
     operator fun get(uuid: UUID) = data.levels[uuid.toString()]
 
-    @Suppress("unused")
     fun remove(uuid: UUID) = remove(uuid.toString())
 
     fun remove(uuidString: String) = data.levels.remove(uuidString)
@@ -126,7 +117,6 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
 
     fun getInactiveList() = getInactiveList(Constants.Server.worldData.levelName)
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun getInactiveList(levelName: String) = data.inactiveLevels[levelName]?.toSet() ?: setOf()
 
     override fun randomUUID(): UUID {
