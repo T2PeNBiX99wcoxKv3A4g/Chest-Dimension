@@ -34,7 +34,6 @@ object ChestDimensionClient : ClientModInitializer {
 
         Constants.LOGGER.debug("{}", IrisCompat)
 
-        // TODO: Create new ChestRenderer
         BlockEntityRenderers.register(BlockEntityTypes.CHEST_DIMENSION, ::ChestRenderer)
         BlockEntityRenderers.register(BlockEntityTypes.TELEPORT_DOOR, ::TeleportDoorRenderer)
         BuiltinItemRendererRegistry.INSTANCE.register(Items.CHEST_DIMENSION) { stack, mode, matrices, vertexConsumers, light, overlay ->
