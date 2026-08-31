@@ -4,6 +4,7 @@ import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.level.data.DimensionPosition
 import io.github.ykysnk.chestdimension.level.data.LevelData
 import io.github.ykysnk.chestdimension.level.data.Levels
+import io.github.ykysnk.chestdimension.level.data.RandomUUID
 import io.github.ykysnk.chestdimension.utils.AbstractManager
 import kotlinx.coroutines.launch
 import net.minecraft.core.BlockPos
@@ -15,7 +16,7 @@ import java.io.File
 import java.nio.file.Files
 import java.util.*
 
-object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()) {
+object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID {
     override fun load() {
         if (!Files.exists(dataPath)) {
             saveNow()
@@ -45,10 +46,8 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()) {
     fun haveChestData(uuid: UUID) = haveChestData(uuid, Constants.Server.worldData.levelName)
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun haveChestData(uuid: UUID, levelName: String): Boolean = data.levels[uuid.toString()]?.let { levels ->
-        val list = levels.dimensionPositions[levelName]
-        return list?.dimension != null && list.blockPos != null
-    } ?: false
+    fun haveChestData(uuid: UUID, levelName: String): Boolean =
+        data.levels[uuid.toString()]?.let { levels -> levels.dimensionPositions[levelName] != null } ?: false
 
     fun setChestData(uuid: UUID, key: ResourceKey<Level>, pos: BlockPos) =
         setChestData(uuid, Constants.Server.worldData.levelName, key, pos)
@@ -130,7 +129,7 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()) {
     @Suppress("MemberVisibilityCanBePrivate")
     fun getInactiveList(levelName: String) = data.inactiveLevels[levelName]?.toSet() ?: setOf()
 
-    fun randomUUID(): UUID {
+    override fun randomUUID(): UUID {
         while (true) {
             val uuid = UUID.randomUUID()
             if (!data.levels.containsKey(uuid.toString())) return uuid
