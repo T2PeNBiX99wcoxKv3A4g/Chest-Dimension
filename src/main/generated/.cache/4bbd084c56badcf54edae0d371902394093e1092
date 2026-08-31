@@ -1,12 +1,11 @@
-// 1.20.1	2026-08-31T21:13:02.6707996	Chest Dimension/Block Loot Tables
+// 1.20.1	2026-08-31T22:34:37.7707938	Chest Dimension/Block Loot Tables
 984bdbc86d73b0a89781f4c600ffb64d5f764aee data\chest-dimension\loot_tables\blocks\chest_platform_enter_plate.json
 611691b7d57d1a3f011efaf1612066b0f5b25063 data\chest-dimension\loot_tables\blocks\teleport_door.json
 76248918c5af9f8204e726ca6922087082f9fb3f data\chest-dimension\loot_tables\blocks\chest_platform_fence.json
-19b99e09073e9a5941de3e752bd9c583095f7701 data\chest-dimension\loot_tables\blocks\blast_resistant_glass_wall.json
 3c8fcd5083de83d9851fab869a6a361fb3cfce93 data\chest-dimension\loot_tables\blocks\blast_resistant_glass.json
 ae12bee9f4814b4926e0286bef53278ee4427595 data\chest-dimension\loot_tables\blocks\chest_platform.json
 df12f3a03066c5024bbf307b07d6110ecd8acad5 data\chest-dimension\loot_tables\blocks\weather_time_controller.json
 ffbf6cb754a88d38078d96c0bcd3560699f8052d data\chest-dimension\loot_tables\blocks\chest_platform_wall.json
-0ab3d6c4b00b817da99f0c5938253a32bbbc85a7 data\chest-dimension\loot_tables\blocks\blast_resistant_glass_fence.json
 ccd249e0e5c36c4ce3d9e3974bb8585a49b3fc18 data\chest-dimension\loot_tables\blocks\chest_dimension.json
+aa1b69f27294d1d6d9ff02c044a18e58886bda87 data\chest-dimension\loot_tables\blocks\blast_resistant_glass_pane.json
 bfcd16a8447ac5107489207ab0887617652aa496 data\chest-dimension\loot_tables\blocks\teleport_pressure_plate.json

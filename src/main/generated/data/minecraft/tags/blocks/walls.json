@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "chest-dimension:chest_platform_wall",
-    "chest-dimension:blast_resistant_glass_wall"
+    "chest-dimension:chest_platform_wall"
   ]
 }

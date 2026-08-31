@@ -1,3 +1,5 @@
+@file:Suppress("SameParameterValue")
+
 package io.github.ykysnk.chestdimension.tags
 
 import io.github.ykysnk.chestdimension.id
@@ -16,4 +18,6 @@ object BlockTags : RegistryHelper<TagKey<Block>>() {
 
     @Suppress("unused")
     private fun create(name: String): TagKey<Block> = create(id(name))
+
+    val GLASS_PANES = create(NameSpaces.FORGE, "glass_panes")
 }

@@ -11,8 +11,6 @@ class BlockLootTableProvider(output: FabricDataOutput) : FabricBlockLootTablePro
         dropSelf(Blocks.CHEST_PLATFORM_FENCE)
         dropSelf(Blocks.CHEST_PLATFORM_ENTER_PLATE)
         dropSelf(Blocks.BLAST_RESISTANT_GLASS)
-        dropSelf(Blocks.BLAST_RESISTANT_GLASS_WALL)
-        dropSelf(Blocks.BLAST_RESISTANT_GLASS_FENCE)
         dropSelf(Blocks.BLAST_RESISTANT_GLASS_PANE)
         dropSelf(Blocks.TELEPORT_PRESSURE_PLATE)
         dropSelf(Blocks.CHEST_DIMENSION)

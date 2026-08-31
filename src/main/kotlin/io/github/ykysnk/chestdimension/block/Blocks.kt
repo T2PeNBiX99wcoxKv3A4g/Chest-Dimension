@@ -54,24 +54,6 @@ object Blocks : RegistryHelper<Block>() {
         )
     )
 
-    val BLAST_RESISTANT_GLASS_WALL: Block = register(
-        "blast_resistant_glass_wall",
-        GlassWallBlock(
-            BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).strength(0.3f, 1200.0f)
-                .sound(SoundType.GLASS).noOcclusion().isValidSpawn(MCBlocks::never).isRedstoneConductor(MCBlocks::never)
-                .isSuffocating(MCBlocks::never).isViewBlocking(MCBlocks::never).forceSolidOn()
-        )
-    )
-
-    val BLAST_RESISTANT_GLASS_FENCE: Block = register(
-        "blast_resistant_glass_fence",
-        GlassFenceBlock(
-            BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).strength(0.3f, 1200.0f)
-                .sound(SoundType.GLASS).noOcclusion().isValidSpawn(MCBlocks::never).isRedstoneConductor(MCBlocks::never)
-                .isSuffocating(MCBlocks::never).isViewBlocking(MCBlocks::never)
-        )
-    )
-
     val BLAST_RESISTANT_GLASS_PANE: Block = register(
         "blast_resistant_glass_pane",
         IronBarsBlock(

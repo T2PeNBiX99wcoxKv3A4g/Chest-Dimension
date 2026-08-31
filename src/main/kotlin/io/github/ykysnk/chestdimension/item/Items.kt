@@ -24,12 +24,6 @@ object Items : RegistryHelper<Item>() {
     val BLAST_RESISTANT_GLASS: Item = register(MCItems.registerBlock(Blocks.BLAST_RESISTANT_GLASS))
 
     @JvmField
-    val BLAST_RESISTANT_GLASS_WALL: Item = register(MCItems.registerBlock(Blocks.BLAST_RESISTANT_GLASS_WALL))
-
-    @JvmField
-    val BLAST_RESISTANT_GLASS_FENCE: Item = register(MCItems.registerBlock(Blocks.BLAST_RESISTANT_GLASS_FENCE))
-
-    @JvmField
     val BLAST_RESISTANT_GLASS_PANE: Item = register(MCItems.registerBlock(Blocks.BLAST_RESISTANT_GLASS_PANE))
 
     @JvmField
