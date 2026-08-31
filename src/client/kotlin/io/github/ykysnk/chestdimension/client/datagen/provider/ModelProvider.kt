@@ -1,8 +1,8 @@
 package io.github.ykysnk.chestdimension.client.datagen.provider
 
 import com.google.gson.JsonObject
-import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.id
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
 import net.minecraft.data.models.BlockModelGenerators
@@ -28,7 +28,7 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
         ).createWithoutBlockItem(Blocks.CHEST_DIMENSION)
 
         val chestPlatformEnterPlateTextureMapping = TextureMapping()
-        chestPlatformEnterPlateTextureMapping.put(TextureSlot.TEXTURE, Constants.id("block/chest_platform_enter_plate"))
+        chestPlatformEnterPlateTextureMapping.put(TextureSlot.TEXTURE, id("block/chest_platform_enter_plate"))
 
         val chestPlatformEnterPlateModel = ModelTemplates.PRESSURE_PLATE_UP.create(
             Blocks.CHEST_PLATFORM_ENTER_PLATE,
@@ -50,7 +50,7 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
     }
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerators) {
-        itemModelGenerator.output.accept(Constants.id("item/chest_dimension")) {
+        itemModelGenerator.output.accept(id("item/chest_dimension")) {
             JsonObject().apply {
                 addProperty("parent", "minecraft:item/chest")
             }

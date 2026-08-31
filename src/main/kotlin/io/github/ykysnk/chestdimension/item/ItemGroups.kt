@@ -1,6 +1,7 @@
 package io.github.ykysnk.chestdimension.item
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.id
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.minecraft.core.Registry
@@ -14,7 +15,7 @@ import net.minecraft.world.item.Items as MCItems
 object ItemGroups {
     val CHEST_DIMENSION: CreativeModeTab = Registry.register(
         BuiltInRegistries.CREATIVE_MODE_TAB,
-        Constants.id("item_group"),
+        id("item_group"),
         FabricItemGroup.builder()
             .title(Component.translatable("itemGroup.${Constants.MOD_ID}"))
             .icon { ItemStack(Items.CHEST_DIMENSION) }

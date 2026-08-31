@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.block
 
-import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
