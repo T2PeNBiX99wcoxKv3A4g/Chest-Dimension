@@ -8,6 +8,7 @@ import io.github.ykysnk.chestdimension.item.ItemGroups
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.world.Network
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.loader.api.FabricLoader
@@ -56,5 +57,15 @@ object Constants {
         get() = getServer ?: error("Server is not initialized")
 
     @JvmStatic
-    fun id(path: String): ResourceLocation = ResourceLocation(MOD_ID, path)
+    fun id(namespace: String, path: String): ResourceLocation = ResourceLocation(namespace, path)
+
+    @JvmStatic
+    fun id(namespace: NameSpaces, path: String): ResourceLocation = id(namespace.id, path)
+
+    @JvmStatic
+    fun id(path: String): ResourceLocation = id(NameSpaces.MOD, path)
 }
+
+fun id(namespace: String, path: String): ResourceLocation = Constants.id(namespace, path)
+fun id(namespace: NameSpaces, path: String): ResourceLocation = Constants.id(namespace, path)
+fun id(path: String): ResourceLocation = Constants.id(NameSpaces.MOD, path)
