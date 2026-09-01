@@ -326,12 +326,12 @@ object ChestLevelManager {
         UUIDManager.save()
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun findUUIDByLevel(level: Level): UUID? = levelToUUID[level.dimension()]
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    fun isInsideChestDimension(level: Level): Boolean =
-        level.dimension().location().toString().startsWith("${Constants.MOD_ID}:chest/")
+    fun isInsideChestDimension(level: Level): Boolean = isInsideChestDimension(level.dimension())
+
+    fun isInsideChestDimension(levelKey: ResourceKey<Level>): Boolean =
+        levelKey.location().toString().startsWith("${Constants.MOD_ID}:chest/")
 
     private fun createWorldKey(uuid: UUID): ResourceKey<Level> =
         ResourceKey.create(Registries.DIMENSION, id("chest/$uuid"))
