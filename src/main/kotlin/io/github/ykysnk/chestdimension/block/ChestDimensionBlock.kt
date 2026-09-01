@@ -9,6 +9,7 @@ import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.stats.Stats
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -107,6 +108,7 @@ class ChestDimensionBlock(properties: Properties) :
                 else -> {
                     level.scheduleTick(pos, this, 20)
                     blockEntity.startOpen(player)
+                    player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST))
                     PiglinAi.angerNearbyPiglins(player, true)
                     return InteractionResult.CONSUME
                 }
