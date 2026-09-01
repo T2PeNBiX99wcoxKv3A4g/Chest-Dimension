@@ -127,3 +127,10 @@ inline fun <reified T> Map<String, Set<T>>.save(): CompoundTag {
     for ((key, value) in this) tag.put(key, value.save())
     return tag
 }
+
+@JvmName("save4")
+inline fun <reified T> Map<String, Map<String, T>>.save(): CompoundTag {
+    val tag = CompoundTag()
+    for ((key, value) in this) tag.put(key, value.save())
+    return tag
+}
