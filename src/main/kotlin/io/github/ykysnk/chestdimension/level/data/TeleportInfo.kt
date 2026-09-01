@@ -2,19 +2,24 @@ package io.github.ykysnk.chestdimension.level.data
 
 import io.github.ykysnk.chestdimension.data.NbtLoad
 import io.github.ykysnk.chestdimension.data.NbtSave
+import io.github.ykysnk.chestdimension.utils.getCompoundOrNull
+import io.github.ykysnk.chestdimension.utils.getUUIDOrNull
 import net.minecraft.nbt.CompoundTag
+import java.util.*
 
-data class TeleportInfo(val dimensionPosition: DimensionPosition) : NbtSave {
+data class TeleportInfo(val linkUUID: UUID? = null, val dimensionPosition: DimensionPosition? = null) : NbtSave {
     override fun save(): CompoundTag {
         val tag = CompoundTag()
-        tag.put("dimensionPosition", dimensionPosition.save())
+        linkUUID?.let { tag.putUUID("linkUUID", it) }
+        dimensionPosition?.let { tag.put("dimensionPosition", it.save()) }
         return tag
     }
 
     companion object : NbtLoad<TeleportInfo> {
         override fun load(tag: CompoundTag): TeleportInfo {
-            val dimensionPosition = DimensionPosition.load(tag.getCompound("dimensionPosition"))
-            return TeleportInfo(dimensionPosition)
+            val linkUUID = tag.getUUIDOrNull("linkUUID")
+            val dimensionPosition = tag.getCompoundOrNull("dimensionPosition")?.let { DimensionPosition.load(it) }
+            return TeleportInfo(linkUUID, dimensionPosition)
         }
     }
 }
