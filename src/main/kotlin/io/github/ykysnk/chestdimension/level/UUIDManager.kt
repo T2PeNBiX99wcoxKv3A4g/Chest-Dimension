@@ -8,32 +8,18 @@ import io.github.ykysnk.chestdimension.level.data.LevelData
 import io.github.ykysnk.chestdimension.level.data.Levels
 import io.github.ykysnk.chestdimension.level.data.RandomUUID
 import io.github.ykysnk.chestdimension.utils.AbstractManager
-import kotlinx.coroutines.launch
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
 import java.io.File
-import java.nio.file.Files
 import java.util.*
 
 object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID {
-    override fun load() {
-        if (!Files.exists(dataPath)) {
-            saveNow()
-            return
-        }
-
+    override fun loadData(): Levels {
         val tag = NbtIo.readCompressed(File(dataPath.toUri()))
-        data = Levels.load(tag)
-    }
-
-    override fun save() {
-        scope.launch {
-            val snapshot = data.deepCopy()
-            saveNow(snapshot)
-        }
+        return Levels.load(tag)
     }
 
     override fun saveNow(saveData: Levels) {
@@ -119,10 +105,5 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
 
     fun getInactiveList(levelName: String) = data.inactiveLevels[levelName]?.toSet() ?: setOf()
 
-    override fun randomUUID(): UUID {
-        while (true) {
-            val uuid = UUID.randomUUID()
-            if (!data.levels.containsKey(uuid.toString())) return uuid
-        }
-    }
+    override fun containsUUID(uuid: UUID) = data.levels.containsKey(uuid.toString())
 }
