@@ -41,10 +41,19 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
         data.points.getOrPut(uuid.toString()) { hashMapOf() }[levelName] = TeleportInfo(dimensionPosition)
     }
 
-    operator fun set(uuid: UUID, level: Level, blockPos: BlockPos) =
+    operator fun set(uuid: UUID, level: Level, blockPos: BlockPos) {
+        removePosition(uuid)
         add(uuid, getLevelName(level.dimension()), DimensionPosition(level.dimension(), blockPos))
+    }
 
     operator fun get(uuid: UUID) = data.points[uuid.toString()]
+
+    fun getPosition(uuid: UUID, level: Level): DimensionPosition? {
+        if (level.isClientSide) return null
+        return getPosition(uuid, getLevelName(level.dimension()))
+    }
+
+    fun getPosition(uuid: UUID, levelName: String): DimensionPosition? = get(uuid)?.get(levelName)?.dimensionPosition
 
     fun isExist(uuid: UUID) = get(uuid) != null
 
@@ -52,9 +61,11 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
 
     fun remove(uuidString: String) = data.points.remove(uuidString)
 
-    fun removePosition(uuid: UUID, level: Level): TeleportInfo? {
-        if (level.isClientSide) return null
-        return get(uuid)?.remove(getLevelName(level))
+    fun removePosition(uuid: UUID): TeleportInfo? {
+        val info = removePosition(uuid, Constants.Server.worldData.levelName) ?: removePosition(uuid, Constants.MOD_ID)
+        if (get(uuid)?.keys?.isEmpty() == true)
+            remove(uuid)
+        return info
     }
 
     fun removePosition(uuid: UUID, levelName: String) = get(uuid)?.remove(levelName)
