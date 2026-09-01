@@ -10,7 +10,7 @@ import kotlin.time.Duration.Companion.minutes
 
 abstract class AbstractManager<T : DeepCopy<T>>(fileName: String, newData: T) {
     protected open val dataPath: Path = Constants.ConfigDir.resolve(fileName)
-    protected open var scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    protected open val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     protected open var data: T = newData
 
     protected open fun load() {
