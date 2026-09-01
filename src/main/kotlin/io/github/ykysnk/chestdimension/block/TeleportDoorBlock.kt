@@ -3,13 +3,17 @@ package io.github.ykysnk.chestdimension.block
 import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
 import io.github.ykysnk.chestdimension.block.entity.TeleportDoorBlockEntity
 import io.github.ykysnk.chestdimension.extensions.teleportToLevel
+import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.TeleportManager
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySelector
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -22,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
 
 class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(properties, type), EntityBlock {
@@ -74,6 +79,21 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = TeleportDoorBlockEntity(pos, state)
+
+    override fun use(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        player: Player,
+        hand: InteractionHand,
+        hit: BlockHitResult
+    ): InteractionResult {
+        if (player.getItemInHand(InteractionHand.MAIN_HAND).`is`(Items.TELEPORT_DOOR_LINKER) || player.getItemInHand(
+                InteractionHand.OFF_HAND
+            ).`is`(Items.TELEPORT_DOOR_LINKER)
+        ) return InteractionResult.PASS
+        return super.use(state, level, pos, player, hand, hit)
+    }
 
     @Deprecated("Deprecated in Java")
     override fun getDrops(state: BlockState, params: LootParams.Builder): List<ItemStack> {
