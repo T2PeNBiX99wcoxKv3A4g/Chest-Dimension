@@ -1,18 +1,26 @@
 package io.github.ykysnk.chestdimension.block
 
+import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
 import io.github.ykysnk.chestdimension.block.entity.TeleportDoorBlockEntity
 import io.github.ykysnk.chestdimension.extensions.teleportToLevel
+import io.github.ykysnk.chestdimension.level.TeleportManager
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySelector
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.DoorBlock
 import net.minecraft.world.level.block.EntityBlock
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BlockSetType
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf
+import net.minecraft.world.level.storage.loot.LootParams
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
@@ -66,4 +74,41 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = TeleportDoorBlockEntity(pos, state)
+
+    @Deprecated("Deprecated in Java")
+    override fun getDrops(state: BlockState, params: LootParams.Builder): List<ItemStack> {
+        val drops = super.getDrops(state, params)
+        val blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
+
+        if (blockEntity is TeleportDoorBlockEntity) {
+            for (stack in drops) {
+                if (stack.item != asItem()) continue
+                val tag = CompoundTag()
+                tag.putUUID("UUID", blockEntity.uuid)
+                blockEntity.linkUUID?.let { tag.putUUID("linkUUID", it) }
+                BlockItem.setBlockEntityData(stack, BlockEntityTypes.TELEPORT_DOOR, tag)
+            }
+        }
+
+        return drops
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRemove(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        newState: BlockState,
+        movedByPiston: Boolean
+    ) {
+        if (!state.`is`(newState.block)) {
+            val blockEntity = level.getBlockEntity(pos)
+            if (blockEntity is TeleportDoorBlockEntity && state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                TeleportManager.removePosition(blockEntity.uuid)
+                TeleportManager.save()
+            }
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston)
+    }
 }
