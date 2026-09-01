@@ -10,7 +10,6 @@ import io.github.ykysnk.chestdimension.level.data.TeleportPoints
 import io.github.ykysnk.chestdimension.utils.AbstractManager
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.NbtIo
-import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.Level
 import java.io.File
 import java.util.*
@@ -25,35 +24,46 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
         NbtIo.writeCompressed(saveData.save(), File(dataPath.toUri()))
     }
 
-    private fun getLevelName(levelKey: ResourceKey<Level>): String =
-        if (ChestLevelManager.isInsideChestDimension(levelKey)) Constants.MOD_ID else Constants.Server.worldData.levelName
-
-    private fun getLevelName(dimensionPosition: DimensionPosition): String = getLevelName(dimensionPosition.dimension)
-
-    private fun getLevelName(level: Level) = getLevelName(level.dimension())
-
-    fun add(uuid: UUID, level: Level, blockPos: BlockPos) {
+    private fun add(uuid: UUID, level: Level, blockPos: BlockPos) {
         if (level.isClientSide) return
-        add(uuid, getLevelName(level.dimension()), DimensionPosition(level.dimension(), blockPos))
+        add(uuid, Constants.Server.worldData.levelName, DimensionPosition(level.dimension(), blockPos))
     }
 
-    fun add(uuid: UUID, levelName: String, dimensionPosition: DimensionPosition) {
-        data.points.getOrPut(uuid.toString()) { hashMapOf() }[levelName] = TeleportInfo(dimensionPosition)
+    private fun add(uuid: UUID, levelName: String, dimensionPosition: DimensionPosition) {
+        data.points.getOrPut(uuid.toString()) { hashMapOf() }[levelName] =
+            TeleportInfo(dimensionPosition = dimensionPosition)
     }
 
     operator fun set(uuid: UUID, level: Level, blockPos: BlockPos) {
+        if (level.isClientSide) return
         removePosition(uuid)
-        add(uuid, getLevelName(level.dimension()), DimensionPosition(level.dimension(), blockPos))
+        getTeleportInfo(uuid)?.let {
+            setTeleportInfo(
+                uuid,
+                Constants.Server.worldData.levelName,
+                it.copy(dimensionPosition = DimensionPosition(level.dimension(), blockPos))
+            )
+        } ?: run {
+            add(uuid, Constants.Server.worldData.levelName, DimensionPosition(level.dimension(), blockPos))
+        }
     }
 
     operator fun get(uuid: UUID) = data.points[uuid.toString()]
 
-    fun getPosition(uuid: UUID, level: Level): DimensionPosition? {
-        if (level.isClientSide) return null
-        return getPosition(uuid, getLevelName(level.dimension()))
-    }
+    fun getPosition(uuid: UUID) = getPosition(uuid, Constants.Server.worldData.levelName)
 
-    fun getPosition(uuid: UUID, levelName: String): DimensionPosition? = get(uuid)?.get(levelName)?.dimensionPosition
+    fun getPosition(uuid: UUID, levelName: String) = get(uuid)?.get(levelName)?.dimensionPosition
+
+    fun getTeleportInfo(uuid: UUID) = getTeleportInfo(uuid, Constants.Server.worldData.levelName)
+
+    fun getTeleportInfo(uuid: UUID, levelName: String) = get(uuid)?.get(levelName)
+
+    fun setTeleportInfo(uuid: UUID, teleportInfo: TeleportInfo) =
+        setTeleportInfo(uuid, Constants.Server.worldData.levelName, teleportInfo)
+
+    fun setTeleportInfo(uuid: UUID, levelName: String, teleportInfo: TeleportInfo) {
+        data.points.getOrPut(uuid.toString()) { hashMapOf() }[levelName] = teleportInfo
+    }
 
     fun isExist(uuid: UUID) = get(uuid) != null
 
@@ -61,14 +71,34 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
 
     fun remove(uuidString: String) = data.points.remove(uuidString)
 
-    fun removePosition(uuid: UUID): TeleportInfo? {
-        val info = removePosition(uuid, Constants.Server.worldData.levelName) ?: removePosition(uuid, Constants.MOD_ID)
+    fun removePosition(uuid: UUID) = removePosition(uuid, Constants.Server.worldData.levelName)
+
+    fun removePosition(uuid: UUID, levelName: String): TeleportInfo? {
+        val info = getTeleportInfo(uuid, levelName) ?: return get(uuid)?.remove(levelName)
+        if (info.linkUUID == null && info.dimensionPosition == null)
+            return get(uuid)?.remove(levelName)
+        setTeleportInfo(uuid, levelName, info.copy(dimensionPosition = null))
         if (get(uuid)?.keys?.isEmpty() == true)
             remove(uuid)
         return info
     }
 
-    fun removePosition(uuid: UUID, levelName: String) = get(uuid)?.remove(levelName)
+    fun linkDoors(first: UUID, second: UUID) = linkDoors(first, second, Constants.Server.worldData.levelName)
+
+    fun linkDoors(first: UUID, second: UUID, levelName: String): Boolean {
+        get(first)?.get(levelName)?.let { firstInfo ->
+            get(second)?.get(levelName)?.let { secondInfo ->
+                setTeleportInfo(first, levelName, firstInfo.copy(linkUUID = second))
+                setTeleportInfo(second, levelName, secondInfo.copy(linkUUID = first))
+                return true
+            }
+        }
+        return false
+    }
+
+    fun isLinkDoor(uuid: UUID) = isLinkDoor(uuid, Constants.Server.worldData.levelName)
+
+    fun isLinkDoor(uuid: UUID, levelName: String) = get(uuid)?.get(levelName)?.linkUUID != null
 
     override fun containsUUID(uuid: UUID) = data.points.containsKey(uuid.toString())
 }
