@@ -2,9 +2,14 @@ package io.github.ykysnk.chestdimension.item
 
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.entity.TeleportDoorBlockEntity
+import io.github.ykysnk.chestdimension.level.TeleportManager
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.block.DoorBlock
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf
@@ -20,15 +25,33 @@ class TeleportDoorLinker : Item(Properties().durability(1)) {
         if (state.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) pos = pos.below()
 
         val blockEntity = level.getBlockEntity(pos)
-        if (blockEntity is TeleportDoorBlockEntity) {
-            if (blockEntity.linkUUID != null) {
+        if (blockEntity !is TeleportDoorBlockEntity) return InteractionResult.FAIL
+
+        (level as? ServerLevel)?.apply {
+            if (TeleportManager.isLinkDoor(blockEntity.uuid)) {
                 player?.displayClientMessage(Component.literal("This door is already linked!"), true)
                 return InteractionResult.FAIL
             }
+
             val tag = stack.orCreateTag
+            if (tag.contains("linkUUID")) {
+                (player as? ServerPlayer)?.apply {
+                    val linkUUID = tag.getUUID("linkUUID")
+                    val isLinked = TeleportManager.linkDoors(linkUUID, blockEntity.uuid)
+                    if (!isLinked) {
+                        displayClientMessage(Component.literal("Invalid UUID"), true)
+                        return InteractionResult.FAIL
+                    }
+                    stack.hurt(1, level.random, this)
+                }
+                return InteractionResult.sidedSuccess(isClientSide)
+            }
             tag.putUUID("linkUUID", blockEntity.uuid)
-            return InteractionResult.SUCCESS
+            if (FabricLoader.getInstance().isDevelopmentEnvironment)
+                player?.displayClientMessage(Component.literal(blockEntity.uuid.toString()), true)
         }
-        return InteractionResult.FAIL
+        return InteractionResult.sidedSuccess(level.isClientSide)
     }
+
+    override fun isFoil(stack: ItemStack) = stack.tag?.contains("linkUUID") == true || super.isFoil(stack)
 }
