@@ -16,16 +16,6 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
     var uuid: UUID = TeleportManager.randomUUID()
         private set
 
-    var linkUUID: UUID? = null
-        private set
-
-    @Suppress("unused")
-    fun linkToOther(teleportDoorBlockEntity: TeleportDoorBlockEntity): Boolean {
-        if (teleportDoorBlockEntity.linkUUID == null || teleportDoorBlockEntity.linkUUID == linkUUID) return false
-        linkUUID = teleportDoorBlockEntity.uuid
-        return true
-    }
-
     override fun setLevel(level: Level) {
         super.setLevel(level)
         (level as? ServerLevel)?.apply {
@@ -38,12 +28,9 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
     override fun load(tag: CompoundTag) {
         if (tag.hasUUID("UUID"))
             uuid = tag.getUUID("UUID")
-        if (tag.hasUUID("linkUUID"))
-            linkUUID = tag.getUUID("linkUUID")
     }
 
     override fun saveAdditional(tag: CompoundTag) {
         tag.putUUID("UUID", uuid)
-        linkUUID?.let { tag.putUUID("linkUUID", it) }
     }
 }
