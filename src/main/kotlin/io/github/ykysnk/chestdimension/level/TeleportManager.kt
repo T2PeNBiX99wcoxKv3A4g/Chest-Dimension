@@ -86,6 +86,7 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
     fun linkDoors(first: UUID, second: UUID) = linkDoors(first, second, Constants.Server.worldData.levelName)
 
     fun linkDoors(first: UUID, second: UUID, levelName: String): Boolean {
+        if (first == second) return false
         get(first)?.get(levelName)?.let { firstInfo ->
             get(second)?.get(levelName)?.let { secondInfo ->
                 setTeleportInfo(first, levelName, firstInfo.copy(linkUUID = second))
