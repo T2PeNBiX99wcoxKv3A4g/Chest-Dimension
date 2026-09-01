@@ -3,6 +3,7 @@ package io.github.ykysnk.chestdimension.client.datagen.provider
 import com.google.gson.JsonObject
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.id
+import io.github.ykysnk.chestdimension.item.Items
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
 import net.minecraft.data.models.BlockModelGenerators
@@ -54,5 +55,6 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
                 addProperty("parent", "minecraft:item/chest")
             }
         }
+        itemModelGenerator.generateFlatItem(Items.TELEPORT_DOOR_LINKER, ModelTemplates.FLAT_ITEM)
     }
 }
