@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
@@ -42,7 +43,7 @@ class TeleportDoorLinker : Item(Properties().durability(1)) {
                         displayClientMessage(Component.literal("Invalid UUID"), true)
                         return InteractionResult.FAIL
                     }
-                    stack.hurt(1, level.random, this)
+                    stack.hurtAndBreak(1, this) { it.broadcastBreakEvent(EquipmentSlot.MAINHAND) }
                 }
                 return InteractionResult.sidedSuccess(isClientSide)
             }
