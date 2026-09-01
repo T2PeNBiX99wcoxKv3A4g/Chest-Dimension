@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package io.github.ykysnk.chestdimension.utils
 
 import io.github.ykysnk.chestdimension.data.NbtSave
@@ -34,21 +36,18 @@ object NBTHelper {
         return set
     }
 
-    @Suppress("unused")
     fun <T, T2> getHashSet(tag: ListTag, value: (Int, ListTag) -> T2, load: (Int, T2) -> T): HashSet<T> {
         val set = hashSetOf<T>()
         for (i in tag.indices) set.add(load(i, value(i, tag)))
         return set
     }
 
-    @Suppress("unused")
     fun <T, T2> getMutableList(tag: ListTag, value: (Int, ListTag) -> T2, load: (T2) -> T): MutableList<T> {
         val list = mutableListOf<T>()
         for (i in tag.indices) list.add(load(value(i, tag)))
         return list
     }
 
-    @Suppress("unused")
     fun <T, T2> getMutableList(tag: ListTag, value: (Int, ListTag) -> T2, load: (Int, T2) -> T): MutableList<T> {
         val list = mutableListOf<T>()
         for (i in tag.indices) list.add(load(i, value(i, tag)))
@@ -133,4 +132,79 @@ inline fun <reified T> Map<String, Map<String, T>>.save(): CompoundTag {
     val tag = CompoundTag()
     for ((key, value) in this) tag.put(key, value.save())
     return tag
+}
+
+fun CompoundTag.getOrNull(key: String): Tag? {
+    if (!contains(key)) return null
+    return get(key)
+}
+
+fun CompoundTag.getByteOrNull(key: String): Byte? {
+    if (!contains(key)) return null
+    return getByte(key)
+}
+
+fun CompoundTag.getShortOrNull(key: String): Short? {
+    if (!contains(key)) return null
+    return getShort(key)
+}
+
+fun CompoundTag.getIntOrNull(key: String): Int? {
+    if (!contains(key)) return null
+    return getInt(key)
+}
+
+fun CompoundTag.getLongOrNull(key: String): Long? {
+    if (!contains(key)) return null
+    return getLong(key)
+}
+
+fun CompoundTag.getFloatOrNull(key: String): Float? {
+    if (!contains(key)) return null
+    return getFloat(key)
+}
+
+fun CompoundTag.getDoubleOrNull(key: String): Double? {
+    if (!contains(key)) return null
+    return getDouble(key)
+}
+
+fun CompoundTag.getStringOrNull(key: String): String? {
+    if (!contains(key)) return null
+    return getString(key)
+}
+
+fun CompoundTag.getByteArrayOrNull(key: String): ByteArray? {
+    if (!contains(key)) return null
+    return getByteArray(key)
+}
+
+fun CompoundTag.getIntArrayOrNull(key: String): IntArray? {
+    if (!contains(key)) return null
+    return getIntArray(key)
+}
+
+fun CompoundTag.getLongArrayOrNull(key: String): LongArray? {
+    if (!contains(key)) return null
+    return getLongArray(key)
+}
+
+fun CompoundTag.getCompoundOrNull(key: String): CompoundTag? {
+    if (!contains(key)) return null
+    return getCompound(key)
+}
+
+fun CompoundTag.getListOrNull(key: String, tagType: Int): ListTag? {
+    if (!contains(key)) return null
+    return getList(key, tagType)
+}
+
+fun CompoundTag.getBooleanOrNull(key: String): Boolean? {
+    if (!contains(key)) return null
+    return getBoolean(key)
+}
+
+fun CompoundTag.getUUIDOrNull(key: String): UUID? {
+    if (!contains(key)) return null
+    return getUUID(key)
 }
