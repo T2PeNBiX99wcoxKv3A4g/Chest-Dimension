@@ -27,27 +27,25 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
     }
 
     fun add(uuid: UUID, seed: Long) {
-        data.levels[uuid.toString()] = LevelData(seed)
+        set(uuid, LevelData(seed))
     }
 
     fun haveChestData(uuid: UUID) = haveChestData(uuid, Constants.Server.worldData.levelName)
 
     fun haveChestData(uuid: UUID, levelName: String): Boolean =
-        data.levels[uuid.toString()]?.let { levels -> levels.dimensionPositions[levelName] != null } ?: false
+        get(uuid)?.let { levels -> levels.dimensionPositions[levelName] != null } ?: false
 
     fun setChestData(uuid: UUID, key: ResourceKey<Level>, pos: BlockPos) =
         setChestData(uuid, Constants.Server.worldData.levelName, key, pos)
 
     fun setChestData(uuid: UUID, levelName: String, key: ResourceKey<Level>, pos: BlockPos) {
-        val uuidString = uuid.toString()
-        data.levels[uuidString]?.dimensionPositions[levelName] = DimensionPosition(key, pos)
+        get(uuid)?.dimensionPositions[levelName] = DimensionPosition(key, pos)
     }
 
     fun clearChestData(uuid: UUID) = clearChestData(uuid, Constants.Server.worldData.levelName)
 
     fun clearChestData(uuid: UUID, levelName: String): DimensionPosition? {
-        val uuidString = uuid.toString()
-        return data.levels[uuidString]?.dimensionPositions?.remove(levelName)
+        return get(uuid)?.dimensionPositions?.remove(levelName)
     }
 
     fun isActive(uuid: UUID) = isActive(uuid, Constants.Server.worldData.levelName)
@@ -68,12 +66,12 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
     fun setActive(uuid: UUID, levelName: String) =
         data.inactiveLevels.getOrPut(levelName) { hashSetOf() }.remove(uuid.toString())
 
-    fun isExist(uuid: UUID) = data.levels[uuid.toString()] != null
+    fun isExist(uuid: UUID) = get(uuid) != null
 
     fun getExitChestPosition(uuid: UUID): BlockPos? = getExitChestPosition(uuid, Constants.Server.worldData.levelName)
 
     fun getExitChestPosition(uuid: UUID, levelName: String): BlockPos? {
-        val data = data.levels[uuid.toString()] ?: return null
+        val data = get(uuid) ?: return null
         return data.dimensionPositions[levelName]?.blockPos
     }
 
@@ -81,13 +79,13 @@ object UUIDManager : AbstractManager<Levels>("levels.dat", Levels()), RandomUUID
         getExitChestDimensionKey(uuid, Constants.Server.worldData.levelName)
 
     fun getExitChestDimensionKey(uuid: UUID, levelName: String): ResourceKey<Level>? =
-        data.levels[uuid.toString()]?.dimensionPositions[levelName]?.dimension
+        get(uuid)?.dimensionPositions[levelName]?.dimension
 
     fun getExitChestDimension(uuid: UUID): ServerLevel? =
         getExitChestDimension(uuid, Constants.Server.worldData.levelName)
 
     fun getExitChestDimension(uuid: UUID, levelName: String): ServerLevel? =
-        data.levels[uuid.toString()]?.dimensionPositions[levelName]?.dimension?.let(Constants.Server::getLevel)
+        get(uuid)?.dimensionPositions[levelName]?.dimension?.let(Constants.Server::getLevel)
 
     operator fun set(uuid: UUID, levelData: LevelData) {
         data.levels[uuid.toString()] = levelData
