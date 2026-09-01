@@ -216,7 +216,7 @@ class ChestDimensionBlock(properties: Properties) :
     }
 
     @Deprecated("Deprecated in Java")
-    override fun getDrops(state: BlockState, params: LootParams.Builder): MutableList<ItemStack> {
+    override fun getDrops(state: BlockState, params: LootParams.Builder): List<ItemStack> {
         val drops = super.getDrops(state, params)
         val blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
 
