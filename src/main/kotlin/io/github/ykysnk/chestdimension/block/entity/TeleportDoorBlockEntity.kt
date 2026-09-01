@@ -19,6 +19,13 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
     var linkUUID: UUID? = null
         private set
 
+    @Suppress("unused")
+    fun linkToOther(teleportDoorBlockEntity: TeleportDoorBlockEntity): Boolean {
+        if (teleportDoorBlockEntity.linkUUID == null || teleportDoorBlockEntity.linkUUID == linkUUID) return false
+        linkUUID = teleportDoorBlockEntity.uuid
+        return true
+    }
+
     override fun setLevel(level: Level) {
         super.setLevel(level)
         (level as? ServerLevel)?.apply {

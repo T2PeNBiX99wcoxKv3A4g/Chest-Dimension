@@ -111,4 +111,21 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
 
         super.onRemove(state, level, pos, newState, movedByPiston)
     }
+
+    @Suppress("unused")
+    fun linkToOther(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        otherState: BlockState,
+        otherLevel: Level,
+        otherPos: BlockPos
+    ): Boolean {
+        if (state.getValue(HALF) != DoubleBlockHalf.LOWER || otherState.getValue(HALF) != DoubleBlockHalf.LOWER) return false
+        val blockEntity = level.getBlockEntity(pos)
+        val otherBlockEntity = otherLevel.getBlockEntity(otherPos)
+        return blockEntity is TeleportDoorBlockEntity && otherBlockEntity is TeleportDoorBlockEntity && blockEntity.linkToOther(
+            otherBlockEntity
+        )
+    }
 }
