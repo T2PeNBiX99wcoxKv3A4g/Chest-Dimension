@@ -23,17 +23,15 @@ class WeatherTimeControllerBlock(properties: Properties) : Block(properties) {
         hand: InteractionHand,
         hit: BlockHitResult
     ): InteractionResult {
-        if (!level.isClientSide) {
-            (player as? ServerPlayer)?.apply {
-                (level as? ChestServerLevel)?.apply {
-                    openMenu(WeatherTimeControllerFactory(this))
-                    return InteractionResult.CONSUME
-                }
-                player.displayClientMessage(
-                    Component.literal("Only can be use inside chest dimension"),
-                    true
-                )
+        (player as? ServerPlayer)?.apply {
+            (level as? ChestServerLevel)?.apply {
+                openMenu(WeatherTimeControllerFactory(this))
+                return InteractionResult.CONSUME
             }
+            player.displayClientMessage(
+                Component.literal("Only can be use inside chest dimension"),
+                true
+            )
         }
 
         return InteractionResult.sidedSuccess(level.isClientSide)
