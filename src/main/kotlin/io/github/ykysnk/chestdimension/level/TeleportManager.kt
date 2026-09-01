@@ -27,7 +27,7 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
 
     operator fun get(uuid: UUID) = data.points[uuid.toString()]
 
-    fun isExist(uuid: UUID) = data.points[uuid.toString()] != null
+    fun isExist(uuid: UUID) = get(uuid) != null
 
     fun remove(uuid: UUID) = remove(uuid.toString())
 
