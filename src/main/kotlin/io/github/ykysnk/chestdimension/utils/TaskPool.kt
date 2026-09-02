@@ -15,11 +15,13 @@ object TaskPool {
 
     private fun runTasks() {
         val currentTasks = tasks.toList()
-        tasks.clear()
+        val removeTasks = mutableListOf<TaskData>()
         currentTasks.forEach {
-            if (it.nextTick <= tickCount || isStop) return@forEach
+            if (it.nextTick > tickCount || isStop) return@forEach
             it.task()
+            removeTasks.add(it)
         }
+        removeTasks.forEach { tasks.remove(it) }
     }
 
     init {
@@ -33,6 +35,7 @@ object TaskPool {
         }
         ServerLifecycleEvents.SERVER_STOPPING.register {
             isStop = true
+            tasks.clear()
             tickCount = 0L
         }
     }
