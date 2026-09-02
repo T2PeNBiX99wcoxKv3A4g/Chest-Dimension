@@ -81,7 +81,7 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
                 damageSource,
                 null,
                 pos.center,
-                3f,
+                1f,
                 true,
                 Level.ExplosionInteraction.NONE
             )
@@ -165,7 +165,7 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         val drops = super.getDrops(state, params)
         val blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
 
-        if (blockEntity is TeleportDoorBlockEntity && state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+        if (blockEntity is TeleportDoorBlockEntity) {
             for (stack in drops) {
                 if (stack.item != asItem()) continue
                 val tag = CompoundTag()
@@ -186,8 +186,10 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         movedByPiston: Boolean
     ) {
         if (!state.`is`(newState.block)) {
-            val blockEntity = level.getBlockEntity(pos)
-            if (blockEntity is TeleportDoorBlockEntity && state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            var getPos = pos
+            if (state.getValue(HALF) != DoubleBlockHalf.LOWER) getPos = getPos.below()
+            val blockEntity = level.getBlockEntity(getPos)
+            if (blockEntity is TeleportDoorBlockEntity) {
                 TeleportManager.removePosition(blockEntity.uuid)
                 TeleportManager.save()
             }
