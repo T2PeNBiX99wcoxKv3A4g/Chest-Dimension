@@ -47,6 +47,8 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
                 .getHolderOrThrow(DamageTypes.EXPLOSION_BY_TELEPORT_DOOR)
         }
 
+        val blockPosList = mutableListOf<BlockPos>()
+
         private fun explodePush(level: ServerLevel, pos: BlockPos, entity: Entity) {
             val damageSource = DamageSource(damageSourceType)
             level.explode(
@@ -124,6 +126,7 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
     override fun setLevel(level: Level) {
         super.setLevel(level)
         (level as? ServerLevel)?.apply {
+            blockPosList.add(blockPos)
             TaskPool.run {
                 if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) {
                     val pos = blockPos.below()
