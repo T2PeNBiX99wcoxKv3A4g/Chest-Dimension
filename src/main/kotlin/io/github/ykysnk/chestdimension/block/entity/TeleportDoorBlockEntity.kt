@@ -125,8 +125,8 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
 
     override fun setLevel(level: Level) {
         super.setLevel(level)
+        blockPosList.add(blockPos)
         (level as? ServerLevel)?.apply {
-            blockPosList.add(blockPos)
             TaskPool.run {
                 if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) {
                     val pos = blockPos.below()
