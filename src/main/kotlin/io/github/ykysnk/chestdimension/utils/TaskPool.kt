@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package io.github.ykysnk.chestdimension.utils
 
 import io.github.ykysnk.chestdimension.data.TaskData
@@ -9,7 +11,9 @@ object TaskPool {
     private var isStop = false
     private var tickCount = 0L
 
-    fun run(task: () -> Unit, delayTick: Long = 0L) {
+    fun run(task: () -> Unit) = run(0L, task)
+
+    fun run(delayTick: Long, task: () -> Unit) {
         tasks.add(TaskData(tickCount + delayTick, task))
     }
 
