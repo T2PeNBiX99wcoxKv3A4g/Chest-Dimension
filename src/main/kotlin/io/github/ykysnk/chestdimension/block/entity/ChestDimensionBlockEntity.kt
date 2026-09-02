@@ -4,6 +4,7 @@ import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UUIDManager
+import io.github.ykysnk.chestdimension.utils.TaskPool
 import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
@@ -131,10 +132,12 @@ class ChestDimensionBlockEntity(pos: BlockPos, blockState: BlockState) :
     override fun setLevel(level: Level) {
         super.setLevel(level)
         (level as? ServerLevel)?.apply {
-            ChestLevelManager.setActive(uuid)
-            if (haveSameChest()) return@apply
-            UUIDManager.setChestData(uuid, dimension(), blockPos)
-            UUIDManager.save()
+            TaskPool.run {
+                ChestLevelManager.setActive(uuid)
+                if (haveSameChest()) return@run
+                UUIDManager.setChestData(uuid, dimension(), blockPos)
+                UUIDManager.save()
+            }
         }
     }
 
