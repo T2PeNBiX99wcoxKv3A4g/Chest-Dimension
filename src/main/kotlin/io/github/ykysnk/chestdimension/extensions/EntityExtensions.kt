@@ -29,8 +29,11 @@ fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3i, resetRot: Boolean = f
 fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3, setDirection: Direction, resetRot: Boolean = false): Boolean {
     val offset = Mth.wrapDegrees(yRot - direction.toYRot())
     val targetYRot = setDirection.toYRot()
-    val newYRot = targetYRot + offset
-    return teleportToLevel(level, pos, if (resetRot) targetYRot else newYRot, if (resetRot) 0f else xRot)
+    val movement = Vec3(deltaMovement.x, 0.0, deltaMovement.z)
+    val facing = Vec3(getViewVector(1.0f).x, 0.0, getViewVector(1.0f).z)
+    val isMovingBackward = movement.horizontalDistanceSqr() > 0.0001 && movement.dot(facing) < 0
+    val newYRot = if (resetRot) targetYRot else targetYRot + offset + if (isMovingBackward) 180f else 0f
+    return teleportToLevel(level, pos, Mth.wrapDegrees(newYRot), if (resetRot) 0f else xRot)
 }
 
 fun Entity.teleportToLevel(
