@@ -12,13 +12,13 @@ object TaskPool {
     }
 
     private fun runTasks() {
-        if (isStop) return
         tasks.forEach { it() }
         tasks.clear()
     }
 
     init {
         ServerTickEvents.END_SERVER_TICK.register {
+            if (isStop) return@register
             runTasks()
         }
         ServerLifecycleEvents.SERVER_STARTING.register {
