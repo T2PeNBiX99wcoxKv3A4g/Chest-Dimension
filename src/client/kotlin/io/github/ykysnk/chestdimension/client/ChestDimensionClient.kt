@@ -61,7 +61,7 @@ object ChestDimensionClient : ClientModInitializer {
                 val camera = context.camera()
                 val cameraPos = camera.position
 
-                TeleportDoorBlockEntity.blockPosList.forEach {
+                TeleportDoorBlockEntity.blockPosList.toList().forEach {
                     val level = Minecraft.getInstance().level ?: return@forEach
                     val state = level.getBlockState(it)
 
