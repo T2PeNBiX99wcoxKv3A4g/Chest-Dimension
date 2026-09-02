@@ -108,6 +108,11 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
     fun unLinkDoors(uuid: UUID, levelName: String) {
         getTeleportInfo(uuid, levelName)?.let {
             setTeleportInfo(uuid, levelName, it.copy(linkUUID = null))
+            it.linkUUID?.let { linkUUID ->
+                getTeleportInfo(linkUUID, levelName)?.let { linkInfo ->
+                    setTeleportInfo(linkUUID, levelName, linkInfo.copy(linkUUID = null))
+                }
+            }
         }
     }
 
