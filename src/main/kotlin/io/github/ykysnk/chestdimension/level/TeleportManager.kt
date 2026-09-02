@@ -71,15 +71,22 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
 
     fun remove(uuidString: String) = data.points.remove(uuidString)
 
+    fun removeLevel(uuid: UUID) = removeLevel(uuid, Constants.Server.worldData.levelName)
+
+    fun removeLevel(uuid: UUID, levelName: String): TeleportInfo? {
+        val info = get(uuid)?.remove(levelName)
+        if (get(uuid)?.keys?.isEmpty() == true) remove(uuid)
+        return info
+    }
+
     fun removePosition(uuid: UUID) = removePosition(uuid, Constants.Server.worldData.levelName)
 
     fun removePosition(uuid: UUID, levelName: String): TeleportInfo? {
-        val info = getTeleportInfo(uuid, levelName) ?: return get(uuid)?.remove(levelName)
-        if (info.linkUUID == null && info.dimensionPosition == null)
-            return get(uuid)?.remove(levelName)
+        val info = getTeleportInfo(uuid, levelName) ?: return removeLevel(uuid, levelName)
+        if (info.isEmpty()) return removeLevel(uuid, levelName)
         setTeleportInfo(uuid, levelName, info.copy(dimensionPosition = null))
-        if (get(uuid)?.keys?.isEmpty() == true)
-            remove(uuid)
+        val info2 = getTeleportInfo(uuid, levelName)!!
+        if (info2.isEmpty()) removeLevel(uuid, levelName)
         return info
     }
 
@@ -87,14 +94,26 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
 
     fun linkDoors(first: UUID, second: UUID, levelName: String): Boolean {
         if (first == second) return false
-        get(first)?.get(levelName)?.let { firstInfo ->
-            get(second)?.get(levelName)?.let { secondInfo ->
+        getTeleportInfo(first, levelName)?.let { firstInfo ->
+            getTeleportInfo(second, levelName)?.let { secondInfo ->
+                unLinkDoors(first, levelName)
+                unLinkDoors(second, levelName)
                 setTeleportInfo(first, levelName, firstInfo.copy(linkUUID = second))
                 setTeleportInfo(second, levelName, secondInfo.copy(linkUUID = first))
                 return true
             }
         }
         return false
+    }
+
+    fun unLinkDoors(uuid: UUID, levelName: String) {
+        getTeleportInfo(uuid, levelName)?.let {
+            setTeleportInfo(uuid, levelName, it.copy(linkUUID = null))
+        }
+        getTeleportInfo(uuid, levelName)?.let {
+            if (!it.isEmpty()) return@let
+            removeLevel(uuid, levelName)
+        }
     }
 
     fun isLinkDoor(uuid: UUID) = isLinkDoor(uuid, Constants.Server.worldData.levelName)
