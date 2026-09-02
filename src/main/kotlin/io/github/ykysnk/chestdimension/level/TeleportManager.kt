@@ -63,6 +63,7 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
 
     fun setTeleportInfo(uuid: UUID, levelName: String, teleportInfo: TeleportInfo) {
         data.points.getOrPut(uuid.toString()) { hashMapOf() }[levelName] = teleportInfo
+        if (data.points.getOrPut(uuid.toString()) { hashMapOf() }[levelName]!!.isEmpty()) removeLevel(uuid, levelName)
     }
 
     fun isExist(uuid: UUID) = get(uuid) != null
@@ -85,8 +86,6 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
         val info = getTeleportInfo(uuid, levelName) ?: return removeLevel(uuid, levelName)
         if (info.isEmpty()) return removeLevel(uuid, levelName)
         setTeleportInfo(uuid, levelName, info.copy(dimensionPosition = null))
-        val info2 = getTeleportInfo(uuid, levelName)!!
-        if (info2.isEmpty()) removeLevel(uuid, levelName)
         return info
     }
 
@@ -109,10 +108,6 @@ object TeleportManager : AbstractManager<TeleportPoints>("teleport_points.dat", 
     fun unLinkDoors(uuid: UUID, levelName: String) {
         getTeleportInfo(uuid, levelName)?.let {
             setTeleportInfo(uuid, levelName, it.copy(linkUUID = null))
-        }
-        getTeleportInfo(uuid, levelName)?.let {
-            if (!it.isEmpty()) return@let
-            removeLevel(uuid, levelName)
         }
     }
 
