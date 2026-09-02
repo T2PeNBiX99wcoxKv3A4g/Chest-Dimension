@@ -186,10 +186,8 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         movedByPiston: Boolean
     ) {
         if (!state.`is`(newState.block)) {
-            var getPos = pos
-            if (state.getValue(HALF) != DoubleBlockHalf.LOWER) getPos = getPos.below()
-            val blockEntity = level.getBlockEntity(getPos)
-            if (blockEntity is TeleportDoorBlockEntity) {
+            val blockEntity = level.getBlockEntity(pos)
+            if (blockEntity is TeleportDoorBlockEntity && state.getValue(HALF) == DoubleBlockHalf.LOWER) {
                 TeleportManager.removePosition(blockEntity.uuid)
                 TeleportManager.save()
             }
