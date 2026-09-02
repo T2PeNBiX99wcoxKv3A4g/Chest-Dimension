@@ -9,6 +9,7 @@ import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import io.github.ykysnk.chestdimension.tags.NameSpaces
+import io.github.ykysnk.chestdimension.utils.TaskPool
 import io.github.ykysnk.chestdimension.world.Network
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.loader.api.FabricLoader
@@ -40,14 +41,15 @@ object Constants {
 
     val ForceInitialize: Unit by lazy {
         LOGGER.debug(
-            "{} {} {} {} {} {} {}",
+            "{} {} {} {} {} {} {} {}",
             Blocks,
             Items,
             ItemGroups,
             ChestLevelStorage,
             ChestLevelManager,
             Network,
-            ChestDimCommand
+            ChestDimCommand,
+            TaskPool
         )
     }
 
