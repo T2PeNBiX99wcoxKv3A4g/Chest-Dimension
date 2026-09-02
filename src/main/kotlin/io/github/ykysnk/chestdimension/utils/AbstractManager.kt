@@ -6,12 +6,14 @@ import kotlinx.coroutines.*
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 abstract class AbstractManager<T : DeepCopy<T>>(fileName: String, newData: T) {
     protected open val dataPath: Path = Constants.ConfigDir.resolve(fileName)
     protected open val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private var autoSaveJob: Job? = null
+    protected open val autoSaveDelay: Duration = 5.minutes
+
     protected open var data: T = newData
 
     protected open fun load() {
@@ -24,6 +26,7 @@ abstract class AbstractManager<T : DeepCopy<T>>(fileName: String, newData: T) {
     }
 
     protected abstract fun loadData(): T
+    private var autoSaveJob: Job? = null
 
     open fun save() {
         scope.launch {
@@ -42,7 +45,7 @@ abstract class AbstractManager<T : DeepCopy<T>>(fileName: String, newData: T) {
             autoSaveJob?.cancel()
             autoSaveJob = scope.launch {
                 while (isActive) {
-                    delay(5.minutes)
+                    delay(autoSaveDelay)
                     save()
                 }
             }
