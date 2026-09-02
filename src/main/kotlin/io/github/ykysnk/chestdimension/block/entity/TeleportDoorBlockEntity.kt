@@ -124,16 +124,17 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
     override fun setLevel(level: Level) {
         super.setLevel(level)
         (level as? ServerLevel)?.apply {
-            if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) {
-                TaskPool.run {
+            TaskPool.run {
+                if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) {
                     val pos = blockPos.below()
                     val blockEntity = getBlockEntity(pos)
                     (blockEntity as? TeleportDoorBlockEntity)?.let { uuid = it.uuid }
+                    return@run
                 }
-                return@apply
+
+                TeleportManager[uuid, this] = blockPos
+                TeleportManager.save()
             }
-            TeleportManager[uuid, this] = blockPos
-            TeleportManager.save()
         }
     }
 
