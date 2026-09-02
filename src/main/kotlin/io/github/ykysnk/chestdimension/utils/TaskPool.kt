@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 object TaskPool {
     private val tasks = mutableListOf<() -> Unit>()
 
-    fun add(task: () -> Unit) {
+    fun run(task: () -> Unit) {
         tasks.add(task)
     }
 
