@@ -2,8 +2,10 @@ package io.github.ykysnk.chestdimension.block.entity
 
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.block.TeleportDoorBlock
 import io.github.ykysnk.chestdimension.extensions.teleportToLevel
 import io.github.ykysnk.chestdimension.level.TeleportManager
+import io.github.ykysnk.chestdimension.utils.TaskPool
 import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -99,13 +101,22 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
             Direction.WEST -> Direction.EAST
             else -> Direction.NORTH
         }
+        val block = blockState.block
+        (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
         entity.teleportToLevel(teleportLevel, teleportPlayerPos, teleportPlayerDirection)
     }
 
     override fun setLevel(level: Level) {
         super.setLevel(level)
         (level as? ServerLevel)?.apply {
-            if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) return@apply
+            if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) {
+                TaskPool.run {
+                    val pos = blockPos.below()
+                    val blockEntity = getBlockEntity(pos)
+                    (blockEntity as? TeleportDoorBlockEntity)?.let { uuid = it.uuid }
+                }
+                return@apply
+            }
             TeleportManager[uuid, this] = blockPos
             TeleportManager.save()
         }

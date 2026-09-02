@@ -87,7 +87,6 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
     override fun tick(state: BlockState, level: ServerLevel, pos: BlockPos, random: RandomSource) {
         val blockEntity = getLowerEntity(state, level, pos) ?: return
         blockEntity.startTeleport()
-        setOpen(null, level, state, pos, false)
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = TeleportDoorBlockEntity(pos, state)
