@@ -29,11 +29,6 @@ class TeleportDoorLinker : Item(Properties().durability(1)) {
         if (blockEntity !is TeleportDoorBlockEntity) return InteractionResult.FAIL
 
         (level as? ServerLevel)?.apply {
-            if (TeleportManager.isLinkDoor(blockEntity.uuid)) {
-                player?.displayClientMessage(Component.literal("This door is already linked!"), true)
-                return InteractionResult.FAIL
-            }
-
             val tag = stack.orCreateTag
             if (tag.contains("linkUUID")) {
                 (player as? ServerPlayer)?.apply {
