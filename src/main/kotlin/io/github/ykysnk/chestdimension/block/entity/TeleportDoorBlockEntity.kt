@@ -3,13 +3,16 @@ package io.github.ykysnk.chestdimension.block.entity
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.TeleportDoorBlock
+import io.github.ykysnk.chestdimension.extensions.findSafeLocation
 import io.github.ykysnk.chestdimension.extensions.teleportToLevel
+import io.github.ykysnk.chestdimension.extensions.teleportToSafeLocation
 import io.github.ykysnk.chestdimension.level.TeleportManager
 import io.github.ykysnk.chestdimension.utils.TaskPool
 import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Holder
+import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
@@ -24,10 +27,21 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf
 import java.util.*
+import kotlin.math.abs
 
 class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
     BlockEntity(BlockEntityTypes.TELEPORT_DOOR, pos, blockState) {
     companion object {
+        private val TELEPORT_HORIZONTAL_OFFSETS: List<Vec3i> = (-2..2)
+            .flatMap { x -> (-2..2).map { z -> Vec3i(x, 0, z) } }
+            .sortedBy { maxOf(abs(it.x), abs(it.z)) }
+        private val TELEPORT_OFFSETS: List<Vec3i> = buildList {
+            addAll(TELEPORT_HORIZONTAL_OFFSETS)
+            for (i in 1..5) {
+                addAll(TELEPORT_HORIZONTAL_OFFSETS.map { it.below(i) })
+                addAll(TELEPORT_HORIZONTAL_OFFSETS.map { it.above(i) })
+            }
+        }
         private val damageSourceType: Holder.Reference<DamageType> by lazy {
             Constants.Server.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
                 .getHolderOrThrow(DamageTypes.EXPLOSION_BY_TELEPORT_DOOR)
@@ -100,7 +114,11 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
         val entityNewYRot = Mth.wrapDegrees(entity.yRot + 180f + facingOffset)
         val block = blockState.block
         (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
-        entity.teleportToLevel(teleportLevel, teleportPlayerPos, entityNewYRot, entity.xRot)
+        entity.findSafeLocation(teleportLevel, teleportPlayerPos, TELEPORT_OFFSETS)?.let { safePos ->
+            if (entity.teleportToLevel(teleportLevel, safePos, entityNewYRot, entity.xRot)) return
+        }
+        if (entity.teleportToSafeLocation(teleportLevel, teleportPlayerPos)) return
+        explodePush(level, worldPosition, entity)
     }
 
     override fun setLevel(level: Level) {
