@@ -21,6 +21,7 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
         registryBuilder.add(Registries.DAMAGE_TYPE) { context ->
             context.register(DamageTypes.EXPLOSION_BY_CHEST, DamageTypes.ExplosionByChestType)
             context.register(DamageTypes.EXPLOSION_BY_CHEST_INSIDE, DamageTypes.ExplosionByChestInsideType)
+            context.register(DamageTypes.EXPLOSION_BY_TELEPORT_DOOR, DamageTypes.ExplosionByTeleportDoorType)
         }
     }
 }
