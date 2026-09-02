@@ -373,7 +373,7 @@ object ChestLevelManager {
 
     init {
         ServerLifecycleEvents.SERVER_STARTING.register {
-            TaskPool.add(::checkLevels)
+            TaskPool.run(::checkLevels)
         }
         ServerLifecycleEvents.SERVER_STOPPING.register {
             clear()
