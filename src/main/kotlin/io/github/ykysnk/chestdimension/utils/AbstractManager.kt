@@ -11,6 +11,7 @@ import kotlin.time.Duration.Companion.minutes
 abstract class AbstractManager<T : DeepCopy<T>>(fileName: String, newData: T) {
     protected open val dataPath: Path = Constants.ConfigDir.resolve(fileName)
     protected open val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private var autoSaveJob: Job? = null
     protected open var data: T = newData
 
     protected open fun load() {
@@ -38,7 +39,8 @@ abstract class AbstractManager<T : DeepCopy<T>>(fileName: String, newData: T) {
     init {
         load()
         ServerLifecycleEvents.SERVER_STARTING.register {
-            scope.launch {
+            autoSaveJob?.cancel()
+            autoSaveJob = scope.launch {
                 while (isActive) {
                     delay(5.minutes)
                     save()
@@ -46,8 +48,8 @@ abstract class AbstractManager<T : DeepCopy<T>>(fileName: String, newData: T) {
             }
         }
         ServerLifecycleEvents.SERVER_STOPPING.register {
+            autoSaveJob?.cancel()
             saveNow()
-            scope.cancel()
         }
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register { _, _ ->
             save()
