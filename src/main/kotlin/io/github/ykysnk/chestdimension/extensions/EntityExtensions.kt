@@ -4,6 +4,7 @@ package io.github.ykysnk.chestdimension.extensions
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.Vec3i
 import net.minecraft.server.level.PlayerRespawnLogic
 import net.minecraft.server.level.ServerLevel
@@ -11,26 +12,55 @@ import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.RelativeMovement
 import net.minecraft.world.entity.vehicle.DismountHelper
 import net.minecraft.world.level.CollisionGetter
 import net.minecraft.world.phys.Vec3
 
 fun Entity.teleportToLevel(level: ServerLevel, resetRot: Boolean = false): Boolean =
-    teleportTo(level, 0.5, 1.0, 0.5, setOf(), if (resetRot) 180f else yRot, if (resetRot) 0f else xRot)
+    teleportToLevel(level, Vec3(0.5, 1.0, 0.5), resetRot)
 
 fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3, resetRot: Boolean = false): Boolean =
-    teleportTo(level, pos.x, pos.y, pos.z, setOf(), if (resetRot) 180f else yRot, if (resetRot) 0f else xRot)
+    teleportToLevel(level, pos, if (resetRot) 180f else yRot, if (resetRot) 0f else xRot)
 
 fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3i, resetRot: Boolean = false): Boolean =
-    teleportTo(
-        level,
-        pos.x.toDouble() + 0.5,
-        pos.y.toDouble(),
-        pos.z.toDouble() + 0.5,
-        setOf(),
-        if (resetRot) 180f else yRot,
-        if (resetRot) 0f else xRot
-    )
+    teleportToLevel(level, pos.toVec3(), resetRot)
+
+fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3, setDirection: Direction, resetRot: Boolean = false): Boolean {
+    val offset = Mth.wrapDegrees(yRot - direction.toYRot())
+    val targetYRot = setDirection.toYRot()
+    val newYRot = targetYRot + offset
+    return teleportToLevel(level, pos, if (resetRot) targetYRot else newYRot, if (resetRot) 0f else xRot)
+}
+
+fun Entity.teleportToLevel(
+    level: ServerLevel,
+    pos: Vec3i,
+    setDirection: Direction,
+    resetRot: Boolean = false
+): Boolean = teleportToLevel(level, pos.toVec3(), setDirection, resetRot)
+
+fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3, yRot: Float, xRot: Float): Boolean =
+    teleportToLevel(level, pos, setOf(), yRot, xRot)
+
+fun Entity.teleportToLevel(level: ServerLevel, pos: Vec3i, yRot: Float, xRot: Float): Boolean =
+    teleportToLevel(level, pos.toVec3(), setOf(), yRot, xRot)
+
+fun Entity.teleportToLevel(
+    level: ServerLevel,
+    pos: Vec3,
+    relativeMovements: Set<RelativeMovement>,
+    yRot: Float,
+    xRot: Float
+): Boolean = teleportTo(level, pos.x, pos.y, pos.z, relativeMovements, yRot, xRot)
+
+fun Entity.teleportToLevel(
+    level: ServerLevel,
+    pos: Vec3i,
+    relativeMovements: Set<RelativeMovement>,
+    yRot: Float,
+    xRot: Float
+): Boolean = teleportToLevel(level, pos.toVec3(), relativeMovements, yRot, xRot)
 
 fun Entity.teleportToSafeLocation(
     level: ServerLevel,
