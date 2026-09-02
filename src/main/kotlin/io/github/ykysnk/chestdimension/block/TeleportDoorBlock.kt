@@ -93,7 +93,10 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         if (state.getValue(HALF) != DoubleBlockHalf.LOWER) doorPos = doorPos.below()
         val blockEntity = level.getBlockEntity(doorPos) as? TeleportDoorBlockEntity ?: return
         val uuid = blockEntity.uuid
-        if (!TeleportManager.isLinkDoor(uuid)) return
+        if (!TeleportManager.isLinkDoor(uuid)) {
+            explodePush(level, pos)
+            return
+        }
         val info = TeleportManager.getTeleportInfo(uuid)
         if (info?.linkUUID == null) {
             explodePush(level, pos)
