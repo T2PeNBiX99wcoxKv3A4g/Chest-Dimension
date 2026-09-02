@@ -13,6 +13,7 @@ import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
@@ -86,6 +87,7 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
             explodePush(level, worldPosition, entity)
             return
         }
+        val sourceFacing = blockState.getValue(FACING)
         val teleportFacing = teleportState.getValue(FACING)
         val teleportPlayerPos = when (teleportFacing) {
             Direction.NORTH -> teleportPos.south()
@@ -94,16 +96,11 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
             Direction.WEST -> teleportPos.east()
             else -> teleportPos
         }
-        val teleportPlayerDirection = when (teleportFacing) {
-            Direction.NORTH -> Direction.SOUTH
-            Direction.SOUTH -> Direction.NORTH
-            Direction.EAST -> Direction.WEST
-            Direction.WEST -> Direction.EAST
-            else -> Direction.NORTH
-        }
+        val facingOffset = Mth.wrapDegrees(teleportFacing.toYRot() - sourceFacing.toYRot())
+        val entityNewYRot = Mth.wrapDegrees(entity.yRot + 180f + facingOffset)
         val block = blockState.block
         (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
-        entity.teleportToLevel(teleportLevel, teleportPlayerPos, teleportPlayerDirection)
+        entity.teleportToLevel(teleportLevel, teleportPlayerPos, entityNewYRot, entity.xRot)
     }
 
     override fun setLevel(level: Level) {
