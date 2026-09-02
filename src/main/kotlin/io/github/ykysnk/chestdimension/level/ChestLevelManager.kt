@@ -6,8 +6,8 @@ import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
 import io.github.ykysnk.chestdimension.extensions.*
 import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
+import io.github.ykysnk.chestdimension.utils.TaskPool
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.core.registries.Registries
@@ -336,10 +336,7 @@ object ChestLevelManager {
     private fun createWorldKey(uuid: UUID): ResourceKey<Level> =
         ResourceKey.create(Registries.DIMENSION, id("chest/$uuid"))
 
-    private var hasCheckLevels = false
-
     private fun checkLevels() {
-        if (hasCheckLevels) return
         val badData = hashSetOf<UUID>()
         val reallyBadData = hashSetOf<String>()
         UUIDManager.getMap().forEach { (uuidString, _) ->
@@ -367,7 +364,6 @@ object ChestLevelManager {
         badData.forEach { setInactive(it) }
         reallyBadData.forEach { UUIDManager.remove(it) }
         UUIDManager.save()
-        hasCheckLevels = true
     }
 
     private fun clear() {
@@ -376,12 +372,11 @@ object ChestLevelManager {
     }
 
     init {
-        ServerTickEvents.END_SERVER_TICK.register {
-            checkLevels()
+        ServerLifecycleEvents.SERVER_STARTING.register {
+            TaskPool.add(::checkLevels)
         }
         ServerLifecycleEvents.SERVER_STOPPING.register {
             clear()
-            hasCheckLevels = false
         }
     }
 }
