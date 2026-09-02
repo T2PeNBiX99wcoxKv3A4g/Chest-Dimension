@@ -2,12 +2,14 @@
 
 package io.github.ykysnk.chestdimension.utils
 
+import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.data.TaskData
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 
 object TaskPool {
     private val tasks: MutableList<TaskData> = mutableListOf()
+    private var currentTasks: MutableList<TaskData>? = null
     private var isStop = false
     private var tickCount = 0L
 
@@ -18,13 +20,14 @@ object TaskPool {
     }
 
     private fun runTasks() {
-        val currentTasks = tasks.toList()
+        currentTasks = tasks.toMutableList()
         val removeTasks = mutableListOf<TaskData>()
-        currentTasks.forEach {
-            if (it.nextTick > tickCount || isStop) return@forEach
-            it.task()
-            removeTasks.add(it)
+        currentTasks?.forEach { data ->
+            if (data.nextTick > tickCount || isStop) return@forEach
+            runCatching { data.task() }.getOrElse { Constants.LOGGER.error("Task Error: {}", it.localizedMessage, it) }
+            removeTasks.add(data)
         }
+        currentTasks?.clear()
         removeTasks.forEach { tasks.remove(it) }
     }
 
@@ -40,6 +43,7 @@ object TaskPool {
         ServerLifecycleEvents.SERVER_STOPPING.register {
             isStop = true
             tasks.clear()
+            currentTasks?.clear()
             tickCount = 0L
         }
     }
