@@ -1,16 +1,22 @@
 package io.github.ykysnk.chestdimension.block
 
+import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
 import io.github.ykysnk.chestdimension.block.entity.TeleportDoorBlockEntity
 import io.github.ykysnk.chestdimension.extensions.teleportToLevel
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.TeleportManager
+import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntitySelector
 import net.minecraft.world.entity.player.Player
@@ -27,7 +33,6 @@ import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.BlockHitResult
-import net.minecraft.world.phys.Vec3
 
 class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(properties, type), EntityBlock {
     companion object {
@@ -39,6 +44,11 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
             AABB(0.0, 0.0, 1.0 - TOUCH_OFFSET - TOUCH_THICKNESS, 1.0, 1.0, 1.0 - TOUCH_OFFSET)
         private val WEST_TOUCH_AABB = AABB(1.0 - TOUCH_OFFSET - TOUCH_THICKNESS, 0.0, 0.0, 1.0 - TOUCH_OFFSET, 1.0, 1.0)
         private val EAST_TOUCH_AABB = AABB(TOUCH_OFFSET, 0.0, 0.0, TOUCH_OFFSET + TOUCH_THICKNESS, 1.0, 1.0)
+
+        private val damageSourceType: Holder.Reference<DamageType> by lazy {
+            Constants.Server.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
+                .getHolderOrThrow(DamageTypes.EXPLOSION_BY_TELEPORT_DOOR)
+        }
 
         fun getTouchAABB(state: BlockState, pos: BlockPos): AABB {
             val local = when (state.getValue(FACING)) {
@@ -63,6 +73,64 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
                 else -> centerOffset
             }
         }
+
+        private fun explodePush(level: Level, pos: BlockPos) {
+            val damageSource = DamageSource(damageSourceType)
+            level.explode(
+                null,
+                damageSource,
+                null,
+                pos.center,
+                3f,
+                true,
+                Level.ExplosionInteraction.NONE
+            )
+        }
+    }
+
+    private fun handleTeleport(state: BlockState, level: ServerLevel, pos: BlockPos, entity: Entity) {
+        var doorPos = pos
+        if (state.getValue(HALF) != DoubleBlockHalf.LOWER) doorPos = doorPos.below()
+        val blockEntity = level.getBlockEntity(doorPos) as? TeleportDoorBlockEntity ?: return
+        val uuid = blockEntity.uuid
+        if (!TeleportManager.isLinkDoor(uuid)) return
+        val info = TeleportManager.getTeleportInfo(uuid)
+        if (info?.linkUUID == null) {
+            explodePush(level, pos)
+            return
+        }
+        val teleportToInfo = TeleportManager.getTeleportInfo(info.linkUUID)
+        if (teleportToInfo?.dimensionPosition == null) {
+            explodePush(level, pos)
+            return
+        }
+        val teleportLevel = level.server.getLevel(teleportToInfo.dimensionPosition.dimension)
+        if (teleportLevel == null) {
+            explodePush(level, pos)
+            return
+        }
+        val teleportPos = teleportToInfo.dimensionPosition.blockPos
+        val teleportState = teleportLevel.getBlockState(teleportPos)
+        if (!teleportState.`is`(Blocks.TELEPORT_DOOR)) {
+            explodePush(level, pos)
+            return
+        }
+        val teleportFacing = teleportState.getValue(FACING)
+        val teleportPlayerPos = when (teleportFacing) {
+            Direction.NORTH -> teleportPos.south()
+            Direction.SOUTH -> teleportPos.north()
+            Direction.EAST -> teleportPos.west()
+            Direction.WEST -> teleportPos.east()
+            else -> teleportPos
+        }
+        val teleportPlayerDirection = when (teleportFacing) {
+            Direction.NORTH -> Direction.SOUTH
+            Direction.SOUTH -> Direction.NORTH
+            Direction.EAST -> Direction.WEST
+            Direction.WEST -> Direction.EAST
+            else -> Direction.NORTH
+        }
+        entity.teleportToLevel(teleportLevel, teleportPlayerPos, teleportPlayerDirection)
     }
 
     @Deprecated("Deprecated in Java")
@@ -71,10 +139,7 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         (level as? ServerLevel)?.apply {
             val box = getTouchAABB(state, pos)
             val list = getEntitiesOfClass(Entity::class.java, box, EntitySelector.NO_SPECTATORS)
-            list.forEach {
-                val oldPos = it.position()
-                it.teleportToLevel(this, Vec3(oldPos.x, oldPos.y + 20, oldPos.z))
-            }
+            list.forEach { handleTeleport(state, this, pos, it) }
         }
     }
 
@@ -100,7 +165,7 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         val drops = super.getDrops(state, params)
         val blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
 
-        if (blockEntity is TeleportDoorBlockEntity) {
+        if (blockEntity is TeleportDoorBlockEntity && state.getValue(HALF) == DoubleBlockHalf.LOWER) {
             for (stack in drops) {
                 if (stack.item != asItem()) continue
                 val tag = CompoundTag()
