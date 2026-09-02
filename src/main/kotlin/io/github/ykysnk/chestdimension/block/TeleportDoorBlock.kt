@@ -113,15 +113,11 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         val blockEntity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY)
 
         if (blockEntity is TeleportDoorBlockEntity) {
-            val level = blockEntity.level ?: return drops
-            val state = level.getBlockState(blockEntity.blockPos)
-            getLowerEntity(state, level, blockEntity.blockPos)?.let { lowerEntity ->
-                for (stack in drops) {
-                    if (stack.item != asItem()) continue
-                    val tag = CompoundTag()
-                    tag.putUUID("UUID", lowerEntity.uuid)
-                    BlockItem.setBlockEntityData(stack, BlockEntityTypes.TELEPORT_DOOR, tag)
-                }
+            for (stack in drops) {
+                if (stack.item != asItem()) continue
+                val tag = CompoundTag()
+                tag.putUUID("UUID", blockEntity.uuid)
+                BlockItem.setBlockEntityData(stack, BlockEntityTypes.TELEPORT_DOOR, tag)
             }
         }
 
