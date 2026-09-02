@@ -19,18 +19,25 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
     override fun setLevel(level: Level) {
         super.setLevel(level)
         (level as? ServerLevel)?.apply {
-            if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) return@apply
+            if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) {
+                val pos = blockPos.below()
+                val belowEntity = getBlockEntity(pos)
+                (belowEntity as? TeleportDoorBlockEntity)?.let { uuid = it.uuid }
+                return@apply
+            }
             TeleportManager[uuid, this] = blockPos
             TeleportManager.save()
         }
     }
 
     override fun load(tag: CompoundTag) {
+        if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) return
         if (tag.hasUUID("UUID"))
             uuid = tag.getUUID("UUID")
     }
 
     override fun saveAdditional(tag: CompoundTag) {
+        if (blockState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) return
         tag.putUUID("UUID", uuid)
     }
 }
