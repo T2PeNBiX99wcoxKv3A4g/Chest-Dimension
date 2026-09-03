@@ -44,9 +44,9 @@ object DimensionTypes {
             1.0, // coordinateScale
             false, // bedWorks
             false, // respawnAnchorWorks
-            -64, // minY
-            1024, // height
-            1024, // logicalHeight
+            -128, // minY
+            320, // height
+            320, // logicalHeight
             BlockTags.INFINIBURN_OVERWORLD, // infiniburn
             BuiltinDimensionTypes.NETHER_EFFECTS,
             0.0f, // ambientLight

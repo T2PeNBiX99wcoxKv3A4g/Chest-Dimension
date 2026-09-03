@@ -1,23 +1,18 @@
 package io.github.ykysnk.chestdimension.client.datagen.provider
 
-import io.github.ykysnk.chestdimension.level.biome.Biomes
-import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
-import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider
 import net.minecraft.core.HolderLookup
+import net.minecraft.core.registries.Registries
 import java.util.concurrent.CompletableFuture
 
 class DynamicRegistryProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<HolderLookup.Provider>) :
     FabricDynamicRegistryProvider(output, registriesFuture) {
     override fun configure(registries: HolderLookup.Provider, entries: Entries) {
-        entries.add(Biomes.CHEST_PLATFORM_BIOME, Biomes.ChestPlatformBiomeType)
-        entries.add(Biomes.CHEST_UNDEFINED_BIOME, Biomes.ChestUndefinedBiomeType)
-        entries.add(DimensionTypes.CHEST_PLATFORM, DimensionTypes.ChestPlatformDimensionType)
-        entries.add(DimensionTypes.CHEST_UNDEFINED, DimensionTypes.ChestUndefinedDimensionType)
-        entries.add(DamageTypes.EXPLOSION_BY_CHEST, DamageTypes.ExplosionByChestType)
-        entries.add(DamageTypes.EXPLOSION_BY_CHEST_INSIDE, DamageTypes.ExplosionByChestInsideType)
-        entries.add(DamageTypes.EXPLOSION_BY_TELEPORT_DOOR, DamageTypes.ExplosionByTeleportDoorType)
+        registries.lookup(Registries.BIOME).ifPresent(entries::addAll)
+        registries.lookup(Registries.DIMENSION_TYPE).ifPresent(entries::addAll)
+        registries.lookup(Registries.DAMAGE_TYPE).ifPresent(entries::addAll)
+        registries.lookup(Registries.NOISE_SETTINGS).ifPresent(entries::addAll)
     }
 
     override fun getName(): String {
