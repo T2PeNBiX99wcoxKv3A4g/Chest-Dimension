@@ -341,7 +341,7 @@ object ChestLevelManager {
         levelKey.location().toString().startsWith("${Constants.MOD_ID}:chest/")
 
     private fun createWorldKey(uuid: UUID): ResourceKey<Level> =
-        ResourceKey.create(Registries.DIMENSION, id("chest/$uuid"))
+        ResourceKey.create(Registries.DIMENSION, id("chest/$uuid/platform"))
 
     private fun checkLevels() {
         val badData = hashSetOf<UUID>()
