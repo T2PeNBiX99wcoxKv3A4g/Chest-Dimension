@@ -97,6 +97,8 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
             ADD_DAY_TIME,
             null
         )
+        level.chestServerLevelData.freezeWeather = true
+        level.chestServerLevelData.setWeatherParametersForce(0, 10000, true, true)
         server.levels[worldKey] = level
         loaded = level
         data = data.copy(seed, true)
