@@ -1,4 +1,4 @@
-package io.github.ykysnk.chestdimension.level
+package io.github.ykysnk.chestdimension.level.dimension
 
 import io.github.ykysnk.chestdimension.id
 import net.minecraft.core.registries.Registries
