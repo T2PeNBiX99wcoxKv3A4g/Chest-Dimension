@@ -48,7 +48,7 @@ object DimensionTypes {
             320, // height
             320, // logicalHeight
             BlockTags.INFINIBURN_OVERWORLD, // infiniburn
-            BuiltinDimensionTypes.NETHER_EFFECTS,
+            BuiltinDimensionTypes.OVERWORLD_EFFECTS,
             0.0f, // ambientLight
             ChestUndefinedMonsterSettings
         )

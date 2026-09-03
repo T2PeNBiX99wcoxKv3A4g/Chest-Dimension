@@ -27,8 +27,8 @@ object Biomes {
     val ChestUndefinedBiomeType: Biome by lazy {
         Biome.BiomeBuilder()
             .hasPrecipitation(true)
-            .temperature(0.5f)
-            .downfall(0.5f)
+            .temperature(0f)
+            .downfall(1f)
             .specialEffects(ChestUndefinedBiomeSpecialEffects)
             .mobSpawnSettings(MobSpawnSettings.EMPTY)
             .generationSettings(BiomeGenerationSettings.EMPTY)
@@ -47,10 +47,10 @@ object Biomes {
 
     private val ChestUndefinedBiomeSpecialEffects: BiomeSpecialEffects by lazy {
         BiomeSpecialEffects.Builder()
-            .fogColor(12638463)
-            .skyColor(8103167)
-            .waterColor(4159204)
-            .waterFogColor(329011)
+            .fogColor(0)
+            .skyColor(0)
+            .waterColor(0)
+            .waterFogColor(0)
             .build()
     }
 }
