@@ -7,7 +7,9 @@ import io.github.ykysnk.chestdimension.config.Configs
 import io.github.ykysnk.chestdimension.extensions.findSafeLocation
 import io.github.ykysnk.chestdimension.extensions.teleportToLevel
 import io.github.ykysnk.chestdimension.extensions.teleportToSafeLocation
+import io.github.ykysnk.chestdimension.extensions.teleportToSpawnLocation
 import io.github.ykysnk.chestdimension.level.TeleportManager
+import io.github.ykysnk.chestdimension.level.UndefinedLevelManager
 import io.github.ykysnk.chestdimension.utils.TaskPool
 import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.minecraft.core.BlockPos
@@ -51,7 +53,7 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
         val blockPosList = mutableListOf<BlockPos>()
 
         private fun explodePush(level: ServerLevel, pos: BlockPos, entity: Entity) {
-            if (!Configs.mainConfig.teleportDoorTeleportToUndefined){
+            if (!Configs.mainConfig.teleportDoorTeleportToUndefined) {
                 val damageSource = DamageSource(damageSourceType)
                 level.explode(
                     null,
@@ -64,10 +66,8 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
                 )
                 return
             }
-            // TODO: Teleport To Undefined
-            entity.findSafeLocation(level, pos.above(20), TELEPORT_OFFSETS)?.let { safePos ->
-                if (entity.teleportToLevel(level, safePos, entity.yRot, entity.xRot)) return
-            }
+            val undefinedLevel = UndefinedLevelManager.getOrCreate(Constants.Server)
+            entity.teleportToSpawnLocation(undefinedLevel)
         }
     }
 
