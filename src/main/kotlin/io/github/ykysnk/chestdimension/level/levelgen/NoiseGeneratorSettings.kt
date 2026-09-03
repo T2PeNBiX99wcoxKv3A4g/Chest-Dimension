@@ -16,7 +16,7 @@ object NoiseGeneratorSettings {
     fun undefined(context: BootstapContext<*>, amplified: Boolean, large: Boolean): NoiseGeneratorSettings {
         return NoiseGeneratorSettings(
             NoiseSettings.UNDEFINED_NOISE_SETTINGS,
-            Blocks.DIRT.defaultBlockState(),
+            Blocks.COBBLESTONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
             NoiseRouterData.overworld(
                 context.lookup(Registries.DENSITY_FUNCTION),
@@ -26,7 +26,7 @@ object NoiseGeneratorSettings {
             ),
             SurfaceRuleData.undefined(true, false, true),
             OverworldBiomeBuilder().spawnTarget(),
-            63,
+            0,
             true,
             false,
             false,

@@ -20,6 +20,7 @@ object SurfaceRuleData {
     private val RED_SANDSTONE = makeStateRule(Blocks.RED_SANDSTONE)
     private val STONE = makeStateRule(Blocks.STONE)
     private val DEEPSLATE = makeStateRule(Blocks.DEEPSLATE)
+    private val COBBLED_DEEPSLATE = makeStateRule(Blocks.COBBLED_DEEPSLATE)
     private val DIRT = makeStateRule(Blocks.DIRT)
     private val PODZOL = makeStateRule(Blocks.PODZOL)
     private val COARSE_DIRT = makeStateRule(Blocks.COARSE_DIRT)
@@ -109,7 +110,7 @@ object SurfaceRuleData {
                     "deepslate",
                     VerticalAnchor.absolute(-64),
                     VerticalAnchor.absolute(-56)
-                ), DEEPSLATE
+                ), COBBLED_DEEPSLATE
             )
         )
 
