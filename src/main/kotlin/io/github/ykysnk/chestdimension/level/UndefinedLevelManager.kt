@@ -29,11 +29,11 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
     private lateinit var chunkProgressListener: ChunkProgressListener
     private val biome by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.BIOME)
-            .getHolderOrThrow(Biomes.CHEST_PLATFORM_BIOME)
+            .getHolderOrThrow(Biomes.CHEST_UNDEFINED_BIOME)
     }
     private val dimensionType by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE)
-            .getHolderOrThrow(DimensionTypes.CHEST_PLATFORM)
+            .getHolderOrThrow(DimensionTypes.CHEST_UNDEFINED)
     }
 
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
@@ -75,6 +75,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val seed = worldOptions.seed()
         val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
         val biomeSource = FixedBiomeSource(biome)
+//        val test = NoiseBasedChunkGenerator(biomeSource)
         val generator = ChestChunkGenerator(biomeSource)
         val levelStem = LevelStem(dimensionType, generator)
         val level = ChestServerLevel(
