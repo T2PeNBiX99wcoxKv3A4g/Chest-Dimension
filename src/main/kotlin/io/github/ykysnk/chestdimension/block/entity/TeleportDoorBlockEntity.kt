@@ -51,24 +51,6 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
 
         val blockPosList = mutableListOf<BlockPos>()
-
-        private fun explodePush(level: ServerLevel, pos: BlockPos, entity: Entity) {
-            if (!Configs.mainConfig.teleportDoorTeleportToUndefined) {
-                val damageSource = DamageSource(damageSourceType)
-                level.explode(
-                    null,
-                    damageSource,
-                    null,
-                    pos.center,
-                    .5f,
-                    false,
-                    Level.ExplosionInteraction.NONE
-                )
-                return
-            }
-            val undefinedLevel = UndefinedLevelManager.getOrCreate(Constants.Server)
-            entity.teleportToSpawnLocation(undefinedLevel)
-        }
     }
 
     var uuid: UUID = TeleportManager.randomUUID()
@@ -87,6 +69,26 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
     fun startTeleport() {
         (level as? ServerLevel)?.apply { entitiesCache.forEach { handleTeleport(this, it) } }
         entitiesCache.clear()
+    }
+
+    private fun explodePush(level: ServerLevel, pos: BlockPos, entity: Entity) {
+        if (!Configs.mainConfig.teleportDoorTeleportToUndefined) {
+            val damageSource = DamageSource(damageSourceType)
+            level.explode(
+                null,
+                damageSource,
+                null,
+                pos.center,
+                .5f,
+                false,
+                Level.ExplosionInteraction.NONE
+            )
+            return
+        }
+        val undefinedLevel = UndefinedLevelManager.getOrCreate(Constants.Server)
+        val block = blockState.block
+        (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
+        entity.teleportToSpawnLocation(undefinedLevel)
     }
 
     private fun handleTeleport(level: ServerLevel, entity: Entity) {
