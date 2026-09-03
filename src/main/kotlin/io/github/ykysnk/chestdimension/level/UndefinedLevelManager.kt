@@ -98,6 +98,8 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         )
         server.levels[worldKey] = level
         loaded = level
+        data = data.copy(seed = seed, created = true)
+        save()
         return level
     }
 
