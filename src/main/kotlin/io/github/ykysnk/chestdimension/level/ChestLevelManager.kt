@@ -43,7 +43,7 @@ object ChestLevelManager {
             add(Vec3i(0, i, 0))
         }
     }
-    private val loaded = mutableMapOf<UUID, LoadedChestWorld>()
+    private val loaded = mutableMapOf<UUID, LoadedChestLevel>()
     private val levelToUUID = mutableMapOf<ResourceKey<Level>, UUID>()
     private lateinit var chunkProgressListener: ChunkProgressListener
     private val defaultSpawnPos by lazy { BlockPos(0, 1, 0) }
@@ -88,7 +88,7 @@ object ChestLevelManager {
             )
 
             server.levels[worldKey] = level
-            loaded[uuid] = LoadedChestWorld(uuid, level)
+            loaded[uuid] = LoadedChestLevel(uuid, level)
             levelToUUID[worldKey] = uuid
         }
     }
@@ -123,7 +123,7 @@ object ChestLevelManager {
         createStartPlatform(level)
 
         server.levels[worldKey] = level
-        loaded[uuid] = LoadedChestWorld(uuid, level)
+        loaded[uuid] = LoadedChestLevel(uuid, level)
         levelToUUID[worldKey] = uuid
         UUIDManager.add(uuid, seed)
         UUIDManager.save()
@@ -325,7 +325,7 @@ object ChestLevelManager {
         )
 
         server.levels[worldKey] = level
-        loaded[uuid] = LoadedChestWorld(uuid, level)
+        loaded[uuid] = LoadedChestLevel(uuid, level)
         levelToUUID[worldKey] = uuid
         UUIDManager.save()
     }
