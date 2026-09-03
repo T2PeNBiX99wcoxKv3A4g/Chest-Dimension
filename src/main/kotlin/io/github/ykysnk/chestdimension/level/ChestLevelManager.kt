@@ -5,6 +5,8 @@ import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
 import io.github.ykysnk.chestdimension.extensions.*
 import io.github.ykysnk.chestdimension.id
+import io.github.ykysnk.chestdimension.level.biome.Biomes
+import io.github.ykysnk.chestdimension.level.chunk.ChestChunkGenerator
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import io.github.ykysnk.chestdimension.utils.TaskPool
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents

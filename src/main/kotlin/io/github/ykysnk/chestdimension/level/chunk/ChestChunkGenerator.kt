@@ -1,4 +1,4 @@
-package io.github.ykysnk.chestdimension.level
+package io.github.ykysnk.chestdimension.level.chunk
 
 import com.mojang.serialization.Codec
 import net.minecraft.core.BlockPos

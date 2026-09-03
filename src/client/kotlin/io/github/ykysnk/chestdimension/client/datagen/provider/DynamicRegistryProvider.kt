@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.client.datagen.provider
 
-import io.github.ykysnk.chestdimension.level.Biomes
+import io.github.ykysnk.chestdimension.level.biome.Biomes
 import io.github.ykysnk.chestdimension.level.DimensionTypes
 import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
