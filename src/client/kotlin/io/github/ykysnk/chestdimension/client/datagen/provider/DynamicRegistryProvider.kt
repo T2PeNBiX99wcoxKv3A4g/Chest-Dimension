@@ -11,8 +11,10 @@ import java.util.concurrent.CompletableFuture
 class DynamicRegistryProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<HolderLookup.Provider>) :
     FabricDynamicRegistryProvider(output, registriesFuture) {
     override fun configure(registries: HolderLookup.Provider, entries: Entries) {
-        entries.add(Biomes.CHEST_BIOME, Biomes.ChestBiomeType)
-        entries.add(DimensionTypes.CHEST, DimensionTypes.ChestDimensionType)
+        entries.add(Biomes.CHEST_PLATFORM_BIOME, Biomes.ChestPlatformBiomeType)
+        entries.add(Biomes.CHEST_UNDEFINED_BIOME, Biomes.ChestUndefinedBiomeType)
+        entries.add(DimensionTypes.CHEST_PLATFORM, DimensionTypes.ChestPlatformDimensionType)
+        entries.add(DimensionTypes.CHEST_UNDEFINED, DimensionTypes.ChestUndefinedDimensionType)
         entries.add(DamageTypes.EXPLOSION_BY_CHEST, DamageTypes.ExplosionByChestType)
         entries.add(DamageTypes.EXPLOSION_BY_CHEST_INSIDE, DamageTypes.ExplosionByChestInsideType)
         entries.add(DamageTypes.EXPLOSION_BY_TELEPORT_DOOR, DamageTypes.ExplosionByTeleportDoorType)

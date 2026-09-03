@@ -48,12 +48,13 @@ object ChestLevelManager {
     private lateinit var chunkProgressListener: ChunkProgressListener
     private val defaultSpawnPos by lazy { BlockPos(0, 1, 0) }
     private val biome by lazy {
-        Constants.Server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.CHEST_BIOME)
+        Constants.Server.registryAccess().registryOrThrow(Registries.BIOME)
+            .getHolderOrThrow(Biomes.CHEST_PLATFORM_BIOME)
     }
 
     private val dimensionType by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE)
-            .getHolderOrThrow(DimensionTypes.CHEST)
+            .getHolderOrThrow(DimensionTypes.CHEST_PLATFORM)
     }
 
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
