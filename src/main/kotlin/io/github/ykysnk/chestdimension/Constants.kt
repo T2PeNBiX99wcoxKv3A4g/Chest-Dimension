@@ -4,7 +4,7 @@ package io.github.ykysnk.chestdimension
 
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.command.ChestDimCommand
-import io.github.ykysnk.chestdimension.config.MainConfig
+import io.github.ykysnk.chestdimension.config.Configs
 import io.github.ykysnk.chestdimension.item.ItemGroups
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
@@ -43,7 +43,7 @@ object Constants {
     val ForceInitialize: Unit by lazy {
         LOGGER.debug(
             "{} {} {} {} {} {} {} {} {}",
-            MainConfig,
+            Configs,
             Blocks,
             Items,
             ItemGroups,
