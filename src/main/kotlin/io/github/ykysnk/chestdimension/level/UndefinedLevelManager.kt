@@ -62,6 +62,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
             isDebugWorld,
             obfuscateSeed,
             emptyList(),
+            100L,
             null
         )
         server.levels[worldKey] = level
@@ -94,6 +95,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
             isDebugWorld,
             obfuscateSeed,
             emptyList(),
+            100L,
             null
         )
         server.levels[worldKey] = level

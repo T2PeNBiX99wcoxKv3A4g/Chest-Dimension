@@ -26,6 +26,7 @@ class ChestServerLevel(
     isDebug: Boolean,
     biomeZoomSeed: Long,
     customSpawners: List<CustomSpawner>,
+    private val addDayTime: Long,
     randomSequences: RandomSequences?
 ) : ServerLevel(
     server,
@@ -41,6 +42,31 @@ class ChestServerLevel(
     true,
     randomSequences
 ) {
+    constructor(
+        server: MinecraftServer,
+        dispatcher: Executor,
+        levelStorageAccess: LevelStorageSource.LevelStorageAccess,
+        dimension: ResourceKey<Level>,
+        levelStem: LevelStem,
+        progressListener: ChunkProgressListener,
+        isDebug: Boolean,
+        biomeZoomSeed: Long,
+        customSpawners: List<CustomSpawner>,
+        randomSequences: RandomSequences?
+    ) : this(
+        server,
+        dispatcher,
+        levelStorageAccess,
+        dimension,
+        levelStem,
+        progressListener,
+        isDebug,
+        biomeZoomSeed,
+        customSpawners,
+        1L,
+        randomSequences
+    )
+
     @Suppress("unused")
     val chestServerLevelData: ChestServerLevelData =
         serverLevelData as? ChestServerLevelData
@@ -62,7 +88,7 @@ class ChestServerLevel(
     override fun toString(): String = "ChestServerLevel[${serverLevelData.levelName}]"
 
     override fun tickTime() {
-        if (levelData.gameRules.getBoolean(GameRules.RULE_DAYLIGHT)) dayTime = levelData.dayTime + 1L
+        if (levelData.gameRules.getBoolean(GameRules.RULE_DAYLIGHT)) dayTime = levelData.dayTime + addDayTime
     }
 
     override fun save(progress: ProgressListener?, flush: Boolean, skipSave: Boolean) {
