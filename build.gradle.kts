@@ -364,7 +364,7 @@ tasks.processResources {
             "fabric_kotlin_version" to providers.gradleProperty("fabric_kotlin_version").get(),
             "fabric_api_version" to providers.gradleProperty("fabric_api_version").get(),
             "mod_menu_version" to providers.gradleProperty("mod_menu_version").get(),
-            "yacl_version" to providers.gradleProperty("yacl_version").get(),
+            "fzzy_config_version" to providers.gradleProperty("fzzy_config_version").get(),
         )
     }
 
