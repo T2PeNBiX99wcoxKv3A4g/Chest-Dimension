@@ -58,11 +58,10 @@ object SurfaceRuleData {
 
     fun undefined(bl: Boolean, bedrockRoof: Boolean, bedrockFloor: Boolean): SurfaceRules.RuleSource {
         val conditionSource8 = SurfaceRules.waterBlockCheck(-1, 0)
-//        val conditionSource9 = SurfaceRules.waterBlockCheck(0, 0)
+        val conditionSource9 = SurfaceRules.waterBlockCheck(0, 0)
         val conditionSource10 = SurfaceRules.waterStartCheck(-6, -1)
         // ground rule
-//        val ruleSource = SurfaceRules.sequence(SurfaceRules.ifTrue(conditionSource9, GRASS_BLOCK), DIRT)
-        val ruleSource = SurfaceRules.sequence((DIRT))
+        val ruleSource = SurfaceRules.sequence(SurfaceRules.ifTrue(conditionSource9, MUD), DIRT)
         val ruleSource3 = SurfaceRules.sequence(SurfaceRules.ifTrue(SurfaceRules.ON_CEILING, STONE), GRAVEL)
         val ruleSource7 = SurfaceRules.sequence(DIRT)
         val ruleSource8 = SurfaceRules.sequence(ruleSource)
