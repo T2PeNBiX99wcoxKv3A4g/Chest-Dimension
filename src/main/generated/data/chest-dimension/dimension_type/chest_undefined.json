@@ -5,7 +5,7 @@
   "effects": "minecraft:the_nether",
   "has_ceiling": false,
   "has_raids": false,
-  "has_skylight": false,
+  "has_skylight": true,
   "height": 320,
   "infiniburn": "#minecraft:infiniburn_overworld",
   "logical_height": 320,
@@ -15,5 +15,5 @@
   "natural": true,
   "piglin_safe": true,
   "respawn_anchor_works": false,
-  "ultrawarm": false
+  "ultrawarm": true
 }
