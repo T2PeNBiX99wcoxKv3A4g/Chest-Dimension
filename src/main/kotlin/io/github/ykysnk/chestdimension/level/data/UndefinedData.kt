@@ -6,7 +6,7 @@ import io.github.ykysnk.chestdimension.data.NbtSave
 import net.minecraft.nbt.CompoundTag
 
 data class UndefinedData(val seed: Long, val created: Boolean = false) : NbtSave, DeepCopy<UndefinedData> {
-    override fun deepCopy(): UndefinedData = copy(seed = seed, created = created)
+    override fun deepCopy(): UndefinedData = copy(seed, created)
 
     override fun save(): CompoundTag {
         val tag = CompoundTag()
