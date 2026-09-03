@@ -2,6 +2,7 @@ package io.github.ykysnk.chestdimension.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import io.github.ykysnk.chestdimension.event.UtilsEvents;
 import io.github.ykysnk.chestdimension.level.ChestLevelManager;
 import io.github.ykysnk.chestdimension.level.ChestServerLevel;
 import net.minecraft.server.MinecraftServer;
@@ -26,7 +27,7 @@ public abstract class MinecraftServerMixin {
 
     @Inject(method = "createLevels", at = @At("TAIL"))
     private void createLevels(ChunkProgressListener listener, CallbackInfo ci) {
-        ChestLevelManager.INSTANCE.load((MinecraftServer) (Object) this, listener);
+        UtilsEvents.AFTER_CREATE_LEVEL.invoker().onAfterCreateLevel((MinecraftServer) (Object) this, listener);
     }
 
     @Inject(method = "getAllLevels", at = @At("RETURN"), cancellable = true)

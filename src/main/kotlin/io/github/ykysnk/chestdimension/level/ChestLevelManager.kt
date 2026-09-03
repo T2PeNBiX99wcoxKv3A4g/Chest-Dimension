@@ -3,6 +3,7 @@ package io.github.ykysnk.chestdimension.level
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
+import io.github.ykysnk.chestdimension.event.UtilsEvents
 import io.github.ykysnk.chestdimension.extensions.*
 import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.biome.Biomes
@@ -54,7 +55,7 @@ object ChestLevelManager {
             .getHolderOrThrow(DimensionTypes.CHEST)
     }
 
-    fun load(server: MinecraftServer, listener: ChunkProgressListener) {
+    private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
 
         val storage = ChestLevelStorage.access
@@ -374,6 +375,7 @@ object ChestLevelManager {
     }
 
     init {
+        UtilsEvents.AFTER_CREATE_LEVEL.register(::load)
         ServerLifecycleEvents.SERVER_STARTING.register {
             TaskPool.run(::checkLevels)
         }
