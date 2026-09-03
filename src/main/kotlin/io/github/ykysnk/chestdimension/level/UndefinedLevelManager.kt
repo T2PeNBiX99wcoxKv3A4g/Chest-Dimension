@@ -36,6 +36,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         Constants.Server.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE)
             .getHolderOrThrow(DimensionTypes.CHEST_UNDEFINED)
     }
+    private const val ADD_DAY_TIME = 1000L
 
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
@@ -62,7 +63,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
             isDebugWorld,
             obfuscateSeed,
             emptyList(),
-            100L,
+            ADD_DAY_TIME,
             null
         )
         server.levels[worldKey] = level
@@ -95,7 +96,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
             isDebugWorld,
             obfuscateSeed,
             emptyList(),
-            100L,
+            ADD_DAY_TIME,
             null
         )
         server.levels[worldKey] = level
