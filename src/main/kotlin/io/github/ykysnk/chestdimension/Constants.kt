@@ -8,6 +8,7 @@ import io.github.ykysnk.chestdimension.config.Configs
 import io.github.ykysnk.chestdimension.item.ItemGroups
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.ChestLevelManager
+import io.github.ykysnk.chestdimension.level.UndefinedLevelManager
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.TaskPool
@@ -42,13 +43,14 @@ object Constants {
 
     val ForceInitialize: Unit by lazy {
         LOGGER.debug(
-            "{} {} {} {} {} {} {} {} {}",
+            "{} {} {} {} {} {} {} {} {} {}",
             Configs,
             Blocks,
             Items,
             ItemGroups,
             ChestLevelStorage,
             ChestLevelManager,
+            UndefinedLevelManager,
             Network,
             ChestDimCommand,
             TaskPool
