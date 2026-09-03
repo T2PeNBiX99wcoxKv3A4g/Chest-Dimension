@@ -3,6 +3,7 @@ package io.github.ykysnk.chestdimension.block.entity
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.TeleportDoorBlock
+import io.github.ykysnk.chestdimension.config.MainConfig
 import io.github.ykysnk.chestdimension.extensions.findSafeLocation
 import io.github.ykysnk.chestdimension.extensions.teleportToLevel
 import io.github.ykysnk.chestdimension.extensions.teleportToSafeLocation
@@ -50,16 +51,20 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
         val blockPosList = mutableListOf<BlockPos>()
 
         private fun explodePush(level: ServerLevel, pos: BlockPos, entity: Entity) {
-            val damageSource = DamageSource(damageSourceType)
-            level.explode(
-                null,
-                damageSource,
-                null,
-                pos.center,
-                .5f,
-                false,
-                Level.ExplosionInteraction.NONE
-            )
+            if (!MainConfig.INSTANCE.teleportDoorTeleportToUndefined){
+                val damageSource = DamageSource(damageSourceType)
+                level.explode(
+                    null,
+                    damageSource,
+                    null,
+                    pos.center,
+                    .5f,
+                    false,
+                    Level.ExplosionInteraction.NONE
+                )
+                return
+            }
+            // TODO
         }
     }
 
