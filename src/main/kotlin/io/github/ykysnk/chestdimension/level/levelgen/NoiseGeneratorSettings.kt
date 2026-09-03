@@ -3,7 +3,6 @@ package io.github.ykysnk.chestdimension.level.levelgen
 import io.github.ykysnk.chestdimension.id
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
-import net.minecraft.data.worldgen.SurfaceRuleData
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.biome.OverworldBiomeBuilder
 import net.minecraft.world.level.block.Blocks
@@ -18,14 +17,14 @@ object NoiseGeneratorSettings {
         return NoiseGeneratorSettings(
             NoiseSettings.UNDEFINED_NOISE_SETTINGS,
             Blocks.DIRT.defaultBlockState(),
-            Blocks.AIR.defaultBlockState(),
+            Blocks.WATER.defaultBlockState(),
             NoiseRouterData.overworld(
                 context.lookup(Registries.DENSITY_FUNCTION),
                 context.lookup(Registries.NOISE),
                 large,
                 amplified
             ),
-            SurfaceRuleData.overworld(),
+            SurfaceRuleData.undefined(true, false, true),
             OverworldBiomeBuilder().spawnTarget(),
             63,
             true,
