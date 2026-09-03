@@ -11,7 +11,8 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings
 import net.minecraft.world.level.levelgen.NoiseRouterData
 
 object NoiseGeneratorSettings {
-    val UNDEFINED: ResourceKey<NoiseGeneratorSettings> = ResourceKey.create(Registries.NOISE_SETTINGS, id("undefined"))
+    val CHEST_UNDEFINED: ResourceKey<NoiseGeneratorSettings> =
+        ResourceKey.create(Registries.NOISE_SETTINGS, id("chest_undefined"))
 
     fun undefined(context: BootstapContext<*>, amplified: Boolean, large: Boolean): NoiseGeneratorSettings {
         return NoiseGeneratorSettings(

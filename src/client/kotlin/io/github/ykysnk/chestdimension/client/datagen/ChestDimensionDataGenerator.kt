@@ -36,7 +36,7 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
         }
         registryBuilder.add(Registries.NOISE_SETTINGS) { context ->
             context.register(
-                NoiseGeneratorSettings.UNDEFINED, NoiseGeneratorSettings.undefined(
+                NoiseGeneratorSettings.CHEST_UNDEFINED, NoiseGeneratorSettings.undefined(
                     context,
                     amplified = false,
                     large = false
