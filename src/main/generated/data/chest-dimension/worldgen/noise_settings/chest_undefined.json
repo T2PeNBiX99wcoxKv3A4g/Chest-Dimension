@@ -1,7 +1,7 @@
 {
   "aquifers_enabled": false,
   "default_block": {
-    "Name": "minecraft:dirt"
+    "Name": "minecraft:cobblestone"
   },
   "default_fluid": {
     "Name": "minecraft:water",
@@ -332,7 +332,7 @@
     }
   },
   "ore_veins_enabled": false,
-  "sea_level": 63,
+  "sea_level": 0,
   "spawn_target": [
     {
       "continentalness": [
@@ -548,10 +548,7 @@
         "then_run": {
           "type": "minecraft:block",
           "result_state": {
-            "Name": "minecraft:deepslate",
-            "Properties": {
-              "axis": "y"
-            }
+            "Name": "minecraft:cobbled_deepslate"
           }
         }
       }
