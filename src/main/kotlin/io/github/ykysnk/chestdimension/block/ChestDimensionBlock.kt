@@ -171,7 +171,7 @@ class ChestDimensionBlock(properties: Properties) :
         state.rotate(mirror.getRotation(state.getValue(FACING)))
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(*arrayOf(FACING, WATERLOGGED))
+        builder.add(FACING, WATERLOGGED)
     }
 
     @Deprecated(

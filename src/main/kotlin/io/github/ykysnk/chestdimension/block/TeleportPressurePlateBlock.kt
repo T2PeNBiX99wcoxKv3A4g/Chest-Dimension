@@ -35,7 +35,7 @@ class TeleportPressurePlateBlock(properties: Properties, type: BlockSetType) :
         level.getEntitiesOfClass(Entity::class.java, TOUCH_AABB.move(pos), EntitySelector.NO_SPECTATORS)
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(*arrayOf(PressurePlateBlock.POWERED))
+        builder.add(PressurePlateBlock.POWERED)
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity =
