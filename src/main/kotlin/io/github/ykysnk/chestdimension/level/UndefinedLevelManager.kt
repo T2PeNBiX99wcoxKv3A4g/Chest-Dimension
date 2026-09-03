@@ -54,7 +54,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val worldKey = createWorldKey()
         val seed = data.seed
         val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
-        val level = ChestServerLevel(
+        val level = UndefinedServerLevel(
             server,
             server.executor,
             storage,
@@ -63,8 +63,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
             listener,
             isDebugWorld,
             obfuscateSeed,
-            emptyList(),
-            ADD_DAY_TIME,
+            seed,
             null
         )
         server.levels[worldKey] = level
@@ -84,7 +83,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val biomeSource = FixedBiomeSource(biome)
         val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
         val levelStem = LevelStem(dimensionType, generator)
-        val level = ChestServerLevel(
+        val level = UndefinedServerLevel(
             server,
             server.executor,
             storage,
@@ -93,8 +92,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
             listener,
             isDebugWorld,
             obfuscateSeed,
-            emptyList(),
-            ADD_DAY_TIME,
+            seed,
             null
         )
         level.chestServerLevelData.freezeWeather = true

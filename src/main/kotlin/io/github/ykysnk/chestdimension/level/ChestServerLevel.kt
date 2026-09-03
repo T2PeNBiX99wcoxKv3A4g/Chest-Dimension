@@ -16,7 +16,7 @@ import net.minecraft.world.level.dimension.LevelStem
 import net.minecraft.world.level.storage.LevelStorageSource
 import java.util.concurrent.Executor
 
-class ChestServerLevel(
+open class ChestServerLevel(
     server: MinecraftServer,
     dispatcher: Executor,
     levelStorageAccess: LevelStorageSource.LevelStorageAccess,
@@ -25,6 +25,7 @@ class ChestServerLevel(
     progressListener: ChunkProgressListener,
     isDebug: Boolean,
     biomeZoomSeed: Long,
+    private val levelSeed: Long,
     customSpawners: List<CustomSpawner>,
     private val addDayTime: Long,
     randomSequences: RandomSequences?
@@ -51,6 +52,7 @@ class ChestServerLevel(
         progressListener: ChunkProgressListener,
         isDebug: Boolean,
         biomeZoomSeed: Long,
+        levelSeed: Long,
         customSpawners: List<CustomSpawner>,
         randomSequences: RandomSequences?
     ) : this(
@@ -62,7 +64,34 @@ class ChestServerLevel(
         progressListener,
         isDebug,
         biomeZoomSeed,
+        levelSeed,
         customSpawners,
+        1L,
+        randomSequences
+    )
+
+    constructor(
+        server: MinecraftServer,
+        dispatcher: Executor,
+        levelStorageAccess: LevelStorageSource.LevelStorageAccess,
+        dimension: ResourceKey<Level>,
+        levelStem: LevelStem,
+        progressListener: ChunkProgressListener,
+        isDebug: Boolean,
+        biomeZoomSeed: Long,
+        levelSeed: Long,
+        randomSequences: RandomSequences?
+    ) : this(
+        server,
+        dispatcher,
+        levelStorageAccess,
+        dimension,
+        levelStem,
+        progressListener,
+        isDebug,
+        biomeZoomSeed,
+        levelSeed,
+        emptyList(),
         1L,
         randomSequences
     )
@@ -87,6 +116,8 @@ class ChestServerLevel(
 
     override fun toString(): String = "ChestServerLevel[${serverLevelData.levelName}]"
 
+    override fun getSeed() = levelSeed
+
     override fun tickTime() {
         if (levelData.gameRules.getBoolean(GameRules.RULE_DAYLIGHT)) dayTime = levelData.dayTime + addDayTime
     }
@@ -95,5 +126,6 @@ class ChestServerLevel(
         super.save(progress, flush, skipSave)
         if (!skipSave) return
         UUIDManager.saveNow()
+        TeleportManager.saveNow()
     }
 }
