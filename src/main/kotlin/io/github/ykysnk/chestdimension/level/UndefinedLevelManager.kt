@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
