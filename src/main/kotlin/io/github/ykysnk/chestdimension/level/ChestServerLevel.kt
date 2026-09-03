@@ -101,6 +101,7 @@ open class ChestServerLevel(
         serverLevelData as? ChestServerLevelData
             ?: throw IllegalArgumentException("serverLevelData are not ChestServerLevelData")
 
+    // TODO: Create mixin then create event before ServerLevel get the seed in init
     init {
         dataStorage.computeIfAbsent(
             { loadDimData(it) },
