@@ -37,7 +37,7 @@ object DimensionTypes {
     val ChestUndefinedDimensionType by lazy {
         DimensionType(
             OptionalLong.empty(), // fixedTime
-            true, // hasSkyLight
+            false, // hasSkyLight
             false, // hasCeiling
             true, // ultraWarm
             true, // natural
