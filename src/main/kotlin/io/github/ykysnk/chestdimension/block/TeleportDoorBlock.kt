@@ -90,7 +90,7 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         }
 
         val box = getTouchAABB(state, pos)
-        if (entity.boundingBox.intersects(box)) return false
+        if (!entity.boundingBox.intersects(box)) return false
         getLowerEntity(state, level, pos)?.apply {
             if (isInDoor(entity)) return false
             enterDoor(entity)
