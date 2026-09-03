@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
