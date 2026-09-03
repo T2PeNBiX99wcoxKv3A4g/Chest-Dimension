@@ -86,7 +86,7 @@ object ChestLevelManager {
                 listener,
                 isDebugWorld,
                 obfuscateSeed,
-                emptyList(),
+                seed,
                 null
             )
 
@@ -120,7 +120,7 @@ object ChestLevelManager {
             listener,
             isDebugWorld,
             obfuscateSeed,
-            emptyList(),
+            seed,
             null
         )
         createStartPlatform(level)
@@ -323,7 +323,7 @@ object ChestLevelManager {
             listener,
             isDebugWorld,
             obfuscateSeed,
-            emptyList(),
+            seed,
             null
         )
 
