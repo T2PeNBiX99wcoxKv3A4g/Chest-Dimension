@@ -5,7 +5,8 @@
   "mixins": [
     "EntityMixin",
     "ItemEntityMixin",
-    "MinecraftServerMixin"
+    "MinecraftServerMixin",
+    "ServerGamePacketListenerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1
