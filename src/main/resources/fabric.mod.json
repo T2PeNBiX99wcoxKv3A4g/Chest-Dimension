@@ -47,15 +47,15 @@
     }
   ],
   "depends": {
-    "fabricloader": ">=${loader_version}",
+    "fabricloader": "*",
     "minecraft": "~${minecraft_version}",
     "java": ">=17",
     "fabric-api": "*",
-    "fabric-language-kotlin": "*"
+    "fabric-language-kotlin": "*",
+    "fzzy_config": "*"
   },
   "suggests": {
-    "modmenu": "*",
-    "yet_another_config_lib_v3": "*"
+    "modmenu": "*"
   },
   "accessWidener": "${mod_id}.aw"
 }
