@@ -6,9 +6,9 @@ import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.event.UtilsEvents
 import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.biome.Biomes
-import io.github.ykysnk.chestdimension.level.chunk.ChestChunkGenerator
 import io.github.ykysnk.chestdimension.level.data.UndefinedData
 import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
+import io.github.ykysnk.chestdimension.level.levelgen.NoiseGeneratorSettings
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import io.github.ykysnk.chestdimension.utils.AbstractManager
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.biome.BiomeManager
 import net.minecraft.world.level.biome.FixedBiomeSource
 import net.minecraft.world.level.dimension.LevelStem
+import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator
 import net.minecraft.world.level.levelgen.WorldOptions
 import java.io.File
 
@@ -42,7 +43,10 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val storage = ChestLevelStorage.access
         val isDebugWorld = server.worldData.isDebugWorld
         val biomeSource = FixedBiomeSource(biome)
-        val generator = ChestChunkGenerator(biomeSource)
+        val noiseSettings = server.registries().compositeAccess()
+            .lookupOrThrow(Registries.NOISE_SETTINGS)
+            .getOrThrow(NoiseGeneratorSettings.CHEST_UNDEFINED)
+        val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
         val levelStem = LevelStem(dimensionType, generator)
         if (!data.created) return
         val worldKey = createWorldKey()
@@ -75,8 +79,10 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val seed = worldOptions.seed()
         val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
         val biomeSource = FixedBiomeSource(biome)
-//        val test = NoiseBasedChunkGenerator(biomeSource)
-        val generator = ChestChunkGenerator(biomeSource)
+        val noiseSettings = server.registries().compositeAccess()
+            .lookupOrThrow(Registries.NOISE_SETTINGS)
+            .getOrThrow(NoiseGeneratorSettings.CHEST_UNDEFINED)
+        val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
         val levelStem = LevelStem(dimensionType, generator)
         val level = ChestServerLevel(
             server,
@@ -96,7 +102,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
     }
 
     private fun createWorldKey(): ResourceKey<Level> =
-        ResourceKey.create(Registries.DIMENSION, id("chest/undefined"))
+        ResourceKey.create(Registries.DIMENSION, id("undefined"))
 
     override fun loadData(): UndefinedData {
         val tag = NbtIo.readCompressed(File(dataPath.toUri()))
