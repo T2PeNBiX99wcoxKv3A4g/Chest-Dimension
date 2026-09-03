@@ -2,13 +2,14 @@ package io.github.ykysnk.chestdimension.block
 
 import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
 import io.github.ykysnk.chestdimension.block.entity.TeleportDoorBlockEntity
+import io.github.ykysnk.chestdimension.interfaces.PlayerInsideBlock
 import io.github.ykysnk.chestdimension.item.Items
 import io.github.ykysnk.chestdimension.level.TeleportManager
-import io.github.ykysnk.chestdimension.utils.TaskPool
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
@@ -27,7 +28,8 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.BlockHitResult
 
-class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(properties, type), EntityBlock {
+class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(properties, type), EntityBlock,
+    PlayerInsideBlock {
     companion object {
         private const val DOOR_THICKNESS = 3.0 / 16.0
         private const val TOUCH_THICKNESS = 1 / 16.0
@@ -69,21 +71,33 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
         return level.getBlockEntity(getPos) as? TeleportDoorBlockEntity
     }
 
+    override fun playerInside(state: BlockState, level: ServerLevel, pos: BlockPos, player: ServerPlayer): Boolean {
+        return onCollision(state, level, pos, player)
+    }
+
     @Deprecated("Deprecated in Java")
     override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
-        if (level.isClientSide) return
-        (level as? ServerLevel)?.apply ServerLevel@{
-            val box = getTouchAABB(state, pos)
-
-            getLowerEntity(state, this, pos)?.apply {
-                if (entity.boundingBox.intersects(box))
-                    enterDoor(entity)
-                TaskPool.run(1) {
-                    val blockEntity = getLowerEntity(state, level, pos) ?: return@run
-                    blockEntity.startTeleport()
-                }
-            }
+        if (level.isClientSide || entity is ServerPlayer) return
+        (level as? ServerLevel)?.apply {
+            onCollision(state, this, pos, entity)
         }
+    }
+
+    private fun onCollision(state: BlockState, level: ServerLevel, pos: BlockPos, entity: Entity): Boolean {
+        if (entity.isOnPortalCooldown) {
+            entity.setPortalCooldown()
+            return false
+        }
+
+        val box = getTouchAABB(state, pos)
+        if (entity.boundingBox.intersects(box)) return false
+        getLowerEntity(state, level, pos)?.apply {
+            if (isInDoor(entity)) return false
+            enterDoor(entity)
+            startTeleport()
+            return true
+        }
+        return false
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = TeleportDoorBlockEntity(pos, state)

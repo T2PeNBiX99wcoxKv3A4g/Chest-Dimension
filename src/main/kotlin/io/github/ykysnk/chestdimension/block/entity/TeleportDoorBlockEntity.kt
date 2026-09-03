@@ -72,6 +72,10 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
         entitiesCache.add(entity)
     }
 
+    fun isInDoor(entity: Entity): Boolean {
+        return entitiesCache.contains(entity)
+    }
+
     fun startTeleport() {
         (level as? ServerLevel)?.apply { entitiesCache.forEach { handleTeleport(this, it) } }
         entitiesCache.clear()
@@ -116,6 +120,7 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
         val entityNewYRot = Mth.wrapDegrees(entity.yRot + 180f + facingOffset)
         val block = blockState.block
         (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
+        entity.setPortalCooldown()
         entity.findSafeLocation(teleportLevel, teleportPlayerPos, TELEPORT_OFFSETS)?.let { safePos ->
             if (entity.teleportToLevel(teleportLevel, safePos, entityNewYRot, entity.xRot)) return
         }
