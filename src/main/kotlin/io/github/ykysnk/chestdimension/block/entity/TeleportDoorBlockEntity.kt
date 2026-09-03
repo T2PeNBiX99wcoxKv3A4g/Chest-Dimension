@@ -86,8 +86,11 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
             return
         }
         val undefinedLevel = UndefinedLevelManager.getOrCreate(Constants.Server)
-        val block = blockState.block
-        (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
+        if (Configs.mainConfig.automaticCloseTeleportDoor) {
+            val block = blockState.block
+            (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
+        }
+        entity.setPortalCooldown()
         entity.teleportToSpawnLocation(undefinedLevel)
     }
 
@@ -128,8 +131,10 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
         val facingOffset = Mth.wrapDegrees(teleportFacing.toYRot() - sourceFacing.toYRot())
         val entityNewYRot = Mth.wrapDegrees(entity.yRot + 180f + facingOffset)
-        val block = blockState.block
-        (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
+        if (Configs.mainConfig.automaticCloseTeleportDoor) {
+            val block = blockState.block
+            (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
+        }
         entity.setPortalCooldown()
         entity.findSafeLocation(teleportLevel, teleportPlayerPos, TELEPORT_OFFSETS)?.let { safePos ->
             if (entity.teleportToLevel(teleportLevel, safePos, entityNewYRot, entity.xRot)) return
