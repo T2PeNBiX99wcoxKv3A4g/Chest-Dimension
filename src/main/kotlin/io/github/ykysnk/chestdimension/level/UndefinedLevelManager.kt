@@ -36,6 +36,10 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         Constants.Server.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE)
             .getHolderOrThrow(DimensionTypes.CHEST_UNDEFINED)
     }
+    private val noiseSettings by lazy {
+        Constants.Server.registryAccess().registryOrThrow(Registries.NOISE_SETTINGS)
+            .getHolderOrThrow(NoiseGeneratorSettings.CHEST_UNDEFINED)
+    }
     private const val ADD_DAY_TIME = 1000L
 
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
@@ -44,9 +48,6 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val storage = ChestLevelStorage.access
         val isDebugWorld = server.worldData.isDebugWorld
         val biomeSource = FixedBiomeSource(biome)
-        val noiseSettings = server.registries().compositeAccess()
-            .lookupOrThrow(Registries.NOISE_SETTINGS)
-            .getOrThrow(NoiseGeneratorSettings.CHEST_UNDEFINED)
         val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
         val levelStem = LevelStem(dimensionType, generator)
         if (!data.created) return
@@ -81,9 +82,6 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val seed = worldOptions.seed()
         val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
         val biomeSource = FixedBiomeSource(biome)
-        val noiseSettings = server.registries().compositeAccess()
-            .lookupOrThrow(Registries.NOISE_SETTINGS)
-            .getOrThrow(NoiseGeneratorSettings.CHEST_UNDEFINED)
         val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
         val levelStem = LevelStem(dimensionType, generator)
         val level = ChestServerLevel(
