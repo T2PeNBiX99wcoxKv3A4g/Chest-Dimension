@@ -91,6 +91,7 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
             (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
         }
         entity.setPortalCooldown()
+        entity.resetFallDistance()
         entity.teleportToSpawnLocation(undefinedLevel)
     }
 
@@ -136,6 +137,7 @@ class TeleportDoorBlockEntity(pos: BlockPos, blockState: BlockState) :
             (block as? TeleportDoorBlock)?.apply { setOpen(null, level, blockState, blockPos, false) }
         }
         entity.setPortalCooldown()
+        entity.resetFallDistance()
         entity.findSafeLocation(teleportLevel, teleportPlayerPos, TELEPORT_OFFSETS)?.let { safePos ->
             if (entity.teleportToLevel(teleportLevel, safePos, entityNewYRot, entity.xRot)) return
         }
