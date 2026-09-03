@@ -84,6 +84,7 @@ class TeleportDoorBlock(properties: Properties, type: BlockSetType) : DoorBlock(
     }
 
     private fun onCollision(state: BlockState, level: ServerLevel, pos: BlockPos, entity: Entity): Boolean {
+        if (!state.getValue(OPEN)) return false
         if (entity.isOnPortalCooldown) {
             entity.setPortalCooldown()
             return false
