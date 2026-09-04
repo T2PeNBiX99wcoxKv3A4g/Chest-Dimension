@@ -58,11 +58,13 @@ class UndefinedServerLevel(
         null
     )
 
+    private val getRandom by lazy { Random(seed) }
+
     override fun toString(): String = "UndefinedServerLevel[${serverLevelData.levelName}]"
 
     override fun tickTime() {
         if (!levelData.gameRules.getBoolean(GameRules.RULE_DAYLIGHT)) return
-        dayTime = Random(seed).nextLong(0L, 240000000000L)
+        dayTime = getRandom.nextLong(0L, 240000000000L)
     }
 
     override fun save(progress: ProgressListener?, flush: Boolean, skipSave: Boolean) {
