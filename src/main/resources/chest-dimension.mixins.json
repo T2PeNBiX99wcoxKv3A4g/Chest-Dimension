@@ -6,7 +6,8 @@
     "EntityMixin",
     "ItemEntityMixin",
     "MinecraftServerMixin",
-    "ServerGamePacketListenerImplMixin"
+    "ServerGamePacketListenerImplMixin",
+    "ServerLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
