@@ -30,7 +30,6 @@ open class ChestServerLevel(
     progressListener: ChunkProgressListener,
     isDebug: Boolean,
     biomeZoomSeed: Long,
-    private val levelWorldOptions: WorldOptions,
     customSpawners: List<CustomSpawner>,
     private val addDayTime: Long,
     randomSequences: RandomSequences?
@@ -57,7 +56,6 @@ open class ChestServerLevel(
         progressListener: ChunkProgressListener,
         isDebug: Boolean,
         biomeZoomSeed: Long,
-        levelWorldOptions: WorldOptions,
         customSpawners: List<CustomSpawner>,
         randomSequences: RandomSequences?
     ) : this(
@@ -69,7 +67,6 @@ open class ChestServerLevel(
         progressListener,
         isDebug,
         biomeZoomSeed,
-        levelWorldOptions,
         customSpawners,
         1L,
         randomSequences
@@ -84,7 +81,6 @@ open class ChestServerLevel(
         progressListener: ChunkProgressListener,
         isDebug: Boolean,
         biomeZoomSeed: Long,
-        levelWorldOptions: WorldOptions
     ) : this(
         server,
         dispatcher,
@@ -94,7 +90,6 @@ open class ChestServerLevel(
         progressListener,
         isDebug,
         biomeZoomSeed,
-        levelWorldOptions,
         emptyList(),
         1L,
         null
@@ -104,6 +99,9 @@ open class ChestServerLevel(
     val chestServerLevelData: ChestServerLevelData =
         serverLevelData as? ChestServerLevelData
             ?: throw IllegalArgumentException("serverLevelData are not ChestServerLevelData")
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    lateinit var levelWorldOptions: WorldOptions
 
     init {
         dataStorage.computeIfAbsent(

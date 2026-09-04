@@ -314,8 +314,7 @@ object ChestLevelManager {
                 levelStem,
                 listener,
                 isDebugWorld,
-                obfuscateSeed,
-                worldOptions
+                obfuscateSeed
             )
         }.also {
             ChestServerLevelContext.worldOptions.remove()
