@@ -62,8 +62,6 @@ object ChestLevelManager {
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
 
-        val storage = ChestLevelStorage.access
-        val isDebugWorld = server.worldData.isDebugWorld
         val biomeSource = FixedBiomeSource(biome)
         val generator = ChestChunkGenerator(biomeSource)
         val levelStem = LevelStem(dimensionType, generator)
@@ -76,19 +74,8 @@ object ChestLevelManager {
             if (!UUIDManager.isActive(uuid)) continue
             val worldKey = createWorldKey(uuid)
             val seed = data.seed
-            val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
-            val level = ChestServerLevel(
-                server,
-                server.executor,
-                storage,
-                worldKey,
-                levelStem,
-                listener,
-                isDebugWorld,
-                obfuscateSeed,
-                seed,
-                null
-            )
+            val worldOptions = WorldOptions(seed, true, false)
+            val level = createServerLevel(server, levelStem, uuid, worldOptions)
 
             server.levels[worldKey] = level
             loaded[uuid] = LoadedChestLevel(uuid, level)
@@ -101,28 +88,13 @@ object ChestLevelManager {
             return it.level
         }
 
-        val storage = ChestLevelStorage.access
         val worldKey = createWorldKey(uuid)
-        val listener = chunkProgressListener
-        val isDebugWorld = server.worldData.isDebugWorld
         val worldOptions = WorldOptions.defaultWithRandomSeed()
         val seed = worldOptions.seed()
-        val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
         val biomeSource = FixedBiomeSource(biome)
         val generator = ChestChunkGenerator(biomeSource)
         val levelStem = LevelStem(dimensionType, generator)
-        val level = ChestServerLevel(
-            server,
-            server.executor,
-            storage,
-            worldKey,
-            levelStem,
-            listener,
-            isDebugWorld,
-            obfuscateSeed,
-            seed,
-            null
-        )
+        val level = createServerLevel(server, levelStem, uuid, worldOptions)
         createStartPlatform(level)
 
         server.levels[worldKey] = level
@@ -305,32 +277,49 @@ object ChestLevelManager {
         if (loaded.containsKey(uuid)) return
         val data = UUIDManager[uuid] ?: return
         val server = Constants.Server
-        val storage = ChestLevelStorage.access
-        val listener = chunkProgressListener
-        val isDebugWorld = server.worldData.isDebugWorld
         val biomeSource = FixedBiomeSource(biome)
         val generator = ChestChunkGenerator(biomeSource)
         val levelStem = LevelStem(dimensionType, generator)
         val worldKey = createWorldKey(uuid)
         val seed = data.seed
-        val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
-        val level = ChestServerLevel(
-            server,
-            server.executor,
-            storage,
-            worldKey,
-            levelStem,
-            listener,
-            isDebugWorld,
-            obfuscateSeed,
-            seed,
-            null
-        )
+        val worldOptions = WorldOptions(seed, true, false)
+        val level = createServerLevel(server, levelStem, uuid, worldOptions)
 
         server.levels[worldKey] = level
         loaded[uuid] = LoadedChestLevel(uuid, level)
         levelToUUID[worldKey] = uuid
         UUIDManager.save()
+    }
+
+    private fun createServerLevel(
+        server: MinecraftServer,
+        levelStem: LevelStem,
+        uuid: UUID,
+        worldOptions: WorldOptions
+    ): ChestServerLevel {
+        val storage = ChestLevelStorage.access
+        val listener = chunkProgressListener
+        val isDebugWorld = server.worldData.isDebugWorld
+        val worldKey = createWorldKey(uuid)
+        val obfuscateSeed = BiomeManager.obfuscateSeed(worldOptions.seed())
+
+        ChestServerLevelContext.worldOptions.set(worldOptions)
+
+        return runCatching {
+            ChestServerLevel(
+                server,
+                server.executor,
+                storage,
+                worldKey,
+                levelStem,
+                listener,
+                isDebugWorld,
+                obfuscateSeed,
+                worldOptions
+            )
+        }.also {
+            ChestServerLevelContext.worldOptions.remove()
+        }.getOrThrow()
     }
 
     fun findUUIDByLevel(level: Level): UUID? = levelToUUID[level.dimension()]
