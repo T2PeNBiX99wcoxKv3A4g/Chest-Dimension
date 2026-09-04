@@ -1,0 +1,10 @@
+{
+  "type": "chest-dimension:torch_path",
+  "config": {
+    "length": 256,
+    "max_spacing": 15,
+    "max_triangle": 0.15,
+    "min_spacing": 6,
+    "min_triangle": 0.0
+  }
+}
