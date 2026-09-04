@@ -9,6 +9,7 @@ import net.minecraft.world.level.CustomSpawner
 import net.minecraft.world.level.GameRules
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.dimension.LevelStem
+import net.minecraft.world.level.levelgen.WorldOptions
 import net.minecraft.world.level.storage.LevelStorageSource
 import java.util.concurrent.Executor
 import kotlin.random.Random
@@ -22,7 +23,7 @@ class UndefinedServerLevel(
     progressListener: ChunkProgressListener,
     isDebug: Boolean,
     biomeZoomSeed: Long,
-    levelSeed: Long,
+    levelWorldOptions: WorldOptions,
     customSpawners: List<CustomSpawner>,
     randomSequences: RandomSequences?
 ) : ChestServerLevel(
@@ -34,7 +35,7 @@ class UndefinedServerLevel(
     progressListener,
     isDebug,
     biomeZoomSeed,
-    levelSeed,
+    levelWorldOptions,
     customSpawners,
     randomSequences
 ) {
@@ -47,7 +48,7 @@ class UndefinedServerLevel(
         progressListener: ChunkProgressListener,
         isDebug: Boolean,
         biomeZoomSeed: Long,
-        levelSeed: Long,
+        levelWorldOptions: WorldOptions,
         randomSequences: RandomSequences?
     ) : this(
         server,
@@ -58,7 +59,7 @@ class UndefinedServerLevel(
         progressListener,
         isDebug,
         biomeZoomSeed,
-        levelSeed,
+        levelWorldOptions,
         emptyList(),
         randomSequences
     )
