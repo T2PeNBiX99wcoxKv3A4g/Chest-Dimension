@@ -48,8 +48,7 @@ class UndefinedServerLevel(
         progressListener: ChunkProgressListener,
         isDebug: Boolean,
         biomeZoomSeed: Long,
-        levelWorldOptions: WorldOptions,
-        randomSequences: RandomSequences?
+        levelWorldOptions: WorldOptions
     ) : this(
         server,
         dispatcher,
@@ -61,7 +60,7 @@ class UndefinedServerLevel(
         biomeZoomSeed,
         levelWorldOptions,
         emptyList(),
-        randomSequences
+        null
     )
 
     override fun tickTime() {

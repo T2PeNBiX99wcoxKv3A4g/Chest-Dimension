@@ -84,32 +84,6 @@ open class ChestServerLevel(
         progressListener: ChunkProgressListener,
         isDebug: Boolean,
         biomeZoomSeed: Long,
-        levelWorldOptions: WorldOptions,
-        randomSequences: RandomSequences?
-    ) : this(
-        server,
-        dispatcher,
-        levelStorageAccess,
-        dimension,
-        levelStem,
-        progressListener,
-        isDebug,
-        biomeZoomSeed,
-        levelWorldOptions,
-        emptyList(),
-        1L,
-        randomSequences
-    )
-
-    constructor(
-        server: MinecraftServer,
-        dispatcher: Executor,
-        levelStorageAccess: LevelStorageSource.LevelStorageAccess,
-        dimension: ResourceKey<Level>,
-        levelStem: LevelStem,
-        progressListener: ChunkProgressListener,
-        isDebug: Boolean,
-        biomeZoomSeed: Long,
         levelWorldOptions: WorldOptions
     ) : this(
         server,
