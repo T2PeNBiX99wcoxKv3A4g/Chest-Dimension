@@ -59,12 +59,12 @@ object Biomes {
 
         val biome = Biome.BiomeBuilder()
             .hasPrecipitation(true)
-            .temperature(0f)
+            .temperature(-1f)
             .downfall(1f)
             .specialEffects(ChestUndefinedBiomeSpecialEffects)
             .mobSpawnSettings(MobSpawnSettings.EMPTY)
             .generationSettings(generationSettings)
-            .temperatureAdjustment(Biome.TemperatureModifier.FROZEN)
+            .temperatureAdjustment(Biome.TemperatureModifier.NONE)
             .build()
 
         context.register(CHEST_UNDEFINED_BIOME, biome)
