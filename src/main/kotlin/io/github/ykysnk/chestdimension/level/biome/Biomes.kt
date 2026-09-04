@@ -48,10 +48,14 @@ object Biomes {
     fun createChestUndefinedBiome(context: BootstapContext<Biome>) {
         val placedFeatures = context.lookup(Registries.PLACED_FEATURE)
         val carvers = context.lookup(Registries.CONFIGURED_CARVER)
-        val generationSettings = BiomeGenerationSettings.Builder(placedFeatures, carvers).addFeature(
-            GenerationStep.Decoration.SURFACE_STRUCTURES,
-            placedFeatures.getOrThrow(PlacedFeatures.TORCH_PATH)
-        ).build()
+        val generationSettings = BiomeGenerationSettings.Builder(placedFeatures, carvers)
+            .addFeature(
+                GenerationStep.Decoration.SURFACE_STRUCTURES,
+                placedFeatures.getOrThrow(PlacedFeatures.TORCH_PATH)
+            ).addFeature(
+                GenerationStep.Decoration.SURFACE_STRUCTURES,
+                placedFeatures.getOrThrow(PlacedFeatures.BEDROCK_PILLAR)
+            ).build()
 
         val biome = Biome.BiomeBuilder()
             .hasPrecipitation(true)
