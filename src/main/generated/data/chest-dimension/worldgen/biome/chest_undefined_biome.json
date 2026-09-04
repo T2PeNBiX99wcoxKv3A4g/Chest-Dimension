@@ -13,7 +13,8 @@
     [],
     [],
     [
-      "chest-dimension:torch_path"
+      "chest-dimension:torch_path",
+      "chest-dimension:bedrock_pillar"
     ]
   ],
   "has_precipitation": true,
