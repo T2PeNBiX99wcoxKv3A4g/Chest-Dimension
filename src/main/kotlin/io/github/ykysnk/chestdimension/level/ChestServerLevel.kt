@@ -123,7 +123,8 @@ open class ChestServerLevel(
     override fun getSeed(): Long = levelWorldOptions.seed()
 
     override fun tickTime() {
-        if (levelData.gameRules.getBoolean(GameRules.RULE_DAYLIGHT)) dayTime = levelData.dayTime + addDayTime
+        if (!levelData.gameRules.getBoolean(GameRules.RULE_DAYLIGHT)) return
+        dayTime = levelData.dayTime + addDayTime
     }
 
     override fun findNearestMapStructure(
