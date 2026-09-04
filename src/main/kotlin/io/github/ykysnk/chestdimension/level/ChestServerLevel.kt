@@ -13,6 +13,7 @@ import net.minecraft.world.level.CustomSpawner
 import net.minecraft.world.level.GameRules
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.dimension.LevelStem
+import net.minecraft.world.level.levelgen.WorldOptions
 import net.minecraft.world.level.storage.LevelStorageSource
 import java.util.concurrent.Executor
 
@@ -25,7 +26,7 @@ open class ChestServerLevel(
     progressListener: ChunkProgressListener,
     isDebug: Boolean,
     biomeZoomSeed: Long,
-    private val levelSeed: Long,
+    private val levelWorldOptions: WorldOptions,
     customSpawners: List<CustomSpawner>,
     private val addDayTime: Long,
     randomSequences: RandomSequences?
@@ -52,7 +53,7 @@ open class ChestServerLevel(
         progressListener: ChunkProgressListener,
         isDebug: Boolean,
         biomeZoomSeed: Long,
-        levelSeed: Long,
+        levelWorldOptions: WorldOptions,
         customSpawners: List<CustomSpawner>,
         randomSequences: RandomSequences?
     ) : this(
@@ -64,7 +65,7 @@ open class ChestServerLevel(
         progressListener,
         isDebug,
         biomeZoomSeed,
-        levelSeed,
+        levelWorldOptions,
         customSpawners,
         1L,
         randomSequences
@@ -79,7 +80,7 @@ open class ChestServerLevel(
         progressListener: ChunkProgressListener,
         isDebug: Boolean,
         biomeZoomSeed: Long,
-        levelSeed: Long,
+        levelWorldOptions: WorldOptions,
         randomSequences: RandomSequences?
     ) : this(
         server,
@@ -90,10 +91,35 @@ open class ChestServerLevel(
         progressListener,
         isDebug,
         biomeZoomSeed,
-        levelSeed,
+        levelWorldOptions,
         emptyList(),
         1L,
         randomSequences
+    )
+
+    constructor(
+        server: MinecraftServer,
+        dispatcher: Executor,
+        levelStorageAccess: LevelStorageSource.LevelStorageAccess,
+        dimension: ResourceKey<Level>,
+        levelStem: LevelStem,
+        progressListener: ChunkProgressListener,
+        isDebug: Boolean,
+        biomeZoomSeed: Long,
+        levelWorldOptions: WorldOptions
+    ) : this(
+        server,
+        dispatcher,
+        levelStorageAccess,
+        dimension,
+        levelStem,
+        progressListener,
+        isDebug,
+        biomeZoomSeed,
+        levelWorldOptions,
+        emptyList(),
+        1L,
+        null
     )
 
     @Suppress("unused")
@@ -101,7 +127,6 @@ open class ChestServerLevel(
         serverLevelData as? ChestServerLevelData
             ?: throw IllegalArgumentException("serverLevelData are not ChestServerLevelData")
 
-    // TODO: Create mixin then create event before ServerLevel get the seed in init
     init {
         dataStorage.computeIfAbsent(
             { loadDimData(it) },
@@ -117,7 +142,7 @@ open class ChestServerLevel(
 
     override fun toString(): String = "ChestServerLevel[${serverLevelData.levelName}]"
 
-    override fun getSeed() = levelSeed
+    override fun getSeed(): Long = levelWorldOptions.seed()
 
     override fun tickTime() {
         if (levelData.gameRules.getBoolean(GameRules.RULE_DAYLIGHT)) dayTime = levelData.dayTime + addDayTime
