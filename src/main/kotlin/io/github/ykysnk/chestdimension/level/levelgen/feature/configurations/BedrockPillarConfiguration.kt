@@ -6,8 +6,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 
 data class BedrockPillarConfiguration(
     val minPillars: Int = 1,
-    val maxPillars: Int = 6,
-    val minHeight: Int = 20,
+    val maxPillars: Int = 3,
     val maxHeight: Int = 150
 ) : FeatureConfiguration {
     companion object {
@@ -15,7 +14,6 @@ data class BedrockPillarConfiguration(
             instance.group(
                 Codec.intRange(1, 64).fieldOf("min_pillars").forGetter(BedrockPillarConfiguration::minPillars),
                 Codec.intRange(1, 64).fieldOf("max_pillars").forGetter(BedrockPillarConfiguration::maxPillars),
-                Codec.intRange(1, 200).fieldOf("min_height").forGetter(BedrockPillarConfiguration::minHeight),
                 Codec.intRange(1, 200).fieldOf("max_height").forGetter(BedrockPillarConfiguration::maxHeight)
             ).apply(instance, ::BedrockPillarConfiguration)
         }

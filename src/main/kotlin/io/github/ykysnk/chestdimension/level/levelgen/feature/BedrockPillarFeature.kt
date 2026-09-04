@@ -56,9 +56,8 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         while (y > level.minBuildHeight && level.getBlockState(BlockPos(x, y - 1, z)).isAir) y--
         val bedrock = Blocks.BEDROCK.defaultBlockState()
         var placed = false
-        val minHeight = config.minHeight
         val maxHeight = config.maxHeight.coerceAtMost(level.maxBuildHeight)
-        val randomHeight = random.nextIntBetweenInclusive(minHeight, maxHeight)
+        val randomHeight = random.nextIntBetweenInclusive(y, maxHeight)
 
         for (y in y until randomHeight) {
             val pos = BlockPos(x, y, z)
