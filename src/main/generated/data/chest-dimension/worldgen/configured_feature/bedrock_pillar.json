@@ -1,0 +1,9 @@
+{
+  "type": "chest-dimension:bedrock_pillar",
+  "config": {
+    "max_height": 150,
+    "max_pillars": 6,
+    "min_height": 20,
+    "min_pillars": 1
+  }
+}
