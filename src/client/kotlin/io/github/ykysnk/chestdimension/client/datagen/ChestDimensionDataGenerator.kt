@@ -4,11 +4,17 @@ import io.github.ykysnk.chestdimension.client.datagen.provider.*
 import io.github.ykysnk.chestdimension.level.biome.Biomes
 import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
 import io.github.ykysnk.chestdimension.level.levelgen.NoiseGeneratorSettings
+import io.github.ykysnk.chestdimension.level.levelgen.feature.ConfiguredFeatures
+import io.github.ykysnk.chestdimension.level.levelgen.feature.PlacedFeatures
 import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
 import net.minecraft.core.RegistrySetBuilder
 import net.minecraft.core.registries.Registries
+import net.minecraft.data.worldgen.placement.PlacementUtils
+import net.minecraft.world.level.levelgen.placement.BiomeFilter
+import net.minecraft.world.level.levelgen.placement.CountPlacement
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement
 
 object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
     override fun onInitializeDataGenerator(fabricDataGenerator: FabricDataGenerator) {
@@ -36,10 +42,20 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
         }
         registryBuilder.add(Registries.NOISE_SETTINGS) { context ->
             context.register(
-                NoiseGeneratorSettings.CHEST_UNDEFINED, NoiseGeneratorSettings.undefined(
-                    context,
-                    amplified = false,
-                    large = false
+                NoiseGeneratorSettings.CHEST_UNDEFINED,
+                NoiseGeneratorSettings.undefined(context, false, false)
+            )
+        }
+        registryBuilder.add(Registries.CONFIGURED_FEATURE) { context ->
+            context.register(ConfiguredFeatures.TORCH_PATH, ConfiguredFeatures.TorchPathConfigured)
+        }
+        registryBuilder.add(Registries.PLACED_FEATURE) { context ->
+            PlacedFeatures.create(
+                context, PlacedFeatures.TORCH_PATH, ConfiguredFeatures.TORCH_PATH, listOf(
+                    CountPlacement.of(1),
+                    InSquarePlacement.spread(),
+                    PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                    BiomeFilter.biome()
                 )
             )
         }

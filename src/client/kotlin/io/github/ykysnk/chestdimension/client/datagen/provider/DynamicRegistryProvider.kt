@@ -13,6 +13,8 @@ class DynamicRegistryProvider(output: FabricDataOutput, registriesFuture: Comple
         registries.lookup(Registries.DIMENSION_TYPE).ifPresent(entries::addAll)
         registries.lookup(Registries.DAMAGE_TYPE).ifPresent(entries::addAll)
         registries.lookup(Registries.NOISE_SETTINGS).ifPresent(entries::addAll)
+        registries.lookup(Registries.CONFIGURED_FEATURE).ifPresent(entries::addAll)
+        registries.lookup(Registries.PLACED_FEATURE).ifPresent(entries::addAll)
     }
 
     override fun getName(): String {

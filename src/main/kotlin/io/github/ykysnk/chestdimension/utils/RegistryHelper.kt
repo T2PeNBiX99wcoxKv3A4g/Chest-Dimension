@@ -9,7 +9,7 @@ open class RegistryHelper<T> {
     val all: List<T>
         get() = mutableAll.toList()
 
-    protected open fun register(func: () -> T) = mutableAll.addAndGet(func)
+    protected fun <R : T> register(value: R): R = mutableAll.addAndGet(value)
 
-    protected open fun register(value: T) = mutableAll.addAndGet(value)
+    protected fun <R : T> register(func: () -> R): R = mutableAll.addAndGet(func)
 }
