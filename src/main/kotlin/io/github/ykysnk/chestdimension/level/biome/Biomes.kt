@@ -2,8 +2,6 @@ package io.github.ykysnk.chestdimension.level.biome
 
 import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.levelgen.feature.PlacedFeatures
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
 import net.minecraft.resources.ResourceKey
@@ -66,13 +64,5 @@ object Biomes {
             .build()
 
         context.register(CHEST_UNDEFINED_BIOME, biome)
-    }
-
-    init {
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(CHEST_UNDEFINED_BIOME),
-            GenerationStep.Decoration.SURFACE_STRUCTURES,
-            PlacedFeatures.TORCH_PATH
-        )
     }
 }
