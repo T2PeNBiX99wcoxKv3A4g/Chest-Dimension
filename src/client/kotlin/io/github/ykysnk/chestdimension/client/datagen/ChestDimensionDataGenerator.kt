@@ -27,9 +27,22 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
     }
 
     override fun buildRegistry(registryBuilder: RegistrySetBuilder) {
+        registryBuilder.add(Registries.CONFIGURED_FEATURE) { context ->
+            context.register(ConfiguredFeatures.TORCH_PATH, ConfiguredFeatures.TorchPathConfigured)
+        }
+        registryBuilder.add(Registries.PLACED_FEATURE) { context ->
+            PlacedFeatures.create(
+                context, PlacedFeatures.TORCH_PATH, ConfiguredFeatures.TORCH_PATH, listOf(
+                    CountPlacement.of(1),
+                    InSquarePlacement.spread(),
+                    PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                    BiomeFilter.biome()
+                )
+            )
+        }
         registryBuilder.add(Registries.BIOME) { context ->
             context.register(Biomes.CHEST_PLATFORM_BIOME, Biomes.ChestPlatformBiomeType)
-            context.register(Biomes.CHEST_UNDEFINED_BIOME, Biomes.ChestUndefinedBiomeType)
+            Biomes.createChestUndefinedBiome(context)
         }
         registryBuilder.add(Registries.DIMENSION_TYPE) { context ->
             context.register(DimensionTypes.CHEST_PLATFORM, DimensionTypes.ChestPlatformDimensionType)
@@ -44,19 +57,6 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
             context.register(
                 NoiseGeneratorSettings.CHEST_UNDEFINED,
                 NoiseGeneratorSettings.undefined(context, false, false)
-            )
-        }
-        registryBuilder.add(Registries.CONFIGURED_FEATURE) { context ->
-            context.register(ConfiguredFeatures.TORCH_PATH, ConfiguredFeatures.TorchPathConfigured)
-        }
-        registryBuilder.add(Registries.PLACED_FEATURE) { context ->
-            PlacedFeatures.create(
-                context, PlacedFeatures.TORCH_PATH, ConfiguredFeatures.TORCH_PATH, listOf(
-                    CountPlacement.of(1),
-                    InSquarePlacement.spread(),
-                    PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
-                    BiomeFilter.biome()
-                )
             )
         }
     }
