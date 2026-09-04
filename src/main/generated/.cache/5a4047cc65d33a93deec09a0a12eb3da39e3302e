@@ -1,5 +1,5 @@
-// 1.20.1	2026-09-04T20:39:08.4065382	Chest Dimension/Chest Dimension Dynamic Registries
-5a8436e80855ea9b4d69dd9faa4fb27588bec31d data\chest-dimension\worldgen\configured_feature\torch_path.json
+// 1.20.1	2026-09-04T21:53:35.2899359	Chest Dimension/Chest Dimension Dynamic Registries
+888cc4d10a3b15c319b069d0a6881131fcbf0ca2 data\chest-dimension\worldgen\configured_feature\torch_path.json
 1c5891c8559220548898ced4c204dc8177bd8818 data\chest-dimension\damage_type\explosion_by_teleport_door.json
 58b2bcc284e53927330dfba39a165c17cda8917b data\chest-dimension\worldgen\biome\chest_undefined_biome.json
 5f3e1961dd27cd02c665704aefe31dd0f0305847 data\chest-dimension\damage_type\explosion_by_chest.json

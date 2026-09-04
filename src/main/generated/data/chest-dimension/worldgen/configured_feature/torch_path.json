@@ -1,7 +1,8 @@
 {
   "type": "chest-dimension:torch_path",
   "config": {
-    "max_spacing": 15,
-    "min_spacing": 6
+    "max_spacing": 4,
+    "min_spacing": 1,
+    "offset": 200.0
   }
 }
