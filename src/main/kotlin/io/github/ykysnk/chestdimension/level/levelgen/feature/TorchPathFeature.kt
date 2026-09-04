@@ -43,6 +43,7 @@ class TorchPathFeature(codec: Codec<TorchPathConfiguration>) : Feature<TorchPath
         if (alongX) {
             for (x in minX..maxX) {
                 val point = pathZ(
+                    config,
                     x.toDouble(),
                     seed,
                     phase,
@@ -65,6 +66,7 @@ class TorchPathFeature(codec: Codec<TorchPathConfiguration>) : Feature<TorchPath
         } else {
             for (z in minZ..maxZ) {
                 val point = pathX(
+                    config,
                     z.toDouble(),
                     seed,
                     phase,
@@ -90,6 +92,7 @@ class TorchPathFeature(codec: Codec<TorchPathConfiguration>) : Feature<TorchPath
     }
 
     private fun pathZ(
+        config: TorchPathConfiguration,
         x: Double,
         seed: Long,
         phase: Double,
@@ -99,11 +102,12 @@ class TorchPathFeature(codec: Codec<TorchPathConfiguration>) : Feature<TorchPath
         wavelength1: Double,
         wavelength2: Double
     ): Double {
-        val offset = hashToDouble(seed xor 0x99999999L) * 10000.0
+        val offset = hashToDouble(seed xor 0x99999999L) * config.offset - config.offset / 2
         return offset + sin(x / wavelength1 * Math.PI * 2.0 + phase) * amplitude1 + sin(x / wavelength2 * Math.PI * 2.0 + phase2) * amplitude2
     }
 
     private fun pathX(
+        config: TorchPathConfiguration,
         z: Double,
         seed: Long,
         phase: Double,
@@ -113,7 +117,7 @@ class TorchPathFeature(codec: Codec<TorchPathConfiguration>) : Feature<TorchPath
         wavelength1: Double,
         wavelength2: Double
     ): Double {
-        val offset = hashToDouble(seed xor 0xAAAAAAAAL) * 10000.0
+        val offset = hashToDouble(seed xor 0xAAAAAAAAL) * config.offset - config.offset / 2
         return offset + sin(z / wavelength1 * Math.PI * 2.0 + phase) * amplitude1 + sin(z / wavelength2 * Math.PI * 2.0 + phase2) * amplitude2
     }
 
