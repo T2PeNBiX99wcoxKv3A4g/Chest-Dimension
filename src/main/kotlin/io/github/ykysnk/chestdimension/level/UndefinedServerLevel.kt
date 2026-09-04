@@ -63,6 +63,8 @@ class UndefinedServerLevel(
         null
     )
 
+    override fun toString(): String = "UndefinedServerLevel[${serverLevelData.levelName}]"
+
     override fun tickTime() {
         if (!levelData.gameRules.getBoolean(GameRules.RULE_DAYLIGHT)) return
         dayTime = Random(seed).nextLong(0L, 240000000000L)
