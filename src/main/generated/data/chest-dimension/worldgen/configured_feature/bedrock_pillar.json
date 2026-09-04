@@ -3,6 +3,6 @@
   "config": {
     "max_height": 150,
     "max_pillars": 3,
-    "min_pillars": 1
+    "min_pillars": 0
   }
 }
