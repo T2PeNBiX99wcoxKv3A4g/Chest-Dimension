@@ -26,7 +26,7 @@ import net.minecraft.world.level.levelgen.WorldOptions
 import java.io.File
 
 object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", UndefinedData(-1L)) {
-    private var loaded: ChestServerLevel? = null
+    private var loaded: UndefinedServerLevel? = null
     private lateinit var chunkProgressListener: ChunkProgressListener
     private val biome by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.BIOME)
@@ -40,61 +40,32 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         Constants.Server.registryAccess().registryOrThrow(Registries.NOISE_SETTINGS)
             .getHolderOrThrow(NoiseGeneratorSettings.CHEST_UNDEFINED)
     }
-    private const val ADD_DAY_TIME = 1000L
 
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
 
-        val storage = ChestLevelStorage.access
-        val isDebugWorld = server.worldData.isDebugWorld
         val biomeSource = FixedBiomeSource(biome)
         val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
         val levelStem = LevelStem(dimensionType, generator)
         if (!data.created) return
         val worldKey = createWorldKey()
         val seed = data.seed
-        val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
-        val level = UndefinedServerLevel(
-            server,
-            server.executor,
-            storage,
-            worldKey,
-            levelStem,
-            listener,
-            isDebugWorld,
-            obfuscateSeed,
-            seed,
-            null
-        )
+        val worldOptions = WorldOptions(seed, true, false)
+        val level = createServerLevel(server, levelStem, worldOptions)
         server.levels[worldKey] = level
         loaded = level
     }
 
-    fun getOrCreate(server: MinecraftServer): ChestServerLevel {
+    fun getOrCreate(server: MinecraftServer): UndefinedServerLevel {
         loaded?.let { return it }
 
-        val storage = ChestLevelStorage.access
         val worldKey = createWorldKey()
-        val listener = chunkProgressListener
-        val isDebugWorld = server.worldData.isDebugWorld
         val worldOptions = WorldOptions.defaultWithRandomSeed()
         val seed = worldOptions.seed()
-        val obfuscateSeed = BiomeManager.obfuscateSeed(seed)
         val biomeSource = FixedBiomeSource(biome)
         val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
         val levelStem = LevelStem(dimensionType, generator)
-        val level = UndefinedServerLevel(
-            server,
-            server.executor,
-            storage,
-            worldKey,
-            levelStem,
-            listener,
-            isDebugWorld,
-            obfuscateSeed,
-            seed,
-            null
-        )
+        val level = createServerLevel(server, levelStem, worldOptions)
         level.chestServerLevelData.freezeWeather = true
         level.chestServerLevelData.setWeatherParametersForce(0, 10000, true, true)
         server.levels[worldKey] = level
@@ -102,6 +73,36 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         data = data.copy(seed, true)
         save()
         return level
+    }
+
+    private fun createServerLevel(
+        server: MinecraftServer,
+        levelStem: LevelStem,
+        worldOptions: WorldOptions
+    ): UndefinedServerLevel {
+        val storage = ChestLevelStorage.access
+        val listener = chunkProgressListener
+        val isDebugWorld = server.worldData.isDebugWorld
+        val worldKey = createWorldKey()
+        val obfuscateSeed = BiomeManager.obfuscateSeed(worldOptions.seed())
+
+        ChestServerLevelContext.worldOptions.set(worldOptions)
+
+        return runCatching {
+            UndefinedServerLevel(
+                server,
+                server.executor,
+                storage,
+                worldKey,
+                levelStem,
+                listener,
+                isDebugWorld,
+                obfuscateSeed,
+                worldOptions
+            )
+        }.also {
+            ChestServerLevelContext.worldOptions.remove()
+        }.getOrThrow()
     }
 
     private fun createWorldKey(): ResourceKey<Level> =
