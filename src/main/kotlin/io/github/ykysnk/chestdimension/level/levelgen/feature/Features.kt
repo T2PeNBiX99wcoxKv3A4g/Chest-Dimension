@@ -3,6 +3,7 @@
 package io.github.ykysnk.chestdimension.level.levelgen.feature
 
 import io.github.ykysnk.chestdimension.id
+import io.github.ykysnk.chestdimension.level.levelgen.feature.configurations.BedrockPillarConfiguration
 import io.github.ykysnk.chestdimension.level.levelgen.feature.configurations.TorchPathConfiguration
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.Registry
@@ -17,4 +18,5 @@ object Features : RegistryHelper<Feature<out FeatureConfiguration>>() {
     ): F = register(Registry.register(BuiltInRegistries.FEATURE, id(key), value))
 
     val TORCH_PATH = register("torch_path", TorchPathFeature(TorchPathConfiguration.CODEC))
+    val BEDROCK_PILLAR = register("bedrock_pillar", BedrockPillarFeature(BedrockPillarConfiguration.CODEC))
 }

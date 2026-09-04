@@ -29,10 +29,19 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
     override fun buildRegistry(registryBuilder: RegistrySetBuilder) {
         registryBuilder.add(Registries.CONFIGURED_FEATURE) { context ->
             context.register(ConfiguredFeatures.TORCH_PATH, ConfiguredFeatures.TorchPathConfigured)
+            context.register(ConfiguredFeatures.BEDROCK_PILLAR, ConfiguredFeatures.BedrockPillarConfigured)
         }
         registryBuilder.add(Registries.PLACED_FEATURE) { context ->
             PlacedFeatures.create(
                 context, PlacedFeatures.TORCH_PATH, ConfiguredFeatures.TORCH_PATH, listOf(
+                    CountPlacement.of(1),
+                    InSquarePlacement.spread(),
+                    PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                    BiomeFilter.biome()
+                )
+            )
+            PlacedFeatures.create(
+                context, PlacedFeatures.BEDROCK_PILLAR, ConfiguredFeatures.BEDROCK_PILLAR, listOf(
                     CountPlacement.of(1),
                     InSquarePlacement.spread(),
                     PlacementUtils.HEIGHTMAP_WORLD_SURFACE,

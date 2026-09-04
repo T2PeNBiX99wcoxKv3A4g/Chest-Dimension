@@ -10,6 +10,7 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifier
 
 object PlacedFeatures {
     val TORCH_PATH: ResourceKey<PlacedFeature> = ResourceKey.create(Registries.PLACED_FEATURE, id("torch_path"))
+    val BEDROCK_PILLAR: ResourceKey<PlacedFeature> = ResourceKey.create(Registries.PLACED_FEATURE, id("bedrock_pillar"))
 
     fun create(
         context: BootstapContext<PlacedFeature>,
