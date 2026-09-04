@@ -25,7 +25,7 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         val minZ = chunkPos.minBlockZ
 
         val maxPillars = max(config.minPillars, config.maxPillars)
-        val pillarCount = config.minPillars + random.nextInt(maxPillars - config.minPillars + 1)
+        val pillarCount = random.nextIntBetweenInclusive(config.minPillars, maxPillars)
         var placed = false
         val usedPositions = mutableSetOf<Long>()
 
