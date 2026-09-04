@@ -1,0 +1,7 @@
+package io.github.ykysnk.chestdimension.level
+
+import net.minecraft.world.level.levelgen.WorldOptions
+
+object ChestServerLevelContext {
+    val worldOptions = ThreadLocal<WorldOptions?>()
+}
