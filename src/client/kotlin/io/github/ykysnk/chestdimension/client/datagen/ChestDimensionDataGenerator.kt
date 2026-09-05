@@ -63,10 +63,7 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
             context.register(DamageTypes.EXPLOSION_BY_TELEPORT_DOOR, DamageTypes.ExplosionByTeleportDoorType)
         }
         registryBuilder.add(Registries.NOISE_SETTINGS) { context ->
-            context.register(
-                NoiseGeneratorSettings.CHEST_UNDEFINED,
-                NoiseGeneratorSettings.undefined(context, false, false)
-            )
+            context.register(NoiseGeneratorSettings.CHEST_UNDEFINED, NoiseGeneratorSettings.undefined(context))
         }
     }
 }

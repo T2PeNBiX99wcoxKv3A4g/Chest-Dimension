@@ -93,9 +93,7 @@ object NoiseRouterData {
 
     fun undefined(
         densityFunctions: HolderGetter<DensityFunction>,
-        noiseParameters: HolderGetter<NoiseParameters>,
-        large: Boolean,
-        amplified: Boolean
+        noiseParameters: HolderGetter<NoiseParameters>
     ): NoiseRouter {
         val densityFunction = DensityFunctions.noise(noiseParameters.getOrThrow(Noises.AQUIFER_BARRIER), 0.5)
         val densityFunction2 =
@@ -109,28 +107,18 @@ object NoiseRouterData {
             densityFunction5,
             densityFunction6,
             0.25,
-            noiseParameters.getOrThrow(if (large) Noises.TEMPERATURE_LARGE else Noises.TEMPERATURE)
+            noiseParameters.getOrThrow(Noises.TEMPERATURE)
         )
         val densityFunction8 = DensityFunctions.shiftedNoise2d(
             densityFunction5,
             densityFunction6,
             0.25,
-            noiseParameters.getOrThrow(if (large) Noises.VEGETATION_LARGE else Noises.VEGETATION)
+            noiseParameters.getOrThrow(Noises.VEGETATION)
         )
-        val densityFunction9 = getFunction(
-            densityFunctions,
-            if (large) FACTOR_LARGE else (if (amplified) FACTOR_AMPLIFIED else NoiseRouterData.FACTOR)
-        )
-        val densityFunction10 = getFunction(
-            densityFunctions,
-            if (large) DEPTH_LARGE else (if (amplified) DEPTH_AMPLIFIED else NoiseRouterData.DEPTH)
-        )
-        val densityFunction11 =
-            noiseGradientDensity(DensityFunctions.cache2d(densityFunction9), densityFunction10)
-        val densityFunction12 = getFunction(
-            densityFunctions,
-            if (large) SLOPED_CHEESE_LARGE else (if (amplified) SLOPED_CHEESE_AMPLIFIED else SLOPED_CHEESE)
-        )
+        val densityFunction9 = getFunction(densityFunctions, NoiseRouterData.FACTOR)
+        val densityFunction10 = getFunction(densityFunctions, NoiseRouterData.DEPTH)
+        val densityFunction11 = noiseGradientDensity(DensityFunctions.cache2d(densityFunction9), densityFunction10)
+        val densityFunction12 = getFunction(densityFunctions, SLOPED_CHEESE)
         val densityFunction13 = DensityFunctions.min(
             densityFunction12,
             DensityFunctions.mul(
@@ -141,18 +129,12 @@ object NoiseRouterData {
         val densityFunction14 = DensityFunctions.rangeChoice(
             densityFunction12,
             -1000000.0,
-            1.5625,
+            SURFACE_DENSITY_THRESHOLD,
             densityFunction13,
             underground(densityFunctions, noiseParameters, densityFunction12)
         )
-        val densityFunction15 = DensityFunctions.min(
-            postProcess(
-                slideUndefined(
-                    amplified,
-                    densityFunction14
-                )
-            ), getFunction(densityFunctions, NOODLE)
-        )
+        val densityFunction15 =
+            DensityFunctions.min(postProcess(slideUndefined(densityFunction14)), getFunction(densityFunctions, NOODLE))
         return NoiseRouter(
             densityFunction,
             densityFunction2,
@@ -160,19 +142,13 @@ object NoiseRouterData {
             densityFunction4,
             densityFunction7,
             densityFunction8,
-            getFunction(
-                densityFunctions,
-                if (large) NoiseRouterData.CONTINENTS_LARGE else NoiseRouterData.CONTINENTS
-            ),
-            getFunction(
-                densityFunctions,
-                if (large) NoiseRouterData.EROSION_LARGE else NoiseRouterData.EROSION
-            ),
+            getFunction(densityFunctions, NoiseRouterData.CONTINENTS),
+            getFunction(densityFunctions, NoiseRouterData.EROSION),
             densityFunction10,
             getFunction(densityFunctions, NoiseRouterData.RIDGES),
             slideUndefined(
-                amplified,
-                DensityFunctions.add(densityFunction11, DensityFunctions.constant(-1.0)).clamp(-64.0, 64.0)
+                DensityFunctions.add(densityFunction11, DensityFunctions.constant((-0.703125f).toDouble()))
+                    .clamp(-64.0, 64.0)
             ),
             densityFunction15,
             DensityFunctions.constant(-1.0),
@@ -181,17 +157,17 @@ object NoiseRouterData {
         )
     }
 
-    private fun slideUndefined(amplified: Boolean, densityFunction: DensityFunction): DensityFunction {
+    private fun slideUndefined(densityFunction: DensityFunction): DensityFunction {
         return slide(
             densityFunction,
             -128,
             320,
-            if (amplified) 16 else 80,
-            if (amplified) 0 else 64,
+            150,
+            64,
             -0.078125,
             0,
             24,
-            if (amplified) 0.4 else 0.1171875
+            0.1171875
         )
     }
 
@@ -217,18 +193,24 @@ object NoiseRouterData {
         densityFunction: DensityFunction,
         minY: Int,
         maxY: Int,
-        i: Int,
-        j: Int,
-        d: Double,
-        k: Int,
-        l: Int,
-        e: Double
+        topSlideStartOffset: Int,
+        topSlideEndOffset: Int,
+        topTargetDensity: Double,
+        bottomSlideStartOffset: Int,
+        bottomSlideEndOffset: Int,
+        bottomTargetDensity: Double
     ): DensityFunction {
-        val densityFunction3 = DensityFunctions.yClampedGradient(minY + maxY - i, minY + maxY - j, 1.0, 0.0)
-        var densityFunction2 = DensityFunctions.lerp(densityFunction3, d, densityFunction)
-        val densityFunction4 = DensityFunctions.yClampedGradient(minY + k, minY + l, 0.0, 1.0)
-        densityFunction2 = DensityFunctions.lerp(densityFunction4, e, densityFunction2)
-        return densityFunction2
+        val topGradient = DensityFunctions.yClampedGradient(
+            minY + maxY - topSlideStartOffset,
+            minY + maxY - topSlideEndOffset,
+            1.0,
+            0.0
+        )
+        var result = DensityFunctions.lerp(topGradient, topTargetDensity, densityFunction)
+        val bottomGradient =
+            DensityFunctions.yClampedGradient(minY + bottomSlideStartOffset, minY + bottomSlideEndOffset, 0.0, 1.0)
+        result = DensityFunctions.lerp(bottomGradient, bottomTargetDensity, result)
+        return result
     }
 
     private fun createKey(location: String): ResourceKey<DensityFunction> {

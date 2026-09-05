@@ -12,17 +12,12 @@ object NoiseGeneratorSettings {
     val CHEST_UNDEFINED: ResourceKey<NoiseGeneratorSettings> =
         ResourceKey.create(Registries.NOISE_SETTINGS, id("chest_undefined"))
 
-    fun undefined(context: BootstapContext<*>, amplified: Boolean, large: Boolean): NoiseGeneratorSettings {
+    fun undefined(context: BootstapContext<*>): NoiseGeneratorSettings {
         return NoiseGeneratorSettings(
             NoiseSettings.UNDEFINED_NOISE_SETTINGS,
             Blocks.COBBLESTONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
-            NoiseRouterData.undefined(
-                context.lookup(Registries.DENSITY_FUNCTION),
-                context.lookup(Registries.NOISE),
-                large,
-                amplified
-            ),
+            NoiseRouterData.undefined(context.lookup(Registries.DENSITY_FUNCTION), context.lookup(Registries.NOISE)),
             SurfaceRuleData.undefined(true, false, true),
             OverworldBiomeBuilder().spawnTarget(),
             0,
