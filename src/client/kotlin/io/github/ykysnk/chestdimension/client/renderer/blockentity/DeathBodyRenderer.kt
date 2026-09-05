@@ -27,17 +27,24 @@ class DeathBodyRenderer(
     ) {
         poseStack.pushPose()
 
-        poseStack.translate(0.5, 1.5, 0.5)
+        poseStack.translate(0.5, 2.3, 0.9)
         poseStack.scale(-1.0f, -1.0f, 1.0f)
+        poseStack.scale(2.0f, 2.0f, 2.0f)
 
-        model.head.xRot = Math.toRadians(5.0).toFloat()
+        model.head.xScale = 0.7f
+        model.head.yScale = 0.7f
+        model.head.zScale = 0.7f
+
+        model.head.xRot = Math.toRadians(42.0).toFloat()
         model.body.xRot = Math.toRadians(-10.0).toFloat()
 
-        model.rightArm.xRot = Math.toRadians(20.0).toFloat()
-        model.leftArm.xRot = Math.toRadians(20.0).toFloat()
+        model.rightArm.xRot = Math.toRadians(-20.0).toFloat()
+        model.leftArm.xRot = Math.toRadians(-20.0).toFloat()
 
-        model.rightLeg.xRot = Math.toRadians(-65.0).toFloat()
-        model.leftLeg.xRot = Math.toRadians(-65.0).toFloat()
+        model.rightLeg.xRot = Math.toRadians(-90.0).toFloat()
+        model.rightLeg.yRot = Math.toRadians(20.0).toFloat()
+        model.leftLeg.xRot = Math.toRadians(-90.0).toFloat()
+        model.leftLeg.yRot = Math.toRadians(-20.0).toFloat()
 
         model.renderToBuffer(
             poseStack,
