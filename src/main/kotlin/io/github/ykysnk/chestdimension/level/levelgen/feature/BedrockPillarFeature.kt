@@ -1,15 +1,18 @@
 package io.github.ykysnk.chestdimension.level.levelgen.feature
 
 import com.mojang.serialization.Codec
+import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.block.DeathBodyBlock
 import io.github.ykysnk.chestdimension.level.levelgen.feature.configurations.BedrockPillarConfiguration
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.util.RandomSource
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.WorldGenLevel
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.levelgen.feature.Feature
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext
 import kotlin.math.max
+import net.minecraft.world.level.block.Blocks as MCBlocks
 
 // Credits: ChatGPT
 class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<BedrockPillarConfiguration>(codec) {
@@ -24,8 +27,7 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         val minX = chunkPos.minBlockX
         val minZ = chunkPos.minBlockZ
 
-        val skip = random.nextBoolean()
-        if (skip) return false
+        if (random.nextBoolean()) return false
 
         val maxPillars = max(config.minPillars, config.maxPillars)
         val pillarCount = random.nextIntBetweenInclusive(config.minPillars, maxPillars)
@@ -52,18 +54,19 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         level: WorldGenLevel,
         x: Int,
         z: Int,
-        originY: Int,
+        y: Int,
         random: RandomSource
     ): Boolean {
-        var y = originY
+        var y = y
         while (y > level.minBuildHeight && level.getBlockState(BlockPos(x, y - 1, z)).isAir) y--
+        val faceY = y
         for (i in 0 until 2) {
             val testY = y - 1
             if (testY <= level.minBuildHeight) break
             if (level.getBlockState(BlockPos(x, testY, z)).isAir) break
             y = testY
         }
-        val bedrock = Blocks.BEDROCK.defaultBlockState()
+        val bedrock = MCBlocks.BEDROCK.defaultBlockState()
         var placed = false
         val maxHeight = config.maxHeight.coerceAtMost(level.maxBuildHeight)
         val randomHeight = random.nextIntBetweenInclusive(y, maxHeight)
@@ -74,6 +77,47 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
             placed = true
         }
 
+        if (placed && random.nextInt(3) == 0) placeDeathBody(level, x, faceY, z, random)
+
         return placed
+    }
+
+    private fun placeDeathBody(level: WorldGenLevel, x: Int, y: Int, z: Int, random: RandomSource): Boolean {
+        val direction = when (random.nextInt(4)) {
+            0 -> Direction.NORTH
+            1 -> Direction.SOUTH
+            2 -> Direction.EAST
+            else -> Direction.WEST
+        }
+
+        var bodyPos = BlockPos(x, y, z).relative(direction)
+
+        var y = bodyPos.y
+        while (y > level.minBuildHeight && level.getBlockState(BlockPos(bodyPos.x, y - 1, bodyPos.z)).isAir) y--
+
+        bodyPos = BlockPos(bodyPos.x, y, bodyPos.z)
+
+        if (!level.getBlockState(bodyPos).isAir) return false
+        val bodyState = Blocks.DEATH_BODY.defaultBlockState().setValue(DeathBodyBlock.FACING, direction)
+        if (!bodyState.canSurvive(level, bodyPos)) return false
+
+        level.setBlock(bodyPos, bodyState, 2)
+        if (random.nextInt(3) == 0) placeTorch(level, bodyPos.x, bodyPos.z, random)
+        return true
+    }
+
+    private fun placeTorch(level: WorldGenLevel, x: Int, z: Int, random: RandomSource): Boolean {
+        val offsetX = random.nextIntBetweenInclusive(-2, 2)
+        val offsetZ = random.nextIntBetweenInclusive(-2, 2)
+        var y = level.maxBuildHeight
+        while (y > level.minBuildHeight && level.getBlockState(BlockPos(x + offsetX, y - 1, z + offsetZ)).isAir) y--
+
+        val placePos = BlockPos(x + offsetX, y, z + offsetZ)
+        if (!level.getBlockState(placePos).isAir) return false
+        val torchState = MCBlocks.TORCH.defaultBlockState()
+        if (!torchState.canSurvive(level, placePos)) return false
+
+        level.setBlock(placePos, torchState, 2)
+        return true
     }
 }
