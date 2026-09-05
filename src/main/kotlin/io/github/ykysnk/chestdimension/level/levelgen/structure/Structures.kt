@@ -25,7 +25,7 @@ object Structures {
     fun bootstrap(context: BootstapContext<Structure>) {
         val biomes: HolderGetter<Biome> = context.lookup(Registries.BIOME)
         val pools: HolderGetter<StructureTemplatePool> = context.lookup(Registries.TEMPLATE_POOL)
-        val biomeSet = HolderSet.direct(biomes.getOrThrow(Biomes.CHEST_UNDEFINED_BIOME))
+        val biomeSet = HolderSet.direct(biomes.getOrThrow(Biomes.CHEST_PLATFORM_BIOME)) // TODO: Temp Disable
         val settings = Structure.StructureSettings(
             biomeSet,
             emptyMap(),
