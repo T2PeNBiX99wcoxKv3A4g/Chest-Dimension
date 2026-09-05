@@ -39,7 +39,7 @@ object DimensionTypes {
             OptionalLong.empty(), // fixedTime
             false, // hasSkyLight
             false, // hasCeiling
-            true, // ultraWarm
+            false, // ultraWarm
             true, // natural
             1.0, // coordinateScale
             false, // bedWorks
