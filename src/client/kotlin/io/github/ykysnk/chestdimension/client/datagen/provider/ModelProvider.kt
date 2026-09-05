@@ -1,3 +1,5 @@
+@file:Suppress("SameParameterValue")
+
 package io.github.ykysnk.chestdimension.client.datagen.provider
 
 import com.google.gson.JsonObject
@@ -6,6 +8,7 @@ import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.item.Items
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.data.models.BlockModelGenerators
 import net.minecraft.data.models.ItemModelGenerators
 import net.minecraft.data.models.blockstates.MultiVariantGenerator
@@ -15,6 +18,8 @@ import net.minecraft.data.models.model.ModelLocationUtils
 import net.minecraft.data.models.model.ModelTemplates
 import net.minecraft.data.models.model.TextureMapping
 import net.minecraft.data.models.model.TextureSlot
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.Items as MCItems
 import net.minecraft.world.level.block.Blocks as MCBlocks
 
 class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
@@ -47,14 +52,35 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
 
         blockStateModelGenerator.createTrivialCube(Blocks.WEATHER_TIME_CONTROLLER)
         blockStateModelGenerator.createDoor(Blocks.TELEPORT_DOOR)
+        blockStateModelGenerator.blockEntityModels(
+            ModelLocationUtils.getModelLocation(Blocks.DEATH_BODY),
+            MCBlocks.BONE_BLOCK
+        ).createWithoutBlockItem(Blocks.DEATH_BODY)
     }
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerators) {
-        itemModelGenerator.output.accept(id("item/chest_dimension")) {
+        addChestBlockItem(itemModelGenerator, Items.CHEST_DIMENSION)
+        addChestBlockItem(itemModelGenerator, Items.DEATH_BODY)
+        itemModelGenerator.generateFlatItem(Items.TELEPORT_DOOR_LINKER, ModelTemplates.FLAT_ITEM)
+    }
+
+    @Suppress("unused")
+    private fun addSimpleBlockItem(itemModelGenerator: ItemModelGenerators, item: Item) {
+        val resourceLocation = BuiltInRegistries.ITEM.getKey(item)
+        itemModelGenerator.output.accept(resourceLocation.withPrefix("item/")) {
             JsonObject().apply {
-                addProperty("parent", "minecraft:item/chest")
+                addProperty("parent", resourceLocation.withPrefix("block/").toString())
             }
         }
-        itemModelGenerator.generateFlatItem(Items.TELEPORT_DOOR_LINKER, ModelTemplates.FLAT_ITEM)
+    }
+
+    private fun addChestBlockItem(itemModelGenerator: ItemModelGenerators, item: Item) {
+        val resourceLocation = BuiltInRegistries.ITEM.getKey(item)
+        val chestResourceLocation = BuiltInRegistries.ITEM.getKey(MCItems.CHEST)
+        itemModelGenerator.output.accept(resourceLocation.withPrefix("item/")) {
+            JsonObject().apply {
+                addProperty("parent", chestResourceLocation.withPrefix("item/").toString())
+            }
+        }
     }
 }

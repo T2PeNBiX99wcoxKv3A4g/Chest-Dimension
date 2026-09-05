@@ -42,4 +42,7 @@ object Items : RegistryHelper<Item>() {
 
     @JvmField
     val TELEPORT_DOOR_LINKER: Item = register(MCItems.registerItem(id("teleport_door_linker"), TeleportDoorLinker()))
+
+    @JvmField
+    val DEATH_BODY: Item = register(MCItems.registerBlock(Blocks.DEATH_BODY))
 }

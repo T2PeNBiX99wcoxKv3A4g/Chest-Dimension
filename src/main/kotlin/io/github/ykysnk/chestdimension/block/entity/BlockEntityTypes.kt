@@ -35,4 +35,7 @@ object BlockEntityTypes {
 
     val TELEPORT_DOOR: BlockEntityType<TeleportDoorBlockEntity> =
         register("teleport_door", BlockEntityType.Builder.of(::TeleportDoorBlockEntity, Blocks.TELEPORT_DOOR))
+
+    val DEATH_BODY: BlockEntityType<DeathBodyBlockEntity> =
+        register("death_body", BlockEntityType.Builder.of(::DeathBodyBlockEntity, Blocks.DEATH_BODY))
 }

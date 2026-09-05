@@ -92,4 +92,12 @@ object Blocks : RegistryHelper<Block>() {
                 .noOcclusion().pushReaction(PushReaction.DESTROY), BlockSetType.OAK
         )
     )
+
+    val DEATH_BODY: Block = register(
+        "death_body",
+        DeathBodyBlock(
+            BlockBehaviour.Properties.of().mapColor(MCBlocks.SNOW.defaultMapColor()).strength(5.0f)
+                .pushReaction(PushReaction.DESTROY).sound(SoundType.GRAVEL)
+        )
+    )
 }

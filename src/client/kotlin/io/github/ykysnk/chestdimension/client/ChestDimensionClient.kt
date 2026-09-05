@@ -6,8 +6,10 @@ import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.TeleportDoorBlock
 import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
 import io.github.ykysnk.chestdimension.block.entity.ChestDimensionBlockEntity
+import io.github.ykysnk.chestdimension.block.entity.DeathBodyBlockEntity
 import io.github.ykysnk.chestdimension.block.entity.TeleportDoorBlockEntity
 import io.github.ykysnk.chestdimension.client.iris.IrisCompat
+import io.github.ykysnk.chestdimension.client.renderer.blockentity.DeathBodyRenderer
 import io.github.ykysnk.chestdimension.client.renderer.blockentity.TeleportDoorRenderer
 import io.github.ykysnk.chestdimension.client.world.inventory.WeatherTimeControllerScreen
 import io.github.ykysnk.chestdimension.item.Items
@@ -34,6 +36,13 @@ object ChestDimensionClient : ClientModInitializer {
         )
     }
 
+    private val deathBodyBlockEntity by lazy {
+        DeathBodyBlockEntity(
+            BlockPos.ZERO,
+            Blocks.DEATH_BODY.defaultBlockState()
+        )
+    }
+
     override fun onInitializeClient() {
         ForceInitialize
 
@@ -41,6 +50,7 @@ object ChestDimensionClient : ClientModInitializer {
 
         BlockEntityRenderers.register(BlockEntityTypes.CHEST_DIMENSION, ::ChestRenderer)
         BlockEntityRenderers.register(BlockEntityTypes.TELEPORT_DOOR, ::TeleportDoorRenderer)
+        BlockEntityRenderers.register(BlockEntityTypes.DEATH_BODY, ::DeathBodyRenderer)
         BuiltinItemRendererRegistry.INSTANCE.register(Items.CHEST_DIMENSION) { stack, mode, matrices, vertexConsumers, light, overlay ->
             val dispatcher = Minecraft.getInstance().blockEntityRenderDispatcher
             val item = stack.item
@@ -49,6 +59,15 @@ object ChestDimensionClient : ClientModInitializer {
             val blockState = block.defaultBlockState()
             if (!blockState.`is`(Blocks.CHEST_DIMENSION)) return@register
             dispatcher.renderItem(itemChestDimensionBlockEntity, matrices, vertexConsumers, light, overlay)
+        }
+        BuiltinItemRendererRegistry.INSTANCE.register(Items.DEATH_BODY) { stack, mode, matrices, vertexConsumers, light, overlay ->
+            val dispatcher = Minecraft.getInstance().blockEntityRenderDispatcher
+            val item = stack.item
+            if (item !is BlockItem) return@register
+            val block = item.block
+            val blockState = block.defaultBlockState()
+            if (!blockState.`is`(Blocks.DEATH_BODY)) return@register
+            dispatcher.renderItem(deathBodyBlockEntity, matrices, vertexConsumers, light, overlay)
         }
         MenuScreens.register(MenuTypes.WEATHER_TIME_CONTROLLER, ::WeatherTimeControllerScreen)
         BlockRenderLayerMap.INSTANCE.putBlock(Blocks.TELEPORT_DOOR, RenderType.cutout())

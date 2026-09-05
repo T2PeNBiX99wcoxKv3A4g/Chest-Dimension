@@ -1,4 +1,4 @@
-// 1.20.1	2026-09-05T13:53:55.1237887	Chest Dimension/Model Definitions
+// 1.20.1	2026-09-05T15:53:10.0707621	Chest Dimension/Model Definitions
 9f754be9ab279b8a7f1e69c1b7b7f17b332e663b assets\chest-dimension\models\block\teleport_door_top_right.json
 4a749798590a7527f9be9aecc4b1d096350486b3 assets\chest-dimension\models\item\teleport_pressure_plate.json
 ac79805def049ce0259e0c9db4380089cf1427a5 assets\chest-dimension\blockstates\teleport_door.json
@@ -31,6 +31,8 @@ c1b8b66a53abf97b745bcf4b72c0ccb830363d37 assets\chest-dimension\models\block\tel
 8fce688aac9ec77f290f4777e1738407dcc76c0c assets\chest-dimension\models\item\weather_time_controller.json
 1901fb6bba16488829c2e1ea8e4f8ba370f787cc assets\chest-dimension\models\item\chest_platform_enter_plate.json
 fc947d1a263695abe9eb7bc980bef5347760d2b1 assets\chest-dimension\models\block\teleport_door_top_left_open.json
+9b31dc1a818a6872b24a32ed094188cf7ab624e9 assets\chest-dimension\blockstates\death_body.json
+7516e40ce2d519ffdb1db16d742150c57fac81fc assets\chest-dimension\models\block\death_body.json
 1239eb1d7157dbe734b8243e12e559c1bda65e4d assets\chest-dimension\models\item\teleport_door_linker.json
 02495755d06f8fa1bebbe0deda248e97eea80a37 assets\chest-dimension\models\item\chest_platform_fence.json
 74aa7c656eade90f63816febefc77986316995e5 assets\chest-dimension\models\block\blast_resistant_glass_pane_noside.json
@@ -46,4 +48,5 @@ cc809e4744b04b66a6b61fbc7afce846f91409f8 assets\chest-dimension\blockstates\tele
 0ae1cef58b86c59b55085da2b34eaa859d9b89ee assets\chest-dimension\models\block\chest_platform_fence_side.json
 19567df505b5cf0dc12e75f59e3fca91e3fcd605 assets\chest-dimension\models\block\blast_resistant_glass.json
 125a6afd4934fb2955f38859c00fc6d4f988dbd2 assets\chest-dimension\models\block\chest_platform_wall_side.json
+f6caba399494a58683561699d72ad1cc86e3d339 assets\chest-dimension\models\item\death_body.json
 9406156b55721981d3942c141be4b9433c9803a9 assets\chest-dimension\blockstates\chest_platform_enter_plate.json
