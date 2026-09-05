@@ -69,7 +69,7 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         val bedrock = MCBlocks.BEDROCK.defaultBlockState()
         var placed = false
         val maxHeight = config.maxHeight.coerceAtMost(level.maxBuildHeight)
-        val randomHeight = random.nextIntBetweenInclusive(y, maxHeight)
+        val randomHeight = random.nextIntBetweenInclusive(faceY + 3, maxHeight)
 
         for (y in y until randomHeight) {
             val pos = BlockPos(x, y, z)
@@ -77,8 +77,7 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
             placed = true
         }
 
-        if (placed && random.nextInt(3) == 0) placeDeathBody(level, x, faceY, z, random)
-
+        if (placed && random.nextInt(30) == 0) placeDeathBody(level, x, faceY, z, random)
         return placed
     }
 
@@ -107,8 +106,8 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
     }
 
     private fun placeTorch(level: WorldGenLevel, x: Int, z: Int, random: RandomSource): Boolean {
-        val offsetX = random.nextIntBetweenInclusive(-2, 2)
-        val offsetZ = random.nextIntBetweenInclusive(-2, 2)
+        val offsetX = random.nextIntBetweenInclusive(-3, 3)
+        val offsetZ = random.nextIntBetweenInclusive(-3, 3)
         var y = level.maxBuildHeight
         while (y > level.minBuildHeight && level.getBlockState(BlockPos(x + offsetX, y - 1, z + offsetZ)).isAir) y--
 
