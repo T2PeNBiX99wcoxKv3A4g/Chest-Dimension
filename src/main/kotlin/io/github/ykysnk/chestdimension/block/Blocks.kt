@@ -96,7 +96,8 @@ object Blocks : RegistryHelper<Block>() {
     val DEATH_BODY: Block = register(
         "death_body",
         DeathBodyBlock(
-            BlockBehaviour.Properties.of().mapColor(MCBlocks.SNOW.defaultMapColor()).strength(5.0f).noOcclusion()
+            BlockBehaviour.Properties.of().mapColor(MCBlocks.SNOW.defaultMapColor()).requiresCorrectToolForDrops()
+                .strength(2.0f).noOcclusion()
                 .pushReaction(PushReaction.DESTROY).sound(SoundType.BONE_BLOCK)
         )
     )

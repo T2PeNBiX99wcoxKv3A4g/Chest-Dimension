@@ -26,6 +26,7 @@ class BlockTagProvider(output: FabricDataOutput, registries: CompletableFuture<H
             .add(Blocks.CHEST_DIMENSION)
             .add(Blocks.WEATHER_TIME_CONTROLLER)
             .add(Blocks.TELEPORT_DOOR)
+        getOrCreateTagBuilder(MCBlockTags.MINEABLE_WITH_PICKAXE).add(Blocks.DEATH_BODY)
         getOrCreateTagBuilder(BlockTags.GLASS_PANES).add(Blocks.BLAST_RESISTANT_GLASS_PANE)
     }
 }
