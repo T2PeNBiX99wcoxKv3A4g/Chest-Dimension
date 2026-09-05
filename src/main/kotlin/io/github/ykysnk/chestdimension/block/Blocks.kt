@@ -97,7 +97,7 @@ object Blocks : RegistryHelper<Block>() {
         "death_body",
         DeathBodyBlock(
             BlockBehaviour.Properties.of().mapColor(MCBlocks.SNOW.defaultMapColor()).strength(5.0f).noOcclusion()
-                .pushReaction(PushReaction.DESTROY).sound(SoundType.GRAVEL)
+                .pushReaction(PushReaction.DESTROY).sound(SoundType.BONE_BLOCK)
         )
     )
 }

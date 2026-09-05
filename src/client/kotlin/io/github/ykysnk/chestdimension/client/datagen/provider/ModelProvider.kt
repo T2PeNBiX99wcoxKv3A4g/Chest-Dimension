@@ -54,7 +54,7 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
         blockStateModelGenerator.createDoor(Blocks.TELEPORT_DOOR)
         blockStateModelGenerator.blockEntityModels(
             ModelLocationUtils.getModelLocation(Blocks.DEATH_BODY),
-            MCBlocks.BONE_BLOCK
+            MCBlocks.WHITE_WOOL
         ).createWithoutBlockItem(Blocks.DEATH_BODY)
     }
 

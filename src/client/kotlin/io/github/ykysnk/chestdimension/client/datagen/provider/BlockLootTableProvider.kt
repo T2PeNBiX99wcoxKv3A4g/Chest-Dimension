@@ -3,6 +3,7 @@ package io.github.ykysnk.chestdimension.client.datagen.provider
 import io.github.ykysnk.chestdimension.block.Blocks
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider
+import net.minecraft.world.item.Items
 
 class BlockLootTableProvider(output: FabricDataOutput) : FabricBlockLootTableProvider(output) {
     override fun generate() {
@@ -15,6 +16,7 @@ class BlockLootTableProvider(output: FabricDataOutput) : FabricBlockLootTablePro
         dropSelf(Blocks.TELEPORT_PRESSURE_PLATE)
         dropSelf(Blocks.CHEST_DIMENSION)
         dropSelf(Blocks.WEATHER_TIME_CONTROLLER)
+        dropOther(Blocks.DEATH_BODY, Items.BONE)
         add(Blocks.TELEPORT_DOOR, createDoorTable(Blocks.TELEPORT_DOOR))
     }
 }
