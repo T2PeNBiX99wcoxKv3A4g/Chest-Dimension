@@ -1,6 +1,9 @@
 package io.github.ykysnk.chestdimension.client.renderer.blockentity
 
 import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.math.Axis
+import io.github.ykysnk.chestdimension.block.Blocks
+import io.github.ykysnk.chestdimension.block.DeathBodyBlock
 import io.github.ykysnk.chestdimension.block.entity.DeathBodyBlockEntity
 import net.minecraft.client.model.SkeletonModel
 import net.minecraft.client.model.geom.ModelLayers
@@ -8,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
+import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.monster.Skeleton
 
@@ -25,9 +29,15 @@ class DeathBodyRenderer(
         packedLight: Int,
         packedOverlay: Int
     ) {
-        poseStack.pushPose()
+        val level = blockEntity.getLevel()
+        val blockState = if (level != null) blockEntity.blockState else Blocks.DEATH_BODY.defaultBlockState()
+            .setValue(DeathBodyBlock.FACING, Direction.SOUTH)
 
-        poseStack.translate(0.5, 2.3, 0.9)
+        poseStack.pushPose()
+        val facingYRot = blockState.getValue(DeathBodyBlock.FACING).toYRot()
+        poseStack.translate(0.5, 0.0, 0.5)
+        poseStack.mulPose(Axis.YP.rotationDegrees(-facingYRot + 180f))
+        poseStack.translate(0.0, 2.3, 0.4)
         poseStack.scale(-1.0f, -1.0f, 1.0f)
         poseStack.scale(2.0f, 2.0f, 2.0f)
 
