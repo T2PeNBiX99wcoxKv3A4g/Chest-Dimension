@@ -70,10 +70,7 @@ class ChestDimensionBlock(properties: Properties) :
         }
     }
 
-    @Deprecated(
-        "Deprecated in Java",
-        ReplaceWith("SHAPE", "io.github.ykysnk.chestdimension.block.ChestDimensionBlock.Companion.SHAPE")
-    )
+    @Deprecated("Deprecated in Java")
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         return SHAPE
     }
@@ -150,23 +147,11 @@ class ChestDimensionBlock(properties: Properties) :
         }
     }
 
-    @Deprecated(
-        "Deprecated in Java",
-        ReplaceWith(
-            "state.setValue(FACING, rotation.rotate(state.getValue(FACING)))",
-            "net.minecraft.world.level.block.EnderChestBlock"
-        )
-    )
+    @Deprecated("Deprecated in Java")
     override fun rotate(state: BlockState, rotation: Rotation): BlockState =
         state.setValue(FACING, rotation.rotate(state.getValue(FACING)))
 
-    @Deprecated(
-        "Deprecated in Java",
-        ReplaceWith(
-            "state.rotate(mirror.getRotation(state.getValue(FACING)))",
-            "net.minecraft.world.level.block.EnderChestBlock"
-        )
-    )
+    @Deprecated("Deprecated in Java")
     override fun mirror(state: BlockState, mirror: Mirror): BlockState =
         state.rotate(mirror.getRotation(state.getValue(FACING)))
 
@@ -174,14 +159,7 @@ class ChestDimensionBlock(properties: Properties) :
         builder.add(FACING, WATERLOGGED)
     }
 
-    @Deprecated(
-        "Deprecated in Java", ReplaceWith(
-            "if (state.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(state)",
-            "net.minecraft.world.level.block.EnderChestBlock",
-            "net.minecraft.world.level.material.Fluids",
-            "net.minecraft.world.level.block.AbstractChestBlock"
-        )
-    )
+    @Deprecated("Deprecated in Java")
     override fun getFluidState(state: BlockState): FluidState =
         if (state.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(state)
 
@@ -201,7 +179,7 @@ class ChestDimensionBlock(properties: Properties) :
         return super.updateShape(state, direction, neighborState, level, pos, neighborPos)
     }
 
-    @Deprecated("Deprecated in Java", ReplaceWith("false"))
+    @Deprecated("Deprecated in Java")
     override fun isPathfindable(
         state: BlockState,
         level: BlockGetter,

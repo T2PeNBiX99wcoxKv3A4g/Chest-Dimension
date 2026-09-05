@@ -34,13 +34,7 @@ abstract class BaseTeleportPressurePlateBlock(properties: Properties, private va
         protected val TOUCH_AABB: AABB = AABB(0.0625, 0.0, 0.0625, 0.9375, 0.25, 0.9375)
     }
 
-    @Deprecated(
-        "Deprecated in Java", ReplaceWith(
-            "if (getSignalForState(state)) PRESSED_AABB else AABB",
-            "io.github.ykysnk.chestdimension.block.BaseTeleportPressurePlateBlock.Companion.PRESSED_AABB",
-            "io.github.ykysnk.chestdimension.block.BaseTeleportPressurePlateBlock.Companion.AABB"
-        )
-    )
+    @Deprecated("Deprecated in Java")
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape =
         if (getSignalForState(state)) PRESSED_AABB else AABB
 
@@ -52,14 +46,7 @@ abstract class BaseTeleportPressurePlateBlock(properties: Properties, private va
         return true
     }
 
-    @Deprecated(
-        "Deprecated in Java", ReplaceWith(
-            "if (direction == Direction.DOWN && !state.canSurvive( level, pos ) ) Blocks.AIR.defaultBlockState() else super.updateShape(state, direction, neighborState, level, pos, neighborPos)",
-            "net.minecraft.core.Direction",
-            "net.minecraft.world.level.block.Blocks",
-            "net.minecraft.world.level.block.Block"
-        )
-    )
+    @Deprecated("Deprecated in Java")
     override fun updateShape(
         state: BlockState,
         direction: Direction,

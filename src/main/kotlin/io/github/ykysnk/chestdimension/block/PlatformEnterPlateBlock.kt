@@ -31,14 +31,7 @@ class PlatformEnterPlateBlock(properties: Properties) : Block(properties.sound(S
         return true
     }
 
-    @Deprecated(
-        "Deprecated in Java", ReplaceWith(
-            "if (direction == Direction.DOWN && !state.canSurvive( level, pos ) ) Blocks.AIR.defaultBlockState() else super.updateShape(state, direction, neighborState, level, pos, neighborPos)",
-            "net.minecraft.core.Direction",
-            "net.minecraft.world.level.block.Blocks",
-            "net.minecraft.world.level.block.Block"
-        )
-    )
+    @Deprecated("Deprecated in Java")
     override fun updateShape(
         state: BlockState,
         direction: Direction,
