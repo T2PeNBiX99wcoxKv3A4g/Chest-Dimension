@@ -23,8 +23,8 @@ object StructureSets {
             StructureSet(
                 structures.getOrThrow(Structures.DEATH_BODY),
                 RandomSpreadStructurePlacement(
-                    10,
                     5,
+                    3,
                     RandomSpreadType.LINEAR,
                     123456789
                 )
