@@ -17,7 +17,7 @@ object NoiseRouterData {
     private const val VEININESS_FREQUENCY = 1.5
     private const val NOODLE_SPACING_AND_STRAIGHTNESS = 1.5
     private const val SURFACE_DENSITY_THRESHOLD = 1.5625
-    private val CHEESE_NOISE_TARGET = -0.703125
+    private const val CHEESE_NOISE_TARGET = -0.703125
     private val BLENDING_FACTOR: DensityFunction = DensityFunctions.constant(10.0)
     private val BLENDING_JAGGEDNESS: DensityFunction = DensityFunctions.zero()
     private val ZERO: ResourceKey<DensityFunction> = createKey("zero")
@@ -147,7 +147,7 @@ object NoiseRouterData {
             densityFunction10,
             getFunction(densityFunctions, NoiseRouterData.RIDGES),
             slideUndefined(
-                DensityFunctions.add(densityFunction11, DensityFunctions.constant((-0.703125f).toDouble()))
+                DensityFunctions.add(densityFunction11, DensityFunctions.constant(CHEESE_NOISE_TARGET))
                     .clamp(-64.0, 64.0)
             ),
             densityFunction15,
