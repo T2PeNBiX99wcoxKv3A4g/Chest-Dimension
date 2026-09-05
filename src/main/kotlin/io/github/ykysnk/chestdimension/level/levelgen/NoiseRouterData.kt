@@ -162,7 +162,7 @@ object NoiseRouterData {
             densityFunction,
             -128,
             320,
-            180,
+            200,
             140,
             -0.078125,
             0,
