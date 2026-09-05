@@ -6,6 +6,9 @@ import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
 import io.github.ykysnk.chestdimension.level.levelgen.NoiseGeneratorSettings
 import io.github.ykysnk.chestdimension.level.levelgen.feature.ConfiguredFeatures
 import io.github.ykysnk.chestdimension.level.levelgen.feature.PlacedFeatures
+import io.github.ykysnk.chestdimension.level.levelgen.structure.StructureSets
+import io.github.ykysnk.chestdimension.level.levelgen.structure.Structures
+import io.github.ykysnk.chestdimension.level.levelgen.structure.TemplatePools
 import io.github.ykysnk.chestdimension.world.damagesource.DamageTypes
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
@@ -65,5 +68,8 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
         registryBuilder.add(Registries.NOISE_SETTINGS) { context ->
             context.register(NoiseGeneratorSettings.CHEST_UNDEFINED, NoiseGeneratorSettings.undefined(context))
         }
+        registryBuilder.add(Registries.TEMPLATE_POOL, TemplatePools::bootstrap)
+        registryBuilder.add(Registries.STRUCTURE, Structures::bootstrap)
+        registryBuilder.add(Registries.STRUCTURE_SET, StructureSets::bootstrap)
     }
 }
