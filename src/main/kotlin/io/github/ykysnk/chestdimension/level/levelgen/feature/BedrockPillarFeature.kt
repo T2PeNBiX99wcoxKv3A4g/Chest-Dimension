@@ -57,6 +57,12 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
     ): Boolean {
         var y = originY
         while (y > level.minBuildHeight && level.getBlockState(BlockPos(x, y - 1, z)).isAir) y--
+        for (i in 0 until 2) {
+            val testY = y - 1
+            if (testY <= level.minBuildHeight) break
+            if (level.getBlockState(BlockPos(x, testY, z)).isAir) break
+            y = testY
+        }
         val bedrock = Blocks.BEDROCK.defaultBlockState()
         var placed = false
         val maxHeight = config.maxHeight.coerceAtMost(level.maxBuildHeight)
