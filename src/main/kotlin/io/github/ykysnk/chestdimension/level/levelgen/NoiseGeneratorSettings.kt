@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.biome.OverworldBiomeBuilder
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings
-import net.minecraft.world.level.levelgen.NoiseRouterData
 
 object NoiseGeneratorSettings {
     val CHEST_UNDEFINED: ResourceKey<NoiseGeneratorSettings> =
@@ -18,7 +17,7 @@ object NoiseGeneratorSettings {
             NoiseSettings.UNDEFINED_NOISE_SETTINGS,
             Blocks.COBBLESTONE.defaultBlockState(),
             Blocks.WATER.defaultBlockState(),
-            NoiseRouterData.overworld(
+            NoiseRouterData.undefined(
                 context.lookup(Registries.DENSITY_FUNCTION),
                 context.lookup(Registries.NOISE),
                 large,
