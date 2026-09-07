@@ -19,8 +19,8 @@ object TemplatePools {
         ResourceKey.create(Registries.PROCESSOR_LIST, ResourceLocation("minecraft", "empty"))
     val EMPTY_POOL: ResourceKey<StructureTemplatePool> =
         ResourceKey.create(Registries.TEMPLATE_POOL, ResourceLocation("minecraft", "empty"))
-    val DEATH_BODY_POOL: ResourceKey<StructureTemplatePool> =
-        ResourceKey.create(Registries.TEMPLATE_POOL, id("death_body"))
+    val DEATH_BODY_CHEST_POOL: ResourceKey<StructureTemplatePool> =
+        ResourceKey.create(Registries.TEMPLATE_POOL, id("death_body_chest"))
 
     fun bootstrap(context: BootstapContext<StructureTemplatePool>) {
         val processors = context.lookup(Registries.PROCESSOR_LIST)
@@ -28,11 +28,11 @@ object TemplatePools {
         val fallback = context.lookup(Registries.TEMPLATE_POOL).getOrThrow(EMPTY_POOL)
         val elements = listOf(
             Pair.of(
-                SinglePoolElement.single(id("death_body").toString(), emptyProcessors)
+                SinglePoolElement.single(id("death_body_chest").toString(), emptyProcessors)
                     .apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 1
             )
         )
 
-        context.register(DEATH_BODY_POOL, StructureTemplatePool(fallback, elements))
+        context.register(DEATH_BODY_CHEST_POOL, StructureTemplatePool(fallback, elements))
     }
 }

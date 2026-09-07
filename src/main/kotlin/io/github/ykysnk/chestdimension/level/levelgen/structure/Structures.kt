@@ -20,12 +20,12 @@ import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure
 //import net.minecraft.data.worldgen.Structures as MCStructures
 
 object Structures {
-    val DEATH_BODY: ResourceKey<Structure> = ResourceKey.create(Registries.STRUCTURE, id("death_body"))
+    val DEATH_BODY_CHEST: ResourceKey<Structure> = ResourceKey.create(Registries.STRUCTURE, id("death_body_chest"))
 
     fun bootstrap(context: BootstapContext<Structure>) {
         val biomes: HolderGetter<Biome> = context.lookup(Registries.BIOME)
         val pools: HolderGetter<StructureTemplatePool> = context.lookup(Registries.TEMPLATE_POOL)
-        val biomeSet = HolderSet.direct(biomes.getOrThrow(Biomes.CHEST_PLATFORM_BIOME)) // TODO: Temp Disable
+        val biomeSet = HolderSet.direct(biomes.getOrThrow(Biomes.CHEST_UNDEFINED_BIOME))
         val settings = Structure.StructureSettings(
             biomeSet,
             emptyMap(),
@@ -34,10 +34,10 @@ object Structures {
         )
 
         context.register(
-            DEATH_BODY,
+            DEATH_BODY_CHEST,
             JigsawStructure(
                 settings,
-                pools.getOrThrow(TemplatePools.DEATH_BODY_POOL),
+                pools.getOrThrow(TemplatePools.DEATH_BODY_CHEST_POOL),
                 1,
                 ConstantHeight.of(VerticalAnchor.absolute(-2)),
                 false,

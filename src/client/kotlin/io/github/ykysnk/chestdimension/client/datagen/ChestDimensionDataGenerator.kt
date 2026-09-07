@@ -27,6 +27,7 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
         pack.addProvider(::BlockTagProvider)
         pack.addProvider(::DamageTypeTagProvider)
         pack.addProvider(::BlockLootTableProvider)
+        pack.addProvider(::SimpleLootTableProvider)
     }
 
     override fun buildRegistry(registryBuilder: RegistrySetBuilder) {

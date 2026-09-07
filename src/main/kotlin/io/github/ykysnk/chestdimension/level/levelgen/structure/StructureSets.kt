@@ -13,18 +13,19 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStruct
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType
 
 object StructureSets {
-    val DEATH_BODY_SET: ResourceKey<StructureSet> = ResourceKey.create(Registries.STRUCTURE_SET, id("death_body"))
+    val DEATH_BODY_CHEST_SET: ResourceKey<StructureSet> =
+        ResourceKey.create(Registries.STRUCTURE_SET, id("death_body_chest"))
 
     fun bootstrap(context: BootstapContext<StructureSet>) {
         val structures: HolderGetter<Structure> = context.lookup(Registries.STRUCTURE)
 
         context.register(
-            DEATH_BODY_SET,
+            DEATH_BODY_CHEST_SET,
             StructureSet(
-                structures.getOrThrow(Structures.DEATH_BODY),
+                structures.getOrThrow(Structures.DEATH_BODY_CHEST),
                 RandomSpreadStructurePlacement(
-                    5,
-                    3,
+                    20,
+                    10,
                     RandomSpreadType.LINEAR,
                     123456789
                 )

@@ -2,12 +2,12 @@
   "placement": {
     "type": "minecraft:random_spread",
     "salt": 123456789,
-    "separation": 3,
-    "spacing": 5
+    "separation": 10,
+    "spacing": 20
   },
   "structures": [
     {
-      "structure": "chest-dimension:death_body",
+      "structure": "chest-dimension:death_body_chest",
       "weight": 1
     }
   ]
