@@ -58,7 +58,10 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         random: RandomSource
     ): Boolean {
         var y = y
-        while (y > level.minBuildHeight && level.getBlockState(BlockPos(x, y - 1, z)).isAir) y--
+        while (y > level.minBuildHeight && (level.getBlockState(BlockPos(x, y - 1, z)).isAir || level.getBlockState(
+                BlockPos(x, y - 1, z)
+            ).`is`(MCBlocks.WATER))
+        ) y--
         val faceY = y
         for (i in 0 until 2) {
             val testY = y - 1
@@ -92,12 +95,21 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         var bodyPos = BlockPos(x, y, z).relative(direction)
 
         var y = bodyPos.y
-        while (y > level.minBuildHeight && level.getBlockState(BlockPos(bodyPos.x, y - 1, bodyPos.z)).isAir) y--
+        while (y > level.minBuildHeight && (level.getBlockState(
+                BlockPos(
+                    bodyPos.x,
+                    y - 1,
+                    bodyPos.z
+                )
+            ).isAir || level.getBlockState(BlockPos(bodyPos.x, y - 1, bodyPos.z)).`is`(MCBlocks.WATER))
+        ) y--
 
         bodyPos = BlockPos(bodyPos.x, y, bodyPos.z)
 
-        if (!level.getBlockState(bodyPos).isAir) return false
+        if (!level.getBlockState(bodyPos).isAir && !level.getBlockState(bodyPos).`is`(MCBlocks.WATER)) return false
         val bodyState = Blocks.DEATH_BODY.defaultBlockState().setValue(DeathBodyBlock.FACING, direction)
+        if (level.getBlockState(bodyPos).`is`(MCBlocks.WATER))
+            bodyState.setValue(DeathBodyBlock.WATERLOGGED, true)
         if (!bodyState.canSurvive(level, bodyPos)) return false
 
         level.setBlock(bodyPos, bodyState, 2)
