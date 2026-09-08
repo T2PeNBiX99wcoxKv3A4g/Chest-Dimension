@@ -39,7 +39,7 @@ class SimpleLootTableProvider(output: FabricDataOutput) :
                         .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 5.0f)))
                 ).add(
                     LootItem.lootTableItem(MCItems.BREAD).setWeight(8)
-                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 3.0f)))
+                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(10.0f, 20.0f)))
                 ).add(
                     LootItem.lootTableItem(MCItems.GOLD_NUGGET).setWeight(5)
                         .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0f, 8.0f)))
