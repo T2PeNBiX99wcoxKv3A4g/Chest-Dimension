@@ -1,2 +1,3 @@
-// 1.20.1	2026-09-07T21:06:23.9578501	Chest Dimension/minecraft:chest Loot Table
+// 1.20.1	2026-09-08T17:48:22.5887497	Chest Dimension/minecraft:chest Loot Table
 2147c67d6e55548c000b2ce6410ad49993196830 data\chest-dimension\loot_tables\chests\death_body_chest.json
+c04727927416390059f58bfc913be47c22cdcc9a data\chest-dimension\loot_tables\chests\small_shelter.json
