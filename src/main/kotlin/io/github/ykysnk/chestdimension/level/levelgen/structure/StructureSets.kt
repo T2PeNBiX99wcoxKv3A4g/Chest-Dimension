@@ -40,8 +40,8 @@ object StructureSets {
             StructureSet(
                 structures.getOrThrow(Structures.SMALL_SHELTER),
                 RandomSpreadStructurePlacement(
-                    50,
                     40,
+                    30,
                     RandomSpreadType.LINEAR,
                     2067080282
                 )
