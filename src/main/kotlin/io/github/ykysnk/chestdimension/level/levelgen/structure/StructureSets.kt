@@ -16,6 +16,9 @@ object StructureSets {
     val DEATH_BODY_CHEST_SET: ResourceKey<StructureSet> =
         ResourceKey.create(Registries.STRUCTURE_SET, id("death_body_chest"))
 
+    val SMALL_SHELTER_SET: ResourceKey<StructureSet> =
+        ResourceKey.create(Registries.STRUCTURE_SET, id("small_shelter"))
+
     fun bootstrap(context: BootstapContext<StructureSet>) {
         val structures: HolderGetter<Structure> = context.lookup(Registries.STRUCTURE)
 
@@ -27,7 +30,20 @@ object StructureSets {
                     20,
                     10,
                     RandomSpreadType.LINEAR,
-                    123456789
+                    1709669654
+                )
+            )
+        )
+
+        context.register(
+            SMALL_SHELTER_SET,
+            StructureSet(
+                structures.getOrThrow(Structures.SMALL_SHELTER),
+                RandomSpreadStructurePlacement(
+                    50,
+                    40,
+                    RandomSpreadType.LINEAR,
+                    2067080282
                 )
             )
         )

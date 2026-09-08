@@ -21,6 +21,7 @@ import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure
 
 object Structures {
     val DEATH_BODY_CHEST: ResourceKey<Structure> = ResourceKey.create(Registries.STRUCTURE, id("death_body_chest"))
+    val SMALL_SHELTER: ResourceKey<Structure> = ResourceKey.create(Registries.STRUCTURE, id("small_shelter"))
 
     fun bootstrap(context: BootstapContext<Structure>) {
         val biomes: HolderGetter<Biome> = context.lookup(Registries.BIOME)
@@ -40,6 +41,18 @@ object Structures {
                 pools.getOrThrow(TemplatePools.DEATH_BODY_CHEST_POOL),
                 1,
                 ConstantHeight.of(VerticalAnchor.absolute(-2)),
+                false,
+                Heightmap.Types.WORLD_SURFACE_WG
+            )
+        )
+
+        context.register(
+            SMALL_SHELTER,
+            JigsawStructure(
+                settings,
+                pools.getOrThrow(TemplatePools.SMALL_SHELTER_POOL),
+                1,
+                ConstantHeight.of(VerticalAnchor.absolute(-1)),
                 false,
                 Heightmap.Types.WORLD_SURFACE_WG
             )

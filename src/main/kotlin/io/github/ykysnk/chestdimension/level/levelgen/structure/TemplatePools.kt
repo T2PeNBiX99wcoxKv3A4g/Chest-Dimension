@@ -21,18 +21,27 @@ object TemplatePools {
         ResourceKey.create(Registries.TEMPLATE_POOL, ResourceLocation("minecraft", "empty"))
     val DEATH_BODY_CHEST_POOL: ResourceKey<StructureTemplatePool> =
         ResourceKey.create(Registries.TEMPLATE_POOL, id("death_body_chest"))
+    val SMALL_SHELTER_POOL: ResourceKey<StructureTemplatePool> =
+        ResourceKey.create(Registries.TEMPLATE_POOL, id("small_shelter"))
 
     fun bootstrap(context: BootstapContext<StructureTemplatePool>) {
         val processors = context.lookup(Registries.PROCESSOR_LIST)
         val emptyProcessors = processors.getOrThrow(EMPTY_PROCESSOR_LIST)
         val fallback = context.lookup(Registries.TEMPLATE_POOL).getOrThrow(EMPTY_POOL)
-        val elements = listOf(
+        val deathBodyChestElements = listOf(
             Pair.of(
                 SinglePoolElement.single(id("death_body_chest").toString(), emptyProcessors)
                     .apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 1
             )
         )
+        val smallShelterElements = listOf(
+            Pair.of(
+                SinglePoolElement.single(id("small_shelter").toString(), emptyProcessors)
+                    .apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 1
+            )
+        )
 
-        context.register(DEATH_BODY_CHEST_POOL, StructureTemplatePool(fallback, elements))
+        context.register(DEATH_BODY_CHEST_POOL, StructureTemplatePool(fallback, deathBodyChestElements))
+        context.register(SMALL_SHELTER_POOL, StructureTemplatePool(fallback, smallShelterElements))
     }
 }
