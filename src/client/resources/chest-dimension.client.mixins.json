@@ -3,6 +3,7 @@
   "package": "io.github.ykysnk.chestdimension.client.mixin",
   "compatibilityLevel": "JAVA_25",
   "client": [
+    "MinecraftMixin",
     "SheetsMixin"
   ],
   "injectors": {
