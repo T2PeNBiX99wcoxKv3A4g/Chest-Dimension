@@ -2,7 +2,6 @@ package io.github.ykysnk.chestdimension.level.biome
 
 import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.levelgen.feature.PlacedFeatures
-import io.github.ykysnk.chestdimension.sounds.Musics
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
 import net.minecraft.resources.ResourceKey
@@ -43,7 +42,6 @@ object Biomes {
             .skyColor(0)
             .waterColor(0)
             .waterFogColor(0)
-            .backgroundMusic(Musics.CHEST_UNDEFINED)
             .build()
     }
 
