@@ -10,5 +10,6 @@
   },
   "start_pool": "chest-dimension:small_shelter",
   "step": "surface_structures",
+  "terrain_adaptation": "bury",
   "use_expansion_hack": false
 }
