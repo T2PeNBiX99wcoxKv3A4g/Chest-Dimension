@@ -3,6 +3,12 @@
   "downfall": 1.0,
   "effects": {
     "fog_color": 0,
+    "music": {
+      "max_delay": 0,
+      "min_delay": 0,
+      "replace_current_music": true,
+      "sound": "chest-dimension:music.chest_undefined"
+    },
     "sky_color": 0,
     "water_color": 0,
     "water_fog_color": 0
