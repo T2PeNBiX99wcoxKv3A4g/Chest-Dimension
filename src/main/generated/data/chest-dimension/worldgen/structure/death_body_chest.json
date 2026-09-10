@@ -10,6 +10,5 @@
   },
   "start_pool": "chest-dimension:death_body_chest",
   "step": "surface_structures",
-  "terrain_adaptation": "bury",
   "use_expansion_hack": false
 }

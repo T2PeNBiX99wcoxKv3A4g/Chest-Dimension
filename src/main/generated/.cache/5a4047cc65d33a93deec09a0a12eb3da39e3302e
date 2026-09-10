@@ -1,10 +1,10 @@
-// 1.20.1	2026-09-10T18:51:02.1060043	Chest Dimension/Chest Dimension Dynamic Registries
-e13d1f2596ffc32123b6612a15f7774e04ba8bbd data\chest-dimension\worldgen\structure\small_shelter.json
+// 1.20.1	2026-09-10T18:58:38.4245492	Chest Dimension/Chest Dimension Dynamic Registries
+de7426e1212fe8aa862a14c47df27f3afd956914 data\chest-dimension\worldgen\structure\small_shelter.json
 1c5891c8559220548898ced4c204dc8177bd8818 data\chest-dimension\damage_type\explosion_by_teleport_door.json
 4b18d1579a5e67ab9a86d6d5085bb019b39a69fd data\chest-dimension\worldgen\template_pool\small_shelter.json
 5f3e1961dd27cd02c665704aefe31dd0f0305847 data\chest-dimension\damage_type\explosion_by_chest.json
 cd37b2c5e4df3bcb298d17eb3ac501d057442dc2 data\chest-dimension\worldgen\structure_set\small_shelter.json
-c40d2f591fb2e801d13715bd612e23a36edff1ec data\chest-dimension\worldgen\structure\death_body_chest.json
+7a342e8b82f4f50734448e720383a29a390b8940 data\chest-dimension\worldgen\structure\death_body_chest.json
 b475a8c5b8916b829ed408b6ededd51be7293617 data\chest-dimension\worldgen\structure_set\death_body_chest.json
 8e0f5d33e986a801a4627a3634d0a1c1f910fd90 data\chest-dimension\worldgen\template_pool\death_body_chest.json
 712409b1c05a7234dcc4128784333950305c733b data\chest-dimension\dimension_type\chest_platform.json

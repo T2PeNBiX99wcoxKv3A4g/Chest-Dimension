@@ -31,7 +31,7 @@ object Structures {
             biomeSet,
             emptyMap(),
             GenerationStep.Decoration.SURFACE_STRUCTURES,
-            TerrainAdjustment.BURY
+            TerrainAdjustment.NONE
         )
 
         context.register(
