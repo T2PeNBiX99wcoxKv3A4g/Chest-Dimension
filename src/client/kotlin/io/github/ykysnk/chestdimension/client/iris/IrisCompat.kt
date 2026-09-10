@@ -16,5 +16,13 @@ object IrisCompat : ModCompat("iris") {
             SimpleResourceLocation("end_portal"),
             SimpleResourceLocation(MOD_ID, "teleport_door")
         )
+        IrisBlockRegistry.register(
+            SimpleResourceLocation("glass"),
+            SimpleResourceLocation(MOD_ID, "blast_resistant_glass")
+        )
+        IrisBlockRegistry.register(
+            SimpleResourceLocation("glass_pane"),
+            SimpleResourceLocation(MOD_ID, "blast_resistant_glass_pane")
+        )
     }
 }
