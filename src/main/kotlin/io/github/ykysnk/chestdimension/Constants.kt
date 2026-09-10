@@ -11,6 +11,8 @@ import io.github.ykysnk.chestdimension.level.ChestLevelManager
 import io.github.ykysnk.chestdimension.level.UndefinedLevelManager
 import io.github.ykysnk.chestdimension.level.levelgen.feature.Features
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
+import io.github.ykysnk.chestdimension.sounds.Musics
+import io.github.ykysnk.chestdimension.sounds.SoundEvents
 import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.TaskPool
 import io.github.ykysnk.chestdimension.world.Network
@@ -44,7 +46,7 @@ object Constants {
 
     val ForceInitialize: Unit by lazy {
         LOGGER.debug(
-            "{} {} {} {} {} {} {} {} {} {} {}",
+            "{} {} {} {} {} {} {} {} {} {} {} {} {}",
             Configs,
             Blocks,
             Items,
@@ -55,7 +57,9 @@ object Constants {
             Network,
             ChestDimCommand,
             TaskPool,
-            Features
+            Features,
+            SoundEvents,
+            Musics
         )
     }
 
