@@ -41,6 +41,8 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
             .getHolderOrThrow(NoiseGeneratorSettings.CHEST_UNDEFINED)
     }
 
+    private val worldKey by lazy { ResourceKey.create(Registries.DIMENSION, id("undefined")) }
+
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
 
@@ -48,7 +50,6 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
         val levelStem = LevelStem(dimensionType, generator)
         if (!data.created) return
-        val worldKey = createWorldKey()
         val seed = data.seed
         val worldOptions = WorldOptions(seed, true, false)
         val level = createServerLevel(server, levelStem, worldOptions)
@@ -59,7 +60,6 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
     fun getOrCreate(server: MinecraftServer): UndefinedServerLevel {
         loaded?.let { return it }
 
-        val worldKey = createWorldKey()
         val worldOptions = WorldOptions.defaultWithRandomSeed()
         val seed = worldOptions.seed()
         val biomeSource = FixedBiomeSource(biome)
@@ -83,7 +83,6 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val storage = ChestLevelStorage.access
         val listener = chunkProgressListener
         val isDebugWorld = server.worldData.isDebugWorld
-        val worldKey = createWorldKey()
         val obfuscateSeed = BiomeManager.obfuscateSeed(worldOptions.seed())
 
         ChestServerLevelContext.worldOptions.set(worldOptions)
@@ -104,8 +103,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         }.getOrThrow()
     }
 
-    private fun createWorldKey(): ResourceKey<Level> =
-        ResourceKey.create(Registries.DIMENSION, id("undefined"))
+    fun isInsideUndefinedDimension(levelKey: ResourceKey<Level>): Boolean = levelKey == worldKey
 
     override fun loadData(): UndefinedData {
         val tag = NbtIo.readCompressed(File(dataPath.toUri()))

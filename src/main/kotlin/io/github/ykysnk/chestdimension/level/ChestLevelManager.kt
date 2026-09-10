@@ -47,6 +47,7 @@ object ChestLevelManager {
     }
     private val loaded = mutableMapOf<UUID, LoadedChestLevel>()
     private val levelToUUID = mutableMapOf<ResourceKey<Level>, UUID>()
+    private val worldKeyCache = mutableMapOf<UUID, ResourceKey<Level>>()
     private lateinit var chunkProgressListener: ChunkProgressListener
     private val defaultSpawnPos by lazy { BlockPos(0, 1, 0) }
     private val biome by lazy {
@@ -328,8 +329,12 @@ object ChestLevelManager {
     fun isInsideChestDimension(levelKey: ResourceKey<Level>): Boolean =
         levelKey.location().toString().startsWith("${Constants.MOD_ID}:chest/")
 
-    private fun createWorldKey(uuid: UUID): ResourceKey<Level> =
-        ResourceKey.create(Registries.DIMENSION, id("chest/$uuid/platform"))
+    private fun createWorldKey(uuid: UUID): ResourceKey<Level> {
+        worldKeyCache[uuid]?.let { return it }
+        val key = ResourceKey.create(Registries.DIMENSION, id("chest/$uuid/platform"))
+        worldKeyCache[uuid] = key
+        return key
+    }
 
     private fun checkLevels() {
         val badData = hashSetOf<UUID>()
