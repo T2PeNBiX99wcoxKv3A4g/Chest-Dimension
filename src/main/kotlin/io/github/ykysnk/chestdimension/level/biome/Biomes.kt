@@ -2,9 +2,11 @@ package io.github.ykysnk.chestdimension.level.biome
 
 import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.levelgen.feature.PlacedFeatures
+import io.github.ykysnk.chestdimension.sounds.SoundEvents
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
 import net.minecraft.resources.ResourceKey
+import net.minecraft.sounds.Music
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.biome.BiomeGenerationSettings
 import net.minecraft.world.level.biome.BiomeSpecialEffects
@@ -36,12 +38,17 @@ object Biomes {
             .build()
     }
 
+    private val ChestUndefinedMusic by lazy {
+        Music(SoundEvents.MUSIC_CHEST_UNDEFINED, 0, 0, true)
+    }
+
     private val ChestUndefinedBiomeSpecialEffects: BiomeSpecialEffects by lazy {
         BiomeSpecialEffects.Builder()
             .fogColor(0)
             .skyColor(0)
             .waterColor(0)
             .waterFogColor(0)
+            .backgroundMusic(ChestUndefinedMusic)
             .build()
     }
 

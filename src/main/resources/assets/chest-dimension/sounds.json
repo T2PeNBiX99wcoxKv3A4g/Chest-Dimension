@@ -1,0 +1,7 @@
+{
+  "music.chest_undefined": {
+    "sounds": [
+      "chest-dimension:music/chest_undefined"
+    ]
+  }
+}
