@@ -1,8 +1,8 @@
-// 1.20.1	2026-09-11T23:58:19.2969316	Chest Dimension/minecraft:chest Loot Table
+// 1.20.1	2026-09-12T00:12:31.8500742	Chest Dimension/minecraft:chest Loot Table
 c689e8a2e6009cbf8a499385e98999ad5fcf9487 data\chest-dimension\loot_tables\chests\death_body_chest.json
 1758c7fc0e5b31e65671c0443c5ccc27eef3fa09 data\chest-dimension\loot_tables\chests\small_shelter\basement\room\storage.json
 7245a19244bedc67656c42e14f5cd828b37011a7 data\chest-dimension\loot_tables\chests\small_shelter\basement\room\farm.json
-14611182009ea49bacb01e2df4c6eaafdfd3665b data\chest-dimension\loot_tables\chests\small_shelter\basement\entrance\storage.json
 9f8d66aaf9c943de4c7dd6936dfe5922dc1ad1a4 data\chest-dimension\loot_tables\chests\small_shelter\basement\room\kitchen.json
+14611182009ea49bacb01e2df4c6eaafdfd3665b data\chest-dimension\loot_tables\chests\small_shelter\basement\entrance\storage.json
 df0a139a886efa6360efe259a3208c7dfeb3b941 data\chest-dimension\loot_tables\chests\small_shelter\basement\room\enchanting.json
 5caa371eb97de226f4961b11b73047c5d5e92e10 data\chest-dimension\loot_tables\chests\small_shelter\basement\room\smeltery.json
