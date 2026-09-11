@@ -84,6 +84,12 @@ object TemplatePools {
                 ),
                 Pair.of(
                     SinglePoolElement.single(
+                        NameSpaces.MOD("small_shelter/basement/hallway/junction").toString(),
+                        emptyProcessors
+                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 2
+                ),
+                Pair.of(
+                    SinglePoolElement.single(
                         NameSpaces.MOD("small_shelter/basement/hallway/room_enter").toString(),
                         emptyProcessors
                     ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 2

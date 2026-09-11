@@ -3,7 +3,7 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "chest-dimension:small_shelter",
+        "location": "chest-dimension:small_shelter/main",
         "processors": "minecraft:empty",
         "projection": "rigid"
       },

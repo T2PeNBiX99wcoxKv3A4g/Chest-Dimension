@@ -5,7 +5,7 @@
         "element_type": "minecraft:single_pool_element",
         "location": "chest-dimension:death_body_chest",
         "processors": "minecraft:empty",
-        "projection": "rigid"
+        "projection": "terrain_matching"
       },
       "weight": 1
     }
