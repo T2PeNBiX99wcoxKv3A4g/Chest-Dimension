@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package io.github.ykysnk.chestdimension.extensions
 
 import net.minecraft.world.level.storage.loot.LootPool
