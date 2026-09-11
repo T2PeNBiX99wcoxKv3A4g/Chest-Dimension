@@ -9,11 +9,11 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.level.block.Block
 
 object BlockTags : RegistryHelper<TagKey<Block>>() {
-    private fun create(location: ResourceLocation): TagKey<Block> =
+    private fun bind(location: ResourceLocation): TagKey<Block> =
         register(TagKey.create(Registries.BLOCK, location))
 
     @Suppress("unused")
-    private fun create(name: String): TagKey<Block> = create(NameSpaces.MOD(name))
+    private fun bind(name: String): TagKey<Block> = bind(NameSpaces.MOD(name))
 
-    val GLASS_PANES = create(NameSpaces.FORGE("glass_panes"))
+    val GLASS_PANES = bind(NameSpaces.FORGE("glass_panes"))
 }
