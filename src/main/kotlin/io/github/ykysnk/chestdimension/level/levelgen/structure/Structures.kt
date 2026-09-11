@@ -40,7 +40,7 @@ object Structures {
             DEATH_BODY_CHEST,
             JigsawStructure(
                 settings,
-                pools.getOrThrow(TemplatePools.DEATH_BODY_CHEST_POOL),
+                pools.getOrThrow(TemplatePools.DEATH_BODY_CHEST_MAIN_POOL),
                 1,
                 ConstantHeight.of(VerticalAnchor.absolute(-2)),
                 false,
