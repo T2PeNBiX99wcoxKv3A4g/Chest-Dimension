@@ -16,4 +16,6 @@ inline fun LootTable.Builder.build(block: LootTable.Builder.() -> Unit): LootTab
     return this
 }
 
-inline fun LootTable.Builder.withPool(block: () -> LootPool.Builder): LootTable.Builder = withPool(block())
+inline fun LootTable.Builder.withPool(block: LootPool.Builder.() -> Unit): LootTable.Builder {
+    return withPool(LootPool.lootPool().build(block))
+}

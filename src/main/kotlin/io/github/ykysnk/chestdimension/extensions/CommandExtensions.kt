@@ -14,17 +14,13 @@ import java.util.*
 inline fun ArgumentBuilder<CommandSourceStack, *>.literal(
     name: String,
     block: LiteralArgumentBuilder<CommandSourceStack>.() -> Unit
-) {
-    then(Commands.literal(name).apply(block))
-}
+): ArgumentBuilder<CommandSourceStack, *> = then(Commands.literal(name).apply(block))
 
 inline fun <T> ArgumentBuilder<CommandSourceStack, *>.argument(
     name: String,
     type: ArgumentType<T>,
     block: RequiredArgumentBuilder<CommandSourceStack, T>.() -> Unit
-) {
-    then(Commands.argument(name, type).apply(block))
-}
+): ArgumentBuilder<CommandSourceStack, *> = then(Commands.argument(name, type).apply(block))
 
 internal inline fun ArgumentBuilder<CommandSourceStack, *>.uuidArg(block: RequiredArgumentBuilder<CommandSourceStack, UUID>.() -> Unit) =
     argument("uuid", UuidArgument.uuid()) {

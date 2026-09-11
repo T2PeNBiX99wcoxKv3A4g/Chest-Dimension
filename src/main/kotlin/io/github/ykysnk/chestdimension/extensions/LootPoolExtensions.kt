@@ -1,7 +1,10 @@
 package io.github.ykysnk.chestdimension.extensions
 
+import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.storage.loot.LootPool
+import net.minecraft.world.level.storage.loot.entries.LootItem
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -17,3 +20,9 @@ inline fun LootPool.Builder.build(block: LootPool.Builder.() -> Unit): LootPool.
 }
 
 inline fun LootPool.Builder.add(block: () -> LootPoolEntryContainer.Builder<*>): LootPool.Builder = add(block())
+
+inline fun LootPool.Builder.lootTableItem(
+    item: ItemLike,
+    block: LootPoolSingletonContainer.Builder<*>.() -> Unit
+): LootPool.Builder =
+    add(LootItem.lootTableItem(item).build(block))
