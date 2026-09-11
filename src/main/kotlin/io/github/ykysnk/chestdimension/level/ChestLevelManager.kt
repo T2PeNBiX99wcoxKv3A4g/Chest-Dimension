@@ -7,7 +7,6 @@ import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
 import io.github.ykysnk.chestdimension.event.UtilsEvents
 import io.github.ykysnk.chestdimension.extensions.*
-import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.biome.Biomes
 import io.github.ykysnk.chestdimension.level.chunk.ChestChunkGenerator
 import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
@@ -332,7 +331,7 @@ object ChestLevelManager {
 
     private fun createWorldKey(uuid: UUID): ResourceKey<Level> {
         worldKeyCache[uuid]?.let { return it }
-        val key = ResourceKey.create(Registries.DIMENSION, id("chest/$uuid/platform"))
+        val key = ResourceKey.create(Registries.DIMENSION, NameSpaces.MOD("chest/$uuid/platform"))
         return worldKeyCache.putAndGet(uuid, key)
     }
 
