@@ -10,10 +10,10 @@ enum class NameSpaces(val id: String) {
     FORGE("c"),
     MINECRAFT("minecraft");
 
-    fun path(name: String) = ResourceLocation(id, name)
+    fun path(path: String) = ResourceLocation(id, path)
     fun pathSimple(name: String) = SimpleResourceLocation(id, name)
 
     override fun toString(): String = id
     operator fun invoke() = id
-    operator fun invoke(name: String) = path(name)
+    operator fun invoke(path: String) = path(path)
 }
