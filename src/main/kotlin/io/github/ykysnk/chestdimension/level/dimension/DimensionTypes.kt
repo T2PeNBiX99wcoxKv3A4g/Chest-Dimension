@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.level.dimension
 
-import io.github.ykysnk.chestdimension.id
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.BlockTags
@@ -10,9 +10,10 @@ import net.minecraft.world.level.dimension.DimensionType
 import java.util.*
 
 object DimensionTypes {
-    val CHEST_PLATFORM: ResourceKey<DimensionType> = ResourceKey.create(Registries.DIMENSION_TYPE, id("chest_platform"))
+    val CHEST_PLATFORM: ResourceKey<DimensionType> =
+        ResourceKey.create(Registries.DIMENSION_TYPE, NameSpaces.MOD("chest_platform"))
     val CHEST_UNDEFINED: ResourceKey<DimensionType> =
-        ResourceKey.create(Registries.DIMENSION_TYPE, id("chest_undefined"))
+        ResourceKey.create(Registries.DIMENSION_TYPE, NameSpaces.MOD("chest_undefined"))
 
     val ChestPlatformDimensionType by lazy {
         DimensionType(
