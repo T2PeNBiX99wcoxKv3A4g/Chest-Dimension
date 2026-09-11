@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.level.biome
 
-import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.levelgen.feature.PlacedFeatures
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
 import net.minecraft.resources.ResourceKey
@@ -12,8 +12,10 @@ import net.minecraft.world.level.biome.MobSpawnSettings
 import net.minecraft.world.level.levelgen.GenerationStep
 
 object Biomes {
-    val CHEST_PLATFORM_BIOME: ResourceKey<Biome> = ResourceKey.create(Registries.BIOME, id("chest_platform_biome"))
-    val CHEST_UNDEFINED_BIOME: ResourceKey<Biome> = ResourceKey.create(Registries.BIOME, id("chest_undefined_biome"))
+    val CHEST_PLATFORM_BIOME: ResourceKey<Biome> =
+        ResourceKey.create(Registries.BIOME, NameSpaces.MOD("chest_platform_biome"))
+    val CHEST_UNDEFINED_BIOME: ResourceKey<Biome> =
+        ResourceKey.create(Registries.BIOME, NameSpaces.MOD("chest_undefined_biome"))
 
     val ChestPlatformBiomeType: Biome by lazy {
         Biome.BiomeBuilder()
