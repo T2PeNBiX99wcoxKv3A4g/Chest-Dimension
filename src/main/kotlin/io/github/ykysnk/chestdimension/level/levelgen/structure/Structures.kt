@@ -53,7 +53,7 @@ object Structures {
             JigsawStructure(
                 settings,
                 pools.getOrThrow(TemplatePools.SMALL_SHELTER_POOL),
-                1,
+                8,
                 ConstantHeight.of(VerticalAnchor.absolute(-1)),
                 false,
                 Heightmap.Types.WORLD_SURFACE_WG
