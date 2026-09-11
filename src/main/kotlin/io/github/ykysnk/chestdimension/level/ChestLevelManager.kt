@@ -12,6 +12,7 @@ import io.github.ykysnk.chestdimension.level.biome.Biomes
 import io.github.ykysnk.chestdimension.level.chunk.ChestChunkGenerator
 import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.TaskPool
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.BlockPos
@@ -327,7 +328,7 @@ object ChestLevelManager {
     fun isInsideChestDimension(level: Level): Boolean = isInsideChestDimension(level.dimension())
 
     fun isInsideChestDimension(levelKey: ResourceKey<Level>): Boolean =
-        levelKey.location().toString().startsWith("${Constants.MOD_ID}:chest/")
+        levelKey.location().toString().startsWith("${NameSpaces.MOD}:chest/")
 
     private fun createWorldKey(uuid: UUID): ResourceKey<Level> {
         worldKeyCache[uuid]?.let { return it }
