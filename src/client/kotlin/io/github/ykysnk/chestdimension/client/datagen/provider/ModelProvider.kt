@@ -4,8 +4,8 @@ package io.github.ykysnk.chestdimension.client.datagen.provider
 
 import com.google.gson.JsonObject
 import io.github.ykysnk.chestdimension.block.Blocks
-import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.item.Items
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
 import net.minecraft.core.registries.BuiltInRegistries
@@ -33,7 +33,10 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
         blockStateModelGenerator.createGlassBlocks(Blocks.BLAST_RESISTANT_GLASS, Blocks.BLAST_RESISTANT_GLASS_PANE)
 
         val chestPlatformEnterPlateTextureMapping = TextureMapping()
-        chestPlatformEnterPlateTextureMapping.put(TextureSlot.TEXTURE, id("block/chest_platform_enter_plate"))
+        chestPlatformEnterPlateTextureMapping.put(
+            TextureSlot.TEXTURE,
+            NameSpaces.MOD("block/chest_platform_enter_plate")
+        )
 
         val chestPlatformEnterPlateModel = ModelTemplates.PRESSURE_PLATE_UP.create(
             Blocks.CHEST_PLATFORM_ENTER_PLATE,
