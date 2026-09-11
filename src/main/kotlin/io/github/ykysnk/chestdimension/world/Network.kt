@@ -1,16 +1,16 @@
 package io.github.ykysnk.chestdimension.world
 
-import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.ChestServerLevel
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 
 object Network {
-    val SET_TIME = id("set_time")
-    val SET_WEATHER = id("set_weather")
-    val FREEZE_TIME = id("freeze_time")
-    val FREEZE_WEATHER = id("freeze_weather")
+    val SET_TIME = NameSpaces.MOD("set_time")
+    val SET_WEATHER = NameSpaces.MOD("set_weather")
+    val FREEZE_TIME = NameSpaces.MOD("freeze_time")
+    val FREEZE_WEATHER = NameSpaces.MOD("freeze_weather")
 
     init {
         ServerPlayNetworking.registerGlobalReceiver(SET_TIME) { server, player, _, buf, _ ->

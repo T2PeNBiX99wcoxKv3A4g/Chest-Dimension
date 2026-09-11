@@ -2,7 +2,7 @@
 
 package io.github.ykysnk.chestdimension.sounds
 
-import io.github.ykysnk.chestdimension.Constants.id
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
@@ -17,11 +17,11 @@ object SoundEvents : RegistryHelper<SoundEvent>() {
         SoundEvent.createFixedRangeEvent(location, range)
     )
 
-    private fun register(name: String): SoundEvent = register(id(name))
+    private fun register(name: String): SoundEvent = register(NameSpaces.MOD(name))
 
     private fun register(name: ResourceLocation): SoundEvent = register(name, name)
 
-    private fun registerForHolder(name: String): Holder.Reference<SoundEvent> = registerForHolder(id(name))
+    private fun registerForHolder(name: String): Holder.Reference<SoundEvent> = registerForHolder(NameSpaces.MOD(name))
 
     private fun registerForHolder(name: ResourceLocation): Holder.Reference<SoundEvent> = registerForHolder(name, name)
 

@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.level.levelgen
 
-import io.github.ykysnk.chestdimension.id
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
 import net.minecraft.resources.ResourceKey
@@ -10,7 +10,7 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings
 
 object NoiseGeneratorSettings {
     val CHEST_UNDEFINED: ResourceKey<NoiseGeneratorSettings> =
-        ResourceKey.create(Registries.NOISE_SETTINGS, id("chest_undefined"))
+        ResourceKey.create(Registries.NOISE_SETTINGS, NameSpaces.MOD("chest_undefined"))
 
     fun undefined(context: BootstapContext<*>): NoiseGeneratorSettings {
         return NoiseGeneratorSettings(

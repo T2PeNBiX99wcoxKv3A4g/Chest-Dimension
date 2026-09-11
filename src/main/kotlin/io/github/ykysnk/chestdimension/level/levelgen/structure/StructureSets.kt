@@ -2,7 +2,7 @@
 
 package io.github.ykysnk.chestdimension.level.levelgen.structure
 
-import io.github.ykysnk.chestdimension.id
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.minecraft.core.HolderGetter
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
@@ -14,10 +14,10 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType
 
 object StructureSets {
     val DEATH_BODY_CHEST_SET: ResourceKey<StructureSet> =
-        ResourceKey.create(Registries.STRUCTURE_SET, id("death_body_chest"))
+        ResourceKey.create(Registries.STRUCTURE_SET, NameSpaces.MOD("death_body_chest"))
 
     val SMALL_SHELTER_SET: ResourceKey<StructureSet> =
-        ResourceKey.create(Registries.STRUCTURE_SET, id("small_shelter"))
+        ResourceKey.create(Registries.STRUCTURE_SET, NameSpaces.MOD("small_shelter"))
 
     fun bootstrap(context: BootstapContext<StructureSet>) {
         val structures: HolderGetter<Structure> = context.lookup(Registries.STRUCTURE)

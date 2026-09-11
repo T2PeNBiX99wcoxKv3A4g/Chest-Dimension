@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.level.levelgen.structure
 
-import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.biome.Biomes
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.minecraft.core.HolderGetter
 import net.minecraft.core.HolderSet
 import net.minecraft.core.registries.Registries
@@ -20,8 +20,10 @@ import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure
 //import net.minecraft.data.worldgen.Structures as MCStructures
 
 object Structures {
-    val DEATH_BODY_CHEST: ResourceKey<Structure> = ResourceKey.create(Registries.STRUCTURE, id("death_body_chest"))
-    val SMALL_SHELTER: ResourceKey<Structure> = ResourceKey.create(Registries.STRUCTURE, id("small_shelter"))
+    val DEATH_BODY_CHEST: ResourceKey<Structure> =
+        ResourceKey.create(Registries.STRUCTURE, NameSpaces.MOD("death_body_chest"))
+    val SMALL_SHELTER: ResourceKey<Structure> =
+        ResourceKey.create(Registries.STRUCTURE, NameSpaces.MOD("small_shelter"))
 
     fun bootstrap(context: BootstapContext<Structure>) {
         val biomes: HolderGetter<Biome> = context.lookup(Registries.BIOME)

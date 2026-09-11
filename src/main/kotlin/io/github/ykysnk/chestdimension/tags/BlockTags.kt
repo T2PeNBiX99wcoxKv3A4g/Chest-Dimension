@@ -2,7 +2,6 @@
 
 package io.github.ykysnk.chestdimension.tags
 
-import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
@@ -14,10 +13,7 @@ object BlockTags : RegistryHelper<TagKey<Block>>() {
         register(TagKey.create(Registries.BLOCK, location))
 
     @Suppress("unused")
-    private fun create(namespace: NameSpaces, name: String): TagKey<Block> = create(id(namespace, name))
+    private fun create(name: String): TagKey<Block> = create(NameSpaces.MOD(name))
 
-    @Suppress("unused")
-    private fun create(name: String): TagKey<Block> = create(id(name))
-
-    val GLASS_PANES = create(NameSpaces.FORGE, "glass_panes")
+    val GLASS_PANES = create(NameSpaces.FORGE("glass_panes"))
 }

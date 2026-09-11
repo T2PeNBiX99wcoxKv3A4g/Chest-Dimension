@@ -3,7 +3,6 @@
 package io.github.ykysnk.chestdimension.level.levelgen.structure
 
 import com.mojang.datafixers.util.Pair
-import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
@@ -20,9 +19,9 @@ object TemplatePools {
     val EMPTY_POOL: ResourceKey<StructureTemplatePool> =
         ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MINECRAFT("empty"))
     val DEATH_BODY_CHEST_POOL: ResourceKey<StructureTemplatePool> =
-        ResourceKey.create(Registries.TEMPLATE_POOL, id("death_body_chest"))
+        ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MOD("death_body_chest"))
     val SMALL_SHELTER_POOL: ResourceKey<StructureTemplatePool> =
-        ResourceKey.create(Registries.TEMPLATE_POOL, id("small_shelter"))
+        ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MOD("small_shelter"))
 
     fun bootstrap(context: BootstapContext<StructureTemplatePool>) {
         val processors = context.lookup(Registries.PROCESSOR_LIST)
@@ -30,13 +29,13 @@ object TemplatePools {
         val fallback = context.lookup(Registries.TEMPLATE_POOL).getOrThrow(EMPTY_POOL)
         val deathBodyChestElements = listOf(
             Pair.of(
-                SinglePoolElement.single(id("death_body_chest").toString(), emptyProcessors)
+                SinglePoolElement.single(NameSpaces.MOD("death_body_chest").toString(), emptyProcessors)
                     .apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 1
             )
         )
         val smallShelterElements = listOf(
             Pair.of(
-                SinglePoolElement.single(id("small_shelter").toString(), emptyProcessors)
+                SinglePoolElement.single(NameSpaces.MOD("small_shelter").toString(), emptyProcessors)
                     .apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 1
             )
         )

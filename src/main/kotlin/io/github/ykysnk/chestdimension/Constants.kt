@@ -18,7 +18,6 @@ import io.github.ykysnk.chestdimension.utils.TaskPool
 import io.github.ykysnk.chestdimension.world.Network
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -67,17 +66,4 @@ object Constants {
 
     val Server: MinecraftServer
         get() = getServer ?: error("Server is not initialized")
-
-    @JvmStatic
-    fun id(namespace: String, path: String): ResourceLocation = ResourceLocation(namespace, path)
-
-    @JvmStatic
-    fun id(namespace: NameSpaces, path: String): ResourceLocation = id(namespace.id, path)
-
-    @JvmStatic
-    fun id(path: String): ResourceLocation = id(NameSpaces.MOD, path)
 }
-
-fun id(namespace: String, path: String): ResourceLocation = Constants.id(namespace, path)
-fun id(namespace: NameSpaces, path: String): ResourceLocation = Constants.id(namespace, path)
-fun id(path: String): ResourceLocation = Constants.id(NameSpaces.MOD, path)
