@@ -4,12 +4,12 @@ package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.event.UtilsEvents
-import io.github.ykysnk.chestdimension.id
 import io.github.ykysnk.chestdimension.level.biome.Biomes
 import io.github.ykysnk.chestdimension.level.data.UndefinedData
 import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
 import io.github.ykysnk.chestdimension.level.levelgen.NoiseGeneratorSettings
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.AbstractManager
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.registries.Registries
@@ -41,7 +41,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
             .getHolderOrThrow(NoiseGeneratorSettings.CHEST_UNDEFINED)
     }
 
-    private val worldKey by lazy { ResourceKey.create(Registries.DIMENSION, id("undefined")) }
+    private val worldKey by lazy { ResourceKey.create(Registries.DIMENSION, NameSpaces.MOD("undefined")) }
 
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
