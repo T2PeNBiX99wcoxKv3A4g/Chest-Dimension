@@ -39,7 +39,7 @@ object Constants {
 
     @JvmStatic
     val ConfigDir: Path by lazy {
-        val dir = FabricLoader.getInstance().configDir.resolve(MOD_ID)
+        val dir = FabricLoader.getInstance().configDir.resolve(NameSpaces.MOD())
         dir.createDirectories()
         dir
     }
