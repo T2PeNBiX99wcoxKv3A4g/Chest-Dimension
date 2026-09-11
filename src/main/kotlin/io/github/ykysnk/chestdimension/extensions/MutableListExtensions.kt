@@ -2,8 +2,8 @@
 
 package io.github.ykysnk.chestdimension.extensions
 
-fun <T, R : T> MutableList<T>.addAndGet(func: () -> R): R {
-    val item = func()
+fun <T, R : T> MutableList<T>.addAndGet(value: () -> R): R {
+    val item = value()
     add(item)
     return item
 }
