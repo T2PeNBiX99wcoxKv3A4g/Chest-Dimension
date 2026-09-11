@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.item
 
 import io.github.ykysnk.chestdimension.block.Blocks
-import io.github.ykysnk.chestdimension.id
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.world.item.DoubleHighBlockItem
 import net.minecraft.world.item.Item
@@ -41,7 +41,8 @@ object Items : RegistryHelper<Item>() {
         register(MCItems.registerBlock(DoubleHighBlockItem(Blocks.TELEPORT_DOOR, Item.Properties())))
 
     @JvmField
-    val TELEPORT_DOOR_LINKER: Item = register(MCItems.registerItem(id("teleport_door_linker"), TeleportDoorLinker()))
+    val TELEPORT_DOOR_LINKER: Item =
+        register(MCItems.registerItem(NameSpaces.MOD("teleport_door_linker"), TeleportDoorLinker()))
 
     @JvmField
     val DEATH_BODY: Item = register(MCItems.registerBlock(Blocks.DEATH_BODY))
