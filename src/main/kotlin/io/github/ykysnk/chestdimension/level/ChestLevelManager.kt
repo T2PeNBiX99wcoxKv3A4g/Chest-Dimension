@@ -332,8 +332,7 @@ object ChestLevelManager {
     private fun createWorldKey(uuid: UUID): ResourceKey<Level> {
         worldKeyCache[uuid]?.let { return it }
         val key = ResourceKey.create(Registries.DIMENSION, id("chest/$uuid/platform"))
-        worldKeyCache[uuid] = key
-        return key
+        return worldKeyCache.putAndGet(uuid, key)
     }
 
     private fun checkLevels() {
