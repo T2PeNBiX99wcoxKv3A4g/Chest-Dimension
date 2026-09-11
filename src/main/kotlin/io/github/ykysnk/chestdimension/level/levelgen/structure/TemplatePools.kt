@@ -18,17 +18,16 @@ object TemplatePools {
         ResourceKey.create(Registries.PROCESSOR_LIST, NameSpaces.MINECRAFT("empty"))
     val EMPTY_POOL: ResourceKey<StructureTemplatePool> =
         ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MINECRAFT("empty"))
-    val DEATH_BODY_CHEST_POOL: ResourceKey<StructureTemplatePool> =
-        ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MOD("death_body_chest"))
+    val DEATH_BODY_CHEST_MAIN_POOL: ResourceKey<StructureTemplatePool> =
+        ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MOD("death_body_chest/main"))
+    val DEATH_BODY_CHEST_BOTTOM_POOL: ResourceKey<StructureTemplatePool> =
+        ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MOD("death_body_chest/bottom"))
     val SMALL_SHELTER_POOL: ResourceKey<StructureTemplatePool> =
         ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MOD("small_shelter"))
-
     val BASEMENT_ENTRANCE_POOL: ResourceKey<StructureTemplatePool> =
         ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MOD("small_shelter/basement/entrance"))
-
     val BASEMENT_HALLWAY_POOL: ResourceKey<StructureTemplatePool> =
         ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MOD("small_shelter/basement/hallway"))
-
     val BASEMENT_ROOM_POOL: ResourceKey<StructureTemplatePool> =
         ResourceKey.create(Registries.TEMPLATE_POOL, NameSpaces.MOD("small_shelter/basement/room"))
 
@@ -37,9 +36,15 @@ object TemplatePools {
             val processors = lookup(Registries.PROCESSOR_LIST)
             val emptyProcessors = processors.getOrThrow(EMPTY_PROCESSOR_LIST)
             val fallback = lookup(Registries.TEMPLATE_POOL).getOrThrow(EMPTY_POOL)
-            val deathBodyChestElements = listOf(
+            val deathBodyChestMainElements = listOf(
                 Pair.of(
-                    SinglePoolElement.single(NameSpaces.MOD("death_body_chest").toString(), emptyProcessors)
+                    SinglePoolElement.single(NameSpaces.MOD("death_body_chest/main").toString(), emptyProcessors)
+                        .apply(StructureTemplatePool.Projection.TERRAIN_MATCHING) as StructurePoolElement, 1
+                )
+            )
+            val deathBodyChestBottomElements = listOf(
+                Pair.of(
+                    SinglePoolElement.single(NameSpaces.MOD("death_body_chest/bottom").toString(), emptyProcessors)
                         .apply(StructureTemplatePool.Projection.TERRAIN_MATCHING) as StructurePoolElement, 1
                 )
             )
@@ -146,7 +151,8 @@ object TemplatePools {
                 )
             )
 
-            register(DEATH_BODY_CHEST_POOL, StructureTemplatePool(fallback, deathBodyChestElements))
+            register(DEATH_BODY_CHEST_MAIN_POOL, StructureTemplatePool(fallback, deathBodyChestMainElements))
+            register(DEATH_BODY_CHEST_BOTTOM_POOL, StructureTemplatePool(fallback, deathBodyChestBottomElements))
             register(SMALL_SHELTER_POOL, StructureTemplatePool(fallback, smallShelterElements))
             register(BASEMENT_ENTRANCE_POOL, StructureTemplatePool(fallback, basementEntranceElements))
             register(BASEMENT_HALLWAY_POOL, StructureTemplatePool(fallback, basementHallwayElements))
