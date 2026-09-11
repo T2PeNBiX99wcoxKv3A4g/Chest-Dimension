@@ -1,0 +1,8 @@
+// 1.20.1	2026-09-11T23:26:36.7498464	Chest Dimension/Tags for minecraft:item
+940524b6c0bf08ba68e8c2f01d05b869bfd09adc data\minecraft\tags\items\walls.json
+a62867d33c2e7e5b0da6c85c8b4f2bc3862b0711 data\chest-dimension\tags\items\basement_raw_meat_food.json
+1854009eb3696d95047330463378c81ff29a24c9 data\chest-dimension\tags\items\basement_raw_vegetables_food.json
+b8e03f23746eec288392eb53282d0ac81005ed2e data\minecraft\tags\items\wooden_pressure_plates.json
+094c472dd18e9f52a315b7440edc8dd6e4437408 data\minecraft\tags\items\fences.json
+bffd6f06bb141cb7cbbeff4da82f38733d70afc6 data\chest-dimension\tags\items\basement_cooked_vegetables_food.json
+03fbbfdf15e7e4e36fab7a3fcb06657edf176019 data\chest-dimension\tags\items\basement_cooked_meat_food.json
