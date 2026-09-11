@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.world.inventory
 
-import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.level.ChestServerLevel
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
@@ -15,7 +15,7 @@ class WeatherTimeControllerFactory(
 ) : ExtendedScreenHandlerFactory {
     override fun getDisplayName(): Component {
         return Component.translatable(
-            "container.${Constants.MOD_ID}.weather_time_controller"
+            "container.${NameSpaces.MOD}.weather_time_controller"
         )
     }
 
