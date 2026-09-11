@@ -68,13 +68,13 @@ object TemplatePools {
                 Pair.of(
                     SinglePoolElement.single(
                         NameSpaces.MOD("small_shelter/basement/hallway/corner").toString(), emptyProcessors
-                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 3
+                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 2
                 ),
                 Pair.of(
                     SinglePoolElement.single(
                         NameSpaces.MOD("small_shelter/basement/hallway/cross").toString(),
                         emptyProcessors
-                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 3
+                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 2
                 ),
                 Pair.of(
                     SinglePoolElement.single(
@@ -86,19 +86,19 @@ object TemplatePools {
                     SinglePoolElement.single(
                         NameSpaces.MOD("small_shelter/basement/hallway/junction").toString(),
                         emptyProcessors
-                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 3
+                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 2
                 ),
                 Pair.of(
                     SinglePoolElement.single(
                         NameSpaces.MOD("small_shelter/basement/hallway/room_enter").toString(),
                         emptyProcessors
-                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 3
+                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 2
                 ),
                 Pair.of(
                     SinglePoolElement.single(
                         NameSpaces.MOD("small_shelter/basement/hallway/stairwell").toString(),
                         emptyProcessors
-                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 2
+                    ).apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 1
                 )
             )
             val basementRoomElements = listOf(
