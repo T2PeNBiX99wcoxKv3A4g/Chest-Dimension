@@ -1,3 +1,5 @@
-// 1.20.1	2026-09-11T20:13:32.7949725	Chest Dimension/minecraft:chest Loot Table
+// 1.20.1	2026-09-11T20:23:28.1532066	Chest Dimension/minecraft:chest Loot Table
 c689e8a2e6009cbf8a499385e98999ad5fcf9487 data\chest-dimension\loot_tables\chests\death_body_chest.json
-14611182009ea49bacb01e2df4c6eaafdfd3665b data\chest-dimension\loot_tables\chests\small_shelter.json
+c5695940cc86da904976f70dca6f8c8857dbb2e3 data\chest-dimension\loot_tables\chests\small_shelter\basement\room\storage.json
+c5695940cc86da904976f70dca6f8c8857dbb2e3 data\chest-dimension\loot_tables\chests\small_shelter\basement\room\farm.json
+14611182009ea49bacb01e2df4c6eaafdfd3665b data\chest-dimension\loot_tables\chests\small_shelter\basement\entrance\storage.json
