@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.item
 
-import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.id
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.minecraft.core.Registry
@@ -17,7 +17,7 @@ object ItemGroups {
         BuiltInRegistries.CREATIVE_MODE_TAB,
         id("item_group"),
         FabricItemGroup.builder()
-            .title(Component.translatable("itemGroup.${Constants.MOD_ID}"))
+            .title(Component.translatable("itemGroup.${NameSpaces.MOD}"))
             .icon { ItemStack(Items.CHEST_DIMENSION) }
             .displayItems { _, entries -> Items.all.forEach { entries.accept(it) } }
             .build()
