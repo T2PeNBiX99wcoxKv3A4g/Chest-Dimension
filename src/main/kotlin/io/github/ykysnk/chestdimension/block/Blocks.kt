@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.block
 
-import io.github.ykysnk.chestdimension.id
+import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Blocks as MCBlocks
 
 object Blocks : RegistryHelper<Block>() {
     private fun register(name: String, block: Block) =
-        register(Registry.register(BuiltInRegistries.BLOCK, id(name), block))
+        register(Registry.register(BuiltInRegistries.BLOCK, NameSpaces.MOD(name), block))
 
     val CHEST_PLATFORM: Block = register(
         "chest_platform",
