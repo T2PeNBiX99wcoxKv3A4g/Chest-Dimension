@@ -1,4 +1,4 @@
-// 1.20.1	2026-09-11T19:49:34.4266714	Chest Dimension/Chest Dimension Dynamic Registries
+// 1.20.1	2026-09-11T19:58:37.4421729	Chest Dimension/Chest Dimension Dynamic Registries
 de7426e1212fe8aa862a14c47df27f3afd956914 data\chest-dimension\worldgen\structure\small_shelter.json
 1c5891c8559220548898ced4c204dc8177bd8818 data\chest-dimension\damage_type\explosion_by_teleport_door.json
 29e1d9adc9c86da6c0def5cf3078d60606102a7a data\chest-dimension\worldgen\template_pool\small_shelter.json
@@ -8,7 +8,7 @@ cd37b2c5e4df3bcb298d17eb3ac501d057442dc2 data\chest-dimension\worldgen\structure
 b475a8c5b8916b829ed408b6ededd51be7293617 data\chest-dimension\worldgen\structure_set\death_body_chest.json
 4454fe5269922ee7c556a7d5d6fde9ec63d685ed data\chest-dimension\worldgen\template_pool\death_body_chest.json
 72ade49eae5f29f345f74378bd24c5c4d3389130 data\chest-dimension\worldgen\template_pool\small_shelter\basement\entrance.json
-b093beec2877db337c4a09c808b4c99710de9b1c data\chest-dimension\worldgen\template_pool\small_shelter\basement\hallway.json
+a2829e1407b21d5f24942966a9bff18d053a25c8 data\chest-dimension\worldgen\template_pool\small_shelter\basement\hallway.json
 712409b1c05a7234dcc4128784333950305c733b data\chest-dimension\dimension_type\chest_platform.json
 a7937e3577b265a53643ce1a701ad204e68ad129 data\chest-dimension\worldgen\biome\chest_platform_biome.json
 15f34618e28e1805e5ef4edb08d13aca12846c1f data\chest-dimension\worldgen\placed_feature\torch_path.json
