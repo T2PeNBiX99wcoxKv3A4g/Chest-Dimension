@@ -45,7 +45,7 @@ object TemplatePools {
             val deathBodyChestBottomElements = listOf(
                 Pair.of(
                     SinglePoolElement.single(NameSpaces.MOD("death_body_chest/bottom").toString(), emptyProcessors)
-                        .apply(StructureTemplatePool.Projection.TERRAIN_MATCHING) as StructurePoolElement, 1
+                        .apply(StructureTemplatePool.Projection.RIGID) as StructurePoolElement, 1
                 )
             )
             val smallShelterElements = listOf(
