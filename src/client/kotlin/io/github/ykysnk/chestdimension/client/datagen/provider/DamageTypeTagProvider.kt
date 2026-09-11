@@ -12,7 +12,9 @@ import java.util.concurrent.CompletableFuture
 class DamageTypeTagProvider(output: FabricDataOutput, registries: CompletableFuture<HolderLookup.Provider>) :
     FabricTagProvider<DamageType>(output, Registries.DAMAGE_TYPE, registries) {
     override fun addTags(provider: HolderLookup.Provider) {
-        getOrCreateTagBuilder(DamageTypeTags.ALWAYS_HURTS_ENDER_DRAGONS).add(DamageTypes.EXPLOSION_BY_CHEST)
-            .add(DamageTypes.EXPLOSION_BY_CHEST_INSIDE)
+        getOrCreateTagBuilder(DamageTypeTags.ALWAYS_HURTS_ENDER_DRAGONS).apply {
+            add(DamageTypes.EXPLOSION_BY_CHEST)
+            add(DamageTypes.EXPLOSION_BY_CHEST_INSIDE)
+        }
     }
 }

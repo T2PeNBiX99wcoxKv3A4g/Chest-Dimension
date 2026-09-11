@@ -25,6 +25,7 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
         pack.addProvider(::DynamicRegistryProvider)
         pack.addProvider(::ModelProvider)
         pack.addProvider(::BlockTagProvider)
+        pack.addProvider(::ItemTagProvider)
         pack.addProvider(::DamageTypeTagProvider)
         pack.addProvider(::BlockLootTableProvider)
         pack.addProvider(::SimpleLootTableProvider)
