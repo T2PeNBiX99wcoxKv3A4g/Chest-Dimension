@@ -16,7 +16,7 @@
         "processors": "minecraft:empty",
         "projection": "rigid"
       },
-      "weight": 3
+      "weight": 1
     }
   ],
   "fallback": "minecraft:empty"
