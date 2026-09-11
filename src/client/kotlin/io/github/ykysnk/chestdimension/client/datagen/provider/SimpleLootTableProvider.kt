@@ -79,7 +79,11 @@ class SimpleLootTableProvider(output: FabricDataOutput) :
                     setWeight(10)
                     apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 10.0f)))
                 }
-                lootTableItem(MCItems.BREAD) {
+                expandTag(ItemTags.BASEMENT_COOKED_VEGETABLES_FOOD) {
+                    setWeight(8)
+                    apply(SetItemCountFunction.setCount(UniformGenerator.between(10.0f, 40.0f)))
+                }
+                expandTag(ItemTags.BASEMENT_COOKED_MEAT_FOOD) {
                     setWeight(8)
                     apply(SetItemCountFunction.setCount(UniformGenerator.between(10.0f, 40.0f)))
                 }
@@ -104,26 +108,10 @@ class SimpleLootTableProvider(output: FabricDataOutput) :
         output.accept(
             LootTables.SMALL_SHELTER_ROOM_FARM,
             LootTable.lootTable().withPool {
-                setRolls(UniformGenerator.between(3.0f, 6.0f))
-                lootTableItem(MCItems.WHEAT_SEEDS) {
+                setRolls(UniformGenerator.between(4.0f, 8.0f))
+                expandTag(ItemTags.BASEMENT_RAW_VEGETABLES_FOOD) {
                     setWeight(10)
                     apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 20.0f)))
-                }
-                lootTableItem(MCItems.WHEAT) {
-                    setWeight(8)
-                    apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 20.0f)))
-                }
-                lootTableItem(MCItems.POTATO) {
-                    setWeight(5)
-                    apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 15.0f)))
-                }
-                lootTableItem(MCItems.POISONOUS_POTATO) {
-                    setWeight(6)
-                    apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 15.0f)))
-                }
-                lootTableItem(MCItems.CARROT) {
-                    setWeight(5)
-                    apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 15.0f)))
                 }
                 lootTableItem(MCItems.GOLDEN_CARROT) {
                     setWeight(2)
@@ -134,22 +122,22 @@ class SimpleLootTableProvider(output: FabricDataOutput) :
         output.accept(
             LootTables.SMALL_SHELTER_ROOM_KITCHEN,
             LootTable.lootTable().withPool {
-                setRolls(UniformGenerator.between(3.0f, 6.0f))
+                setRolls(UniformGenerator.between(4.0f, 8.0f))
                 expandTag(ItemTags.BASEMENT_RAW_MEAT_FOOD) {
                     setWeight(10)
-                    apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 20.0f)))
+                    apply(SetItemCountFunction.setCount(UniformGenerator.between(5.0f, 20.0f)))
                 }
                 expandTag(ItemTags.BASEMENT_COOKED_MEAT_FOOD) {
                     setWeight(8)
-                    apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 20.0f)))
+                    apply(SetItemCountFunction.setCount(UniformGenerator.between(5.0f, 20.0f)))
                 }
                 expandTag(ItemTags.BASEMENT_RAW_VEGETABLES_FOOD) {
                     setWeight(6)
-                    apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 15.0f)))
+                    apply(SetItemCountFunction.setCount(UniformGenerator.between(5.0f, 15.0f)))
                 }
                 expandTag(ItemTags.BASEMENT_COOKED_VEGETABLES_FOOD) {
                     setWeight(5)
-                    apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 15.0f)))
+                    apply(SetItemCountFunction.setCount(UniformGenerator.between(5.0f, 15.0f)))
                 }
                 lootTableItem(MCItems.GOLDEN_CARROT) {
                     setWeight(2)
