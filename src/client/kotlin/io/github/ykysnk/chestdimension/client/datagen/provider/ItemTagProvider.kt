@@ -34,6 +34,7 @@ class ItemTagProvider(output: FabricDataOutput, registries: CompletableFuture<Ho
             add(MCItems.COOKED_PORKCHOP)
         }
         getOrCreateTagBuilder(ItemTags.BASEMENT_RAW_VEGETABLES_FOOD).apply {
+            add(MCItems.WHEAT)
             add(MCItems.WHEAT_SEEDS)
             add(MCItems.POTATO)
             add(MCItems.BEETROOT_SEEDS)
