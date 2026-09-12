@@ -9,6 +9,7 @@ import io.github.ykysnk.chestdimension.level.data.UndefinedData
 import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
 import io.github.ykysnk.chestdimension.level.levelgen.NoiseGeneratorSettings
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
+import io.github.ykysnk.chestdimension.level.storage.ChestServerLevelData
 import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.AbstractManager
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -84,6 +85,9 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
         val listener = chunkProgressListener
         val isDebugWorld = server.worldData.isDebugWorld
         val obfuscateSeed = BiomeManager.obfuscateSeed(worldOptions.seed())
+        val chestServerLevelData = ChestServerLevelData(server.worldData, server.worldData.overworldData())
+        chestServerLevelData.freezeWeather = true
+        chestServerLevelData.setWeatherParametersForce(0, 10000, true, true)
 
         ChestServerLevelContext.worldOptions.set(worldOptions)
 
@@ -92,6 +96,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
                 server,
                 server.executor,
                 storage,
+                chestServerLevelData,
                 worldKey,
                 levelStem,
                 listener,

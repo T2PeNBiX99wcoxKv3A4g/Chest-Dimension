@@ -1,5 +1,7 @@
 package io.github.ykysnk.chestdimension.level
 
+import io.github.ykysnk.chestdimension.level.storage.ChestServerLevelData
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.progress.ChunkProgressListener
@@ -17,6 +19,7 @@ class UndefinedServerLevel(
     server: MinecraftServer,
     dispatcher: Executor,
     levelStorageAccess: LevelStorageSource.LevelStorageAccess,
+    chestServerLevelData: ChestServerLevelData,
     dimension: ResourceKey<Level>,
     levelStem: LevelStem,
     progressListener: ChunkProgressListener,
@@ -28,18 +31,21 @@ class UndefinedServerLevel(
     server,
     dispatcher,
     levelStorageAccess,
+    chestServerLevelData,
     dimension,
     levelStem,
     progressListener,
     isDebug,
     biomeZoomSeed,
     customSpawners,
+    1L,
     randomSequences
 ) {
     constructor(
         server: MinecraftServer,
         dispatcher: Executor,
         levelStorageAccess: LevelStorageSource.LevelStorageAccess,
+        chestServerLevelData: ChestServerLevelData,
         dimension: ResourceKey<Level>,
         levelStem: LevelStem,
         progressListener: ChunkProgressListener,
@@ -49,6 +55,7 @@ class UndefinedServerLevel(
         server,
         dispatcher,
         levelStorageAccess,
+        chestServerLevelData,
         dimension,
         levelStem,
         progressListener,
@@ -71,5 +78,31 @@ class UndefinedServerLevel(
         super.save(progress, flush, skipSave)
         if (!skipSave) return
         UndefinedLevelManager.saveNow()
+    }
+
+    override fun isRaining(): Boolean = true
+
+    override fun advanceWeatherCycle() {
+        if (oRainLevel != 1f) {
+            server.playerList.broadcastAll(
+                ClientboundGameEventPacket(ClientboundGameEventPacket.START_RAINING, 0.0F),
+                dimension()
+            )
+            server.playerList.broadcastAll(
+                ClientboundGameEventPacket(ClientboundGameEventPacket.RAIN_LEVEL_CHANGE, 1f),
+                dimension()
+            )
+            oRainLevel = 1f
+        }
+
+        if (oThunderLevel != 1f) {
+            server.playerList.broadcastAll(
+                ClientboundGameEventPacket(
+                    ClientboundGameEventPacket.THUNDER_LEVEL_CHANGE,
+                    1f
+                ), dimension()
+            )
+            oThunderLevel = 1f
+        }
     }
 }

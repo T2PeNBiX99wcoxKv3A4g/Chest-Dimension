@@ -12,3 +12,4 @@ accessible field net/minecraft/world/level/storage/LevelStorageSource fixerUpper
 accessible field net/minecraft/world/level/block/entity/BlockEntityType$Builder validBlocks Ljava/util/Set;
 accessible method net/minecraft/server/level/PlayerRespawnLogic getOverworldRespawnPos (Lnet/minecraft/server/level/ServerLevel;II)Lnet/minecraft/core/BlockPos;
 accessible method net/minecraft/world/level/levelgen/NoiseRouterData overworld (Lnet/minecraft/core/HolderGetter;Lnet/minecraft/core/HolderGetter;ZZ)Lnet/minecraft/world/level/levelgen/NoiseRouter;
+extendable method net/minecraft/server/level/ServerLevel advanceWeatherCycle ()V
