@@ -3,9 +3,9 @@
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "chest-dimension:death_body_chest",
+        "location": "chest-dimension:death_body_chest/bottom",
         "processors": "minecraft:empty",
-        "projection": "terrain_matching"
+        "projection": "rigid"
       },
       "weight": 1
     }

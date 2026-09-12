@@ -8,7 +8,7 @@
   "start_height": {
     "absolute": -2
   },
-  "start_pool": "chest-dimension:death_body_chest",
+  "start_pool": "chest-dimension:death_body_chest/main",
   "step": "surface_structures",
   "use_expansion_hack": false
 }
