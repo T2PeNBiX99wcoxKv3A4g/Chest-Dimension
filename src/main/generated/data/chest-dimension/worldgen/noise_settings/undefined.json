@@ -380,7 +380,7 @@
                               "if_true": {
                                 "type": "minecraft:biome",
                                 "biome_is": [
-                                  "chest-dimension:chest_undefined_biome"
+                                  "chest-dimension:graveyard"
                                 ]
                               },
                               "then_run": {
