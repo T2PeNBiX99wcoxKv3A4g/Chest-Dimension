@@ -3,6 +3,7 @@
 package io.github.ykysnk.chestdimension.level.levelgen
 
 import com.google.common.collect.ImmutableList
+import io.github.ykysnk.chestdimension.level.biome.Biomes
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.levelgen.Noises
@@ -31,6 +32,7 @@ object SurfaceRuleData {
     private val SAND = makeStateRule(Blocks.SAND)
     private val SANDSTONE = makeStateRule(Blocks.SANDSTONE)
     private val PACKED_ICE = makeStateRule(Blocks.PACKED_ICE)
+    private val SNOW = makeStateRule(Blocks.SNOW)
     private val SNOW_BLOCK = makeStateRule(Blocks.SNOW_BLOCK)
     private val MUD = makeStateRule(Blocks.MUD)
     private val POWDER_SNOW = makeStateRule(Blocks.POWDER_SNOW)
@@ -60,8 +62,17 @@ object SurfaceRuleData {
         val conditionSource8 = SurfaceRules.waterBlockCheck(-1, 0)
         val conditionSource9 = SurfaceRules.waterBlockCheck(0, 0)
         val conditionSource10 = SurfaceRules.waterStartCheck(-6, -1)
+        val conditionSnow = SurfaceRules.waterBlockCheck(1, 0)
         // ground rule
-        val ruleSource = SurfaceRules.sequence(SurfaceRules.ifTrue(conditionSource9, COARSE_DIRT), DIRT)
+        val ruleSource = SurfaceRules.sequence(
+            SurfaceRules.ifTrue(
+                SurfaceRules.isBiome(Biomes.CHEST_UNDEFINED_BIOME),
+                SurfaceRules.sequence(
+                    SurfaceRules.ifTrue(conditionSource9, COARSE_DIRT),
+                    SurfaceRules.ifTrue(conditionSnow, SNOW)
+                )
+            ), DIRT
+        )
         val ruleSource3 = SurfaceRules.sequence(SurfaceRules.ifTrue(SurfaceRules.ON_CEILING, STONE), GRAVEL)
         val ruleSource7 = SurfaceRules.sequence(DIRT)
         val ruleSource8 = SurfaceRules.sequence(ruleSource)
