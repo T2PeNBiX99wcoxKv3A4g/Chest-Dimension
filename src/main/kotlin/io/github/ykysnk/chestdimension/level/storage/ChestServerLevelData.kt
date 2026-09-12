@@ -102,7 +102,7 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
             privateFreezeWeather = value
         }
     private val spawnPosList: HashSet<BlockPos> = hashSetOf()
-    lateinit var chestSavedData: ChestSavedData
+    var chestSavedData: ChestSavedData? = null
         internal set
 
     override fun getLevelName(): String = worldData.levelName
@@ -316,7 +316,6 @@ class ChestServerLevelData(private val worldData: WorldData, private val wrapped
     }
 
     private fun setDirty() {
-        if (!::chestSavedData.isInitialized) throw NullPointerException("ChestSavedData is not initialized")
-        chestSavedData.setDirty()
+        chestSavedData?.setDirty()
     }
 }
