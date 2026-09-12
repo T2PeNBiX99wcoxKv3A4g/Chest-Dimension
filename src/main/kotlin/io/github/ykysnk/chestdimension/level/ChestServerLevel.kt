@@ -25,6 +25,7 @@ open class ChestServerLevel(
     server: MinecraftServer,
     dispatcher: Executor,
     levelStorageAccess: LevelStorageSource.LevelStorageAccess,
+    chestServerLevelData: ChestServerLevelData,
     dimension: ResourceKey<Level>,
     levelStem: LevelStem,
     progressListener: ChunkProgressListener,
@@ -37,7 +38,7 @@ open class ChestServerLevel(
     server,
     dispatcher,
     levelStorageAccess,
-    ChestServerLevelData(server.worldData, server.worldData.overworldData()),
+    chestServerLevelData,
     dimension,
     levelStem,
     progressListener,
@@ -47,6 +48,33 @@ open class ChestServerLevel(
     true,
     randomSequences
 ) {
+    constructor(
+        server: MinecraftServer,
+        dispatcher: Executor,
+        levelStorageAccess: LevelStorageSource.LevelStorageAccess,
+        dimension: ResourceKey<Level>,
+        levelStem: LevelStem,
+        progressListener: ChunkProgressListener,
+        isDebug: Boolean,
+        biomeZoomSeed: Long,
+        customSpawners: List<CustomSpawner>,
+        addDayTime: Long,
+        randomSequences: RandomSequences?
+    ) : this(
+        server,
+        dispatcher,
+        levelStorageAccess,
+        ChestServerLevelData(server.worldData, server.worldData.overworldData()),
+        dimension,
+        levelStem,
+        progressListener,
+        isDebug,
+        biomeZoomSeed,
+        customSpawners,
+        addDayTime,
+        randomSequences
+    )
+
     constructor(
         server: MinecraftServer,
         dispatcher: Executor,
