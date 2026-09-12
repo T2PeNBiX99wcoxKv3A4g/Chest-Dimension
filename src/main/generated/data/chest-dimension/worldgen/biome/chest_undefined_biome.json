@@ -15,6 +15,14 @@
     [
       "chest-dimension:torch_path",
       "chest-dimension:bedrock_pillar"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:freeze_top_layer"
     ]
   ],
   "has_precipitation": true,
