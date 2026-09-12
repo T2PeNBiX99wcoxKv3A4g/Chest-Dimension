@@ -39,7 +39,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
     }
     private val noiseSettings by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.NOISE_SETTINGS)
-            .getHolderOrThrow(NoiseGeneratorSettings.CHEST_UNDEFINED)
+            .getHolderOrThrow(NoiseGeneratorSettings.UNDEFINED)
     }
 
     private val worldKey by lazy { ResourceKey.create(Registries.DIMENSION, NameSpaces.MOD("undefined")) }

@@ -9,8 +9,8 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings
 
 object NoiseGeneratorSettings {
-    val CHEST_UNDEFINED: ResourceKey<NoiseGeneratorSettings> =
-        ResourceKey.create(Registries.NOISE_SETTINGS, NameSpaces.MOD("chest_undefined"))
+    val UNDEFINED: ResourceKey<NoiseGeneratorSettings> =
+        ResourceKey.create(Registries.NOISE_SETTINGS, NameSpaces.MOD("undefined"))
 
     fun undefined(context: BootstapContext<*>): NoiseGeneratorSettings {
         return NoiseGeneratorSettings(
