@@ -80,7 +80,10 @@ class UndefinedServerLevel(
         UndefinedLevelManager.saveNow()
     }
 
+    override fun getRainLevel(delta: Float): Float = 1f
+    override fun getThunderLevel(delta: Float): Float = 1f
     override fun isRaining(): Boolean = true
+    override fun isThundering(): Boolean = true
 
     override fun advanceWeatherCycle() {
         if (oRainLevel != 1f) {

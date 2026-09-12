@@ -71,8 +71,8 @@ object ChestDimensionClient : ClientModInitializer {
         }
         MenuScreens.register(MenuTypes.WEATHER_TIME_CONTROLLER, ::WeatherTimeControllerScreen)
         BlockRenderLayerMap.INSTANCE.putBlock(Blocks.TELEPORT_DOOR, RenderType.cutout())
-        BlockRenderLayerMap.INSTANCE.putBlock(Blocks.BLAST_RESISTANT_GLASS, RenderType.translucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(Blocks.BLAST_RESISTANT_GLASS_PANE, RenderType.translucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(Blocks.BLAST_RESISTANT_GLASS, RenderType.cutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(Blocks.BLAST_RESISTANT_GLASS_PANE, RenderType.cutout())
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment) {
             WorldRenderEvents.AFTER_ENTITIES.register { context ->
