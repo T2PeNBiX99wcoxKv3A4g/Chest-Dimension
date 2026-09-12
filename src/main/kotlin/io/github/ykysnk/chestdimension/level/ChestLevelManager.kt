@@ -57,7 +57,7 @@ object ChestLevelManager {
 
     private val dimensionType by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE)
-            .getHolderOrThrow(DimensionTypes.CHEST_PLATFORM)
+            .getHolderOrThrow(DimensionTypes.PLATFORM)
     }
 
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {

@@ -10,12 +10,12 @@ import net.minecraft.world.level.dimension.DimensionType
 import java.util.*
 
 object DimensionTypes {
-    val CHEST_PLATFORM: ResourceKey<DimensionType> =
-        ResourceKey.create(Registries.DIMENSION_TYPE, NameSpaces.MOD("chest_platform"))
-    val CHEST_UNDEFINED: ResourceKey<DimensionType> =
-        ResourceKey.create(Registries.DIMENSION_TYPE, NameSpaces.MOD("chest_undefined"))
+    val PLATFORM: ResourceKey<DimensionType> =
+        ResourceKey.create(Registries.DIMENSION_TYPE, NameSpaces.MOD("platform"))
+    val UNDEFINED: ResourceKey<DimensionType> =
+        ResourceKey.create(Registries.DIMENSION_TYPE, NameSpaces.MOD("undefined"))
 
-    val ChestPlatformDimensionType by lazy {
+    val PlatformDimensionType by lazy {
         DimensionType(
             OptionalLong.empty(), // fixedTime
             true, // hasSkyLight
@@ -31,11 +31,11 @@ object DimensionTypes {
             BlockTags.INFINIBURN_OVERWORLD, // infiniburn
             BuiltinDimensionTypes.OVERWORLD_EFFECTS,
             0.0f, // ambientLight
-            ChestPlatformMonsterSettings
+            PlatformMonsterSettings
         )
     }
 
-    val ChestUndefinedDimensionType by lazy {
+    val UndefinedDimensionType by lazy {
         DimensionType(
             OptionalLong.empty(), // fixedTime
             false, // hasSkyLight
@@ -51,22 +51,22 @@ object DimensionTypes {
             BlockTags.INFINIBURN_OVERWORLD, // infiniburn
             BuiltinDimensionTypes.OVERWORLD_EFFECTS,
             0.0f, // ambientLight
-            ChestUndefinedMonsterSettings
+            UndefinedMonsterSettings
         )
     }
 
-    private val ChestPlatformMonsterSettings by lazy {
+    private val PlatformMonsterSettings by lazy {
         DimensionType.MonsterSettings(
-            false, // piglinSafe
+            true, // piglinSafe
             false, // hasRaids
             ConstantInt.of(0), // monsterSpawnLightTest
             0 // monsterSpawnBlockLightLimit
         )
     }
 
-    private val ChestUndefinedMonsterSettings by lazy {
+    private val UndefinedMonsterSettings by lazy {
         DimensionType.MonsterSettings(
-            true, // piglinSafe
+            false, // piglinSafe
             false, // hasRaids
             ConstantInt.of(0), // monsterSpawnLightTest
             0 // monsterSpawnBlockLightLimit

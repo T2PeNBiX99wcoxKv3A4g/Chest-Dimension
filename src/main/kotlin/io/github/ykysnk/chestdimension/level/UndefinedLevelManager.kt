@@ -35,7 +35,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
     }
     private val dimensionType by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE)
-            .getHolderOrThrow(DimensionTypes.CHEST_UNDEFINED)
+            .getHolderOrThrow(DimensionTypes.UNDEFINED)
     }
     private val noiseSettings by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.NOISE_SETTINGS)
