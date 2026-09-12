@@ -14,6 +14,9 @@ object PlacedFeatures {
     val BEDROCK_PILLAR: ResourceKey<PlacedFeature> =
         ResourceKey.create(Registries.PLACED_FEATURE, NameSpaces.MOD("bedrock_pillar"))
 
+    val FREEZE_TOP_LAYER: ResourceKey<PlacedFeature> =
+        ResourceKey.create(Registries.PLACED_FEATURE, NameSpaces.MINECRAFT("freeze_top_layer"))
+
     fun create(
         context: BootstapContext<PlacedFeature>,
         key: ResourceKey<PlacedFeature>,

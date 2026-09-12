@@ -57,6 +57,9 @@ object Biomes {
             ).addFeature(
                 GenerationStep.Decoration.SURFACE_STRUCTURES,
                 placedFeatures.getOrThrow(PlacedFeatures.BEDROCK_PILLAR)
+            ).addFeature(
+                GenerationStep.Decoration.TOP_LAYER_MODIFICATION,
+                placedFeatures.getOrThrow(PlacedFeatures.FREEZE_TOP_LAYER)
             ).build()
 
         val biome = Biome.BiomeBuilder()

@@ -62,15 +62,10 @@ object SurfaceRuleData {
         val conditionSource8 = SurfaceRules.waterBlockCheck(-1, 0)
         val conditionSource9 = SurfaceRules.waterBlockCheck(0, 0)
         val conditionSource10 = SurfaceRules.waterStartCheck(-6, -1)
-        val conditionSnow = SurfaceRules.waterBlockCheck(1, 0)
         // ground rule
         val ruleSource = SurfaceRules.sequence(
             SurfaceRules.ifTrue(
-                SurfaceRules.isBiome(Biomes.CHEST_UNDEFINED_BIOME),
-                SurfaceRules.sequence(
-                    SurfaceRules.ifTrue(conditionSource9, COARSE_DIRT),
-                    SurfaceRules.ifTrue(conditionSnow, SNOW)
-                )
+                SurfaceRules.isBiome(Biomes.CHEST_UNDEFINED_BIOME), SurfaceRules.ifTrue(conditionSource9, COARSE_DIRT)
             ), DIRT
         )
         val ruleSource3 = SurfaceRules.sequence(SurfaceRules.ifTrue(SurfaceRules.ON_CEILING, STONE), GRAVEL)
