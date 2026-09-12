@@ -31,7 +31,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
     private lateinit var chunkProgressListener: ChunkProgressListener
     private val biome by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.BIOME)
-            .getHolderOrThrow(Biomes.CHEST_UNDEFINED_BIOME)
+            .getHolderOrThrow(Biomes.GRAVEYARD)
     }
     private val dimensionType by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE)

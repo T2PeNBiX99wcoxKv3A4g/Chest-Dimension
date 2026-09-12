@@ -65,7 +65,7 @@ object SurfaceRuleData {
         // ground rule
         val ruleSource = SurfaceRules.sequence(
             SurfaceRules.ifTrue(
-                SurfaceRules.isBiome(Biomes.CHEST_UNDEFINED_BIOME), SurfaceRules.ifTrue(conditionSource9, COARSE_DIRT)
+                SurfaceRules.isBiome(Biomes.GRAVEYARD), SurfaceRules.ifTrue(conditionSource9, COARSE_DIRT)
             ), DIRT
         )
         val ruleSource3 = SurfaceRules.sequence(SurfaceRules.ifTrue(SurfaceRules.ON_CEILING, STONE), GRAVEL)

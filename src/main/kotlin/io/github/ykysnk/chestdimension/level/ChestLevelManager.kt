@@ -52,7 +52,7 @@ object ChestLevelManager {
     private val defaultSpawnPos by lazy { BlockPos(0, 1, 0) }
     private val biome by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.BIOME)
-            .getHolderOrThrow(Biomes.CHEST_PLATFORM_BIOME)
+            .getHolderOrThrow(Biomes.PLATFORM)
     }
 
     private val dimensionType by lazy {
