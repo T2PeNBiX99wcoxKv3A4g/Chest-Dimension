@@ -378,16 +378,48 @@
                             {
                               "type": "minecraft:condition",
                               "if_true": {
-                                "type": "minecraft:water",
-                                "add_stone_depth": false,
-                                "offset": 0,
-                                "surface_depth_multiplier": 0
+                                "type": "minecraft:biome",
+                                "biome_is": [
+                                  "chest-dimension:chest_undefined_biome"
+                                ]
                               },
                               "then_run": {
-                                "type": "minecraft:block",
-                                "result_state": {
-                                  "Name": "minecraft:coarse_dirt"
-                                }
+                                "type": "minecraft:sequence",
+                                "sequence": [
+                                  {
+                                    "type": "minecraft:condition",
+                                    "if_true": {
+                                      "type": "minecraft:water",
+                                      "add_stone_depth": false,
+                                      "offset": 0,
+                                      "surface_depth_multiplier": 0
+                                    },
+                                    "then_run": {
+                                      "type": "minecraft:block",
+                                      "result_state": {
+                                        "Name": "minecraft:coarse_dirt"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "minecraft:condition",
+                                    "if_true": {
+                                      "type": "minecraft:water",
+                                      "add_stone_depth": false,
+                                      "offset": 1,
+                                      "surface_depth_multiplier": 0
+                                    },
+                                    "then_run": {
+                                      "type": "minecraft:block",
+                                      "result_state": {
+                                        "Name": "minecraft:snow",
+                                        "Properties": {
+                                          "layers": "1"
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
                               }
                             },
                             {
