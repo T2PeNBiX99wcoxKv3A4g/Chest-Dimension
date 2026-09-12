@@ -41,7 +41,7 @@ object Structures {
             JigsawStructure(
                 settings,
                 pools.getOrThrow(TemplatePools.DEATH_BODY_CHEST_MAIN_POOL),
-                1,
+                7,
                 ConstantHeight.of(VerticalAnchor.absolute(-2)),
                 false,
                 Heightmap.Types.WORLD_SURFACE_WG
