@@ -6,7 +6,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
-import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.block.entity.BlockEntityTypes
 import io.github.ykysnk.chestdimension.extensions.*
 import io.github.ykysnk.chestdimension.item.Items
@@ -45,19 +44,19 @@ object ChestDimCommand {
     private fun register(
         dispatcher: CommandDispatcher<CommandSourceStack>,
         registryAccess: CommandBuildContext,
-        environment: Commands.CommandSelection
+        @Suppress("unused") environment: Commands.CommandSelection
     ) {
         Commands.literal("chestdim").apply {
             literal("create") {
                 requires { it.hasPermission(2) }
 
-                executes {
+                executesLogError {
                     val player = it.source.playerOrException
                     create(player, it.source)
                 }
 
                 argument("targets", EntityArgument.entities()) {
-                    executes {
+                    executesLogError {
                         val entities = EntityArgument.getEntities(it, "targets")
                         create(entities, it.source)
                     }
@@ -69,7 +68,7 @@ object ChestDimCommand {
 
                 literal("direct") {
                     argument("pos", Vec3Argument.vec3()) {
-                        executes {
+                        executesLogError {
                             val player = it.source.playerOrException
                             val pos = Vec3Argument.getVec3(it, "pos")
                             teleport(player, pos, it.source.level, it.source)
@@ -78,7 +77,7 @@ object ChestDimCommand {
 
                     argument("targets", EntityArgument.entities()) {
                         argument("pos", Vec3Argument.vec3()) {
-                            executes {
+                            executesLogError {
                                 val entities = EntityArgument.getEntities(it, "targets")
                                 val pos = Vec3Argument.getVec3(it, "pos")
                                 teleport(entities, pos, it.source.level, it.source)
@@ -88,7 +87,7 @@ object ChestDimCommand {
 
                     uuidArgOnlyExist {
                         argument("pos", Vec3Argument.vec3()) {
-                            executes {
+                            executesLogError {
                                 val player = it.source.playerOrException
                                 val pos = Vec3Argument.getVec3(it, "pos")
                                 val uuid = UuidArgument.getUuid(it, "uuid")
@@ -98,7 +97,7 @@ object ChestDimCommand {
 
                         argument("targets", EntityArgument.entities()) {
                             argument("pos", Vec3Argument.vec3()) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val pos = Vec3Argument.getVec3(it, "pos")
                                     val uuid = UuidArgument.getUuid(it, "uuid")
@@ -110,7 +109,7 @@ object ChestDimCommand {
 
                     argument("dimension", DimensionArgument.dimension()) {
                         argument("pos", Vec3Argument.vec3()) {
-                            executes {
+                            executesLogError {
                                 val player = it.source.playerOrException
                                 val pos = Vec3Argument.getVec3(it, "pos")
                                 val level = DimensionArgument.getDimension(it, "dimension")
@@ -120,7 +119,7 @@ object ChestDimCommand {
 
                         argument("targets", EntityArgument.entities()) {
                             argument("pos", Vec3Argument.vec3()) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val pos = Vec3Argument.getVec3(it, "pos")
                                     val level = DimensionArgument.getDimension(it, "dimension")
@@ -133,7 +132,7 @@ object ChestDimCommand {
                     literal("chestdims") {
                         uuidArgOnlyExist {
                             argument("pos", Vec3Argument.vec3()) {
-                                executes {
+                                executesLogError {
                                     val player = it.source.playerOrException
                                     val pos = Vec3Argument.getVec3(it, "pos")
                                     val uuid = UuidArgument.getUuid(it, "uuid")
@@ -143,7 +142,7 @@ object ChestDimCommand {
 
                             argument("targets", EntityArgument.entities()) {
                                 argument("pos", Vec3Argument.vec3()) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val pos = Vec3Argument.getVec3(it, "pos")
                                         val uuid = UuidArgument.getUuid(it, "uuid")
@@ -158,7 +157,7 @@ object ChestDimCommand {
                         literal("registry") {
                             argument("dimension", DimensionArgument.dimension()) {
                                 argument("pos", Vec3Argument.vec3()) {
-                                    executes {
+                                    executesLogError {
                                         val player = it.source.playerOrException
                                         val pos = Vec3Argument.getVec3(it, "pos")
                                         val level = DimensionArgument.getDimension(it, "dimension")
@@ -168,7 +167,7 @@ object ChestDimCommand {
 
                                 argument("targets", EntityArgument.entities()) {
                                     argument("pos", Vec3Argument.vec3()) {
-                                        executes {
+                                        executesLogError {
                                             val entities = EntityArgument.getEntities(it, "targets")
                                             val pos = Vec3Argument.getVec3(it, "pos")
                                             val level = DimensionArgument.getDimension(it, "dimension")
@@ -182,14 +181,14 @@ object ChestDimCommand {
                         literal("dynamic") {
                             allDimsArg {
                                 argument("pos", Vec3Argument.vec3()) {
-                                    executes {
+                                    executesLogError {
                                         val player = it.source.playerOrException
                                         val pos = Vec3Argument.getVec3(it, "pos")
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         teleport(player, pos, level, it.source)
                                     }
@@ -197,14 +196,14 @@ object ChestDimCommand {
 
                                 argument("targets", EntityArgument.entities()) {
                                     argument("pos", Vec3Argument.vec3()) {
-                                        executes {
+                                        executesLogError {
                                             val entities = EntityArgument.getEntities(it, "targets")
                                             val pos = Vec3Argument.getVec3(it, "pos")
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             teleport(entities, pos, level, it.source)
                                         }
@@ -218,7 +217,7 @@ object ChestDimCommand {
                 literal("safe") {
                     requires { it.hasPermission(2) }
 
-                    executes {
+                    executesLogError {
                         val player = it.source.playerOrException
                         val pos = BlockPos.containing(player.position())
                         val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
@@ -226,7 +225,7 @@ object ChestDimCommand {
                     }
 
                     argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                        executes {
+                        executesLogError {
                             val player = it.source.playerOrException
                             val pos = BlockPos.containing(player.position())
                             val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -235,7 +234,7 @@ object ChestDimCommand {
                     }
 
                     argument("pos", BlockPosArgument.blockPos()) {
-                        executes {
+                        executesLogError {
                             val player = it.source.playerOrException
                             val pos = BlockPosArgument.getBlockPos(it, "pos")
                             val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
@@ -243,7 +242,7 @@ object ChestDimCommand {
                         }
 
                         argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                            executes {
+                            executesLogError {
                                 val player = it.source.playerOrException
                                 val pos = BlockPosArgument.getBlockPos(it, "pos")
                                 val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -253,7 +252,7 @@ object ChestDimCommand {
 
                         argument("targets", EntityArgument.entities()) {
                             argument("pos", BlockPosArgument.blockPos()) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val pos = BlockPosArgument.getBlockPos(it, "pos")
                                     val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
@@ -261,7 +260,7 @@ object ChestDimCommand {
                                 }
 
                                 argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val pos = BlockPosArgument.getBlockPos(it, "pos")
                                         val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -274,7 +273,7 @@ object ChestDimCommand {
 
                     uuidArgOnlyExist {
                         argument("pos", BlockPosArgument.blockPos()) {
-                            executes {
+                            executesLogError {
                                 val player = it.source.playerOrException
                                 val pos = BlockPosArgument.getBlockPos(it, "pos")
                                 val uuid = UuidArgument.getUuid(it, "uuid")
@@ -283,7 +282,7 @@ object ChestDimCommand {
                             }
 
                             argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                executes {
+                                executesLogError {
                                     val player = it.source.playerOrException
                                     val pos = BlockPosArgument.getBlockPos(it, "pos")
                                     val uuid = UuidArgument.getUuid(it, "uuid")
@@ -295,7 +294,7 @@ object ChestDimCommand {
 
                         argument("targets", EntityArgument.entities()) {
                             argument("pos", BlockPosArgument.blockPos()) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val pos = BlockPosArgument.getBlockPos(it, "pos")
                                     val uuid = UuidArgument.getUuid(it, "uuid")
@@ -304,7 +303,7 @@ object ChestDimCommand {
                                 }
 
                                 argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val pos = BlockPosArgument.getBlockPos(it, "pos")
                                         val uuid = UuidArgument.getUuid(it, "uuid")
@@ -318,7 +317,7 @@ object ChestDimCommand {
 
                     argument("dimension", DimensionArgument.dimension()) {
                         argument("pos", BlockPosArgument.blockPos()) {
-                            executes {
+                            executesLogError {
                                 val player = it.source.playerOrException
                                 val pos = BlockPosArgument.getBlockPos(it, "pos")
                                 val level = DimensionArgument.getDimension(it, "dimension")
@@ -327,7 +326,7 @@ object ChestDimCommand {
                             }
 
                             argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                executes {
+                                executesLogError {
                                     val player = it.source.playerOrException
                                     val pos = BlockPosArgument.getBlockPos(it, "pos")
                                     val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -339,7 +338,7 @@ object ChestDimCommand {
 
                         argument("targets", EntityArgument.entities()) {
                             argument("pos", BlockPosArgument.blockPos()) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val pos = BlockPosArgument.getBlockPos(it, "pos")
                                     val level = DimensionArgument.getDimension(it, "dimension")
@@ -348,7 +347,7 @@ object ChestDimCommand {
                                 }
 
                                 argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val pos = BlockPosArgument.getBlockPos(it, "pos")
                                         val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -363,7 +362,7 @@ object ChestDimCommand {
                     literal("chestdims") {
                         uuidArgOnlyExist {
                             argument("pos", BlockPosArgument.blockPos()) {
-                                executes {
+                                executesLogError {
                                     val player = it.source.playerOrException
                                     val pos = BlockPosArgument.getBlockPos(it, "pos")
                                     val uuid = UuidArgument.getUuid(it, "uuid")
@@ -372,7 +371,7 @@ object ChestDimCommand {
                                 }
 
                                 argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                    executes {
+                                    executesLogError {
                                         val player = it.source.playerOrException
                                         val pos = BlockPosArgument.getBlockPos(it, "pos")
                                         val uuid = UuidArgument.getUuid(it, "uuid")
@@ -384,7 +383,7 @@ object ChestDimCommand {
 
                             argument("targets", EntityArgument.entities()) {
                                 argument("pos", BlockPosArgument.blockPos()) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val pos = BlockPosArgument.getBlockPos(it, "pos")
                                         val uuid = UuidArgument.getUuid(it, "uuid")
@@ -393,7 +392,7 @@ object ChestDimCommand {
                                     }
 
                                     argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                        executes {
+                                        executesLogError {
                                             val entities = EntityArgument.getEntities(it, "targets")
                                             val pos = BlockPosArgument.getBlockPos(it, "pos")
                                             val uuid = UuidArgument.getUuid(it, "uuid")
@@ -410,7 +409,7 @@ object ChestDimCommand {
                         literal("registry") {
                             argument("dimension", DimensionArgument.dimension()) {
                                 argument("pos", BlockPosArgument.blockPos()) {
-                                    executes {
+                                    executesLogError {
                                         val player = it.source.playerOrException
                                         val pos = BlockPosArgument.getBlockPos(it, "pos")
                                         val level = DimensionArgument.getDimension(it, "dimension")
@@ -419,7 +418,7 @@ object ChestDimCommand {
                                     }
 
                                     argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                        executes {
+                                        executesLogError {
                                             val player = it.source.playerOrException
                                             val pos = BlockPosArgument.getBlockPos(it, "pos")
                                             val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -431,7 +430,7 @@ object ChestDimCommand {
 
                                 argument("targets", EntityArgument.entities()) {
                                     argument("pos", BlockPosArgument.blockPos()) {
-                                        executes {
+                                        executesLogError {
                                             val entities = EntityArgument.getEntities(it, "targets")
                                             val pos = BlockPosArgument.getBlockPos(it, "pos")
                                             val level = DimensionArgument.getDimension(it, "dimension")
@@ -440,7 +439,7 @@ object ChestDimCommand {
                                         }
 
                                         argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                            executes {
+                                            executesLogError {
                                                 val entities = EntityArgument.getEntities(it, "targets")
                                                 val pos = BlockPosArgument.getBlockPos(it, "pos")
                                                 val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -456,28 +455,28 @@ object ChestDimCommand {
                         literal("dynamic") {
                             allDimsArg {
                                 argument("pos", BlockPosArgument.blockPos()) {
-                                    executes {
+                                    executesLogError {
                                         val player = it.source.playerOrException
                                         val pos = BlockPosArgument.getBlockPos(it, "pos")
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
                                         teleportSafe(player, pos, level, spawnRadius, it.source)
                                     }
 
                                     argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                        executes {
+                                        executesLogError {
                                             val player = it.source.playerOrException
                                             val pos = BlockPosArgument.getBlockPos(it, "pos")
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                                             teleportSafe(player, pos, level, spawnRadius, it.source)
@@ -487,28 +486,28 @@ object ChestDimCommand {
 
                                 argument("targets", EntityArgument.entities()) {
                                     argument("pos", BlockPosArgument.blockPos()) {
-                                        executes {
+                                        executesLogError {
                                             val entities = EntityArgument.getEntities(it, "targets")
                                             val pos = BlockPosArgument.getBlockPos(it, "pos")
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
                                             teleportSafe(entities, pos, level, spawnRadius, it.source)
                                         }
 
                                         argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                            executes {
+                                            executesLogError {
                                                 val entities = EntityArgument.getEntities(it, "targets")
                                                 val pos = BlockPosArgument.getBlockPos(it, "pos")
                                                 val dimension = StringArgumentType.getString(it, "dimension")
                                                 val level = getLevel(it.source, dimension)
                                                 if (level == null) {
                                                     it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                    return@executes 0
+                                                    return@executesLogError 0
                                                 }
                                                 val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                                                 teleportSafe(entities, pos, level, spawnRadius, it.source)
@@ -524,14 +523,14 @@ object ChestDimCommand {
                 literal("spawn") {
                     requires { it.hasPermission(2) }
 
-                    executes {
+                    executesLogError {
                         val player = it.source.playerOrException
                         val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
                         teleportSpawn(player, it.source.level, spawnRadius, it.source)
                     }
 
                     argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                        executes {
+                        executesLogError {
                             val player = it.source.playerOrException
                             val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                             teleportSpawn(player, it.source.level, spawnRadius, it.source)
@@ -539,14 +538,14 @@ object ChestDimCommand {
                     }
 
                     argument("targets", EntityArgument.entities()) {
-                        executes {
+                        executesLogError {
                             val entities = EntityArgument.getEntities(it, "targets")
                             val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
                             teleportSpawn(entities, it.source.level, spawnRadius, it.source)
                         }
 
                         argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                            executes {
+                            executesLogError {
                                 val entities = EntityArgument.getEntities(it, "targets")
                                 val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                                 teleportSpawn(entities, it.source.level, spawnRadius, it.source)
@@ -555,7 +554,7 @@ object ChestDimCommand {
                     }
 
                     uuidArgOnlyExist {
-                        executes {
+                        executesLogError {
                             val player = it.source.playerOrException
                             val uuid = UuidArgument.getUuid(it, "uuid")
                             val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
@@ -563,7 +562,7 @@ object ChestDimCommand {
                         }
 
                         argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                            executes {
+                            executesLogError {
                                 val player = it.source.playerOrException
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -572,7 +571,7 @@ object ChestDimCommand {
                         }
 
                         argument("targets", EntityArgument.entities()) {
-                            executes {
+                            executesLogError {
                                 val entities = EntityArgument.getEntities(it, "targets")
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
@@ -580,7 +579,7 @@ object ChestDimCommand {
                             }
 
                             argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -591,7 +590,7 @@ object ChestDimCommand {
                     }
 
                     argument("dimension", DimensionArgument.dimension()) {
-                        executes {
+                        executesLogError {
                             val player = it.source.playerOrException
                             val level = DimensionArgument.getDimension(it, "dimension")
                             val spawnRadius = it.source.server.getSpawnRadius(level)
@@ -599,7 +598,7 @@ object ChestDimCommand {
                         }
 
                         argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                            executes {
+                            executesLogError {
                                 val player = it.source.playerOrException
                                 val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                                 val level = DimensionArgument.getDimension(it, "dimension")
@@ -608,7 +607,7 @@ object ChestDimCommand {
                         }
 
                         argument("targets", EntityArgument.entities()) {
-                            executes {
+                            executesLogError {
                                 val entities = EntityArgument.getEntities(it, "targets")
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 val spawnRadius = it.source.server.getSpawnRadius(level)
@@ -616,7 +615,7 @@ object ChestDimCommand {
                             }
 
                             argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                                     val level = DimensionArgument.getDimension(it, "dimension")
@@ -628,7 +627,7 @@ object ChestDimCommand {
 
                     literal("chestdims") {
                         uuidArgOnlyExist {
-                            executes {
+                            executesLogError {
                                 val player = it.source.playerOrException
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
@@ -636,7 +635,7 @@ object ChestDimCommand {
                             }
 
                             argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                executes {
+                                executesLogError {
                                     val player = it.source.playerOrException
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -645,7 +644,7 @@ object ChestDimCommand {
                             }
 
                             argument("targets", EntityArgument.entities()) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     val spawnRadius = it.source.server.getSpawnRadius(it.source.level)
@@ -653,7 +652,7 @@ object ChestDimCommand {
                                 }
 
                                 argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
@@ -667,7 +666,7 @@ object ChestDimCommand {
                     literal("alldims") {
                         literal("registry") {
                             argument("dimension", DimensionArgument.dimension()) {
-                                executes {
+                                executesLogError {
                                     val player = it.source.playerOrException
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     val spawnRadius = it.source.server.getSpawnRadius(level)
@@ -675,7 +674,7 @@ object ChestDimCommand {
                                 }
 
                                 argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                    executes {
+                                    executesLogError {
                                         val player = it.source.playerOrException
                                         val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                                         val level = DimensionArgument.getDimension(it, "dimension")
@@ -684,7 +683,7 @@ object ChestDimCommand {
                                 }
 
                                 argument("targets", EntityArgument.entities()) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val level = DimensionArgument.getDimension(it, "dimension")
                                         val spawnRadius = it.source.server.getSpawnRadius(level)
@@ -692,7 +691,7 @@ object ChestDimCommand {
                                     }
 
                                     argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                        executes {
+                                        executesLogError {
                                             val entities = EntityArgument.getEntities(it, "targets")
                                             val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                                             val level = DimensionArgument.getDimension(it, "dimension")
@@ -705,54 +704,54 @@ object ChestDimCommand {
 
                         literal("dynamic") {
                             allDimsArg {
-                                executes {
+                                executesLogError {
                                     val player = it.source.playerOrException
                                     val dimension = StringArgumentType.getString(it, "dimension")
                                     val level = getLevel(it.source, dimension)
                                     if (level == null) {
                                         it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                        return@executes 0
+                                        return@executesLogError 0
                                     }
                                     val spawnRadius = it.source.server.getSpawnRadius(level)
                                     teleportSpawn(player, level, spawnRadius, it.source)
                                 }
 
                                 argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                    executes {
+                                    executesLogError {
                                         val player = it.source.playerOrException
                                         val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         teleportSpawn(player, level, spawnRadius, it.source)
                                     }
                                 }
 
                                 argument("targets", EntityArgument.entities()) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         val spawnRadius = it.source.server.getSpawnRadius(level)
                                         teleportSpawn(entities, level, spawnRadius, it.source)
                                     }
 
                                     argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                        executes {
+                                        executesLogError {
                                             val entities = EntityArgument.getEntities(it, "targets")
                                             val spawnRadius = IntegerArgumentType.getInteger(it, "spawn-radius")
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             teleportSpawn(entities, level, spawnRadius, it.source)
                                         }
@@ -767,14 +766,14 @@ object ChestDimCommand {
                     requires { it.hasPermission(2) }
 
                     uuidArgOnlyExist {
-                        executes {
+                        executesLogError {
                             val player = it.source.playerOrException
                             val uuid = UuidArgument.getUuid(it, "uuid")
                             teleportEnter(player, uuid, it.source)
                         }
 
                         argument("targets", EntityArgument.entities()) {
-                            executes {
+                            executesLogError {
                                 val entities = EntityArgument.getEntities(it, "targets")
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 teleportEnter(entities, uuid, it.source)
@@ -787,12 +786,12 @@ object ChestDimCommand {
                     literal("direct") {
                         argument("targets", EntityArgument.entities()) {
                             argument("pos", EntityArgument.entities()) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val posEntity = EntityArgument.getEntities(it, "pos").random()
                                     if (posEntity == null) {
                                         it.source.sendFailure(Component.literal("Position entity is not valid."))
-                                        return@executes 0
+                                        return@executesLogError 0
                                     }
                                     val level = (posEntity.level() as? ServerLevel) ?: it.source.level
                                     val pos = posEntity.position()
@@ -805,12 +804,12 @@ object ChestDimCommand {
                     literal("safe") {
                         argument("targets", EntityArgument.entities()) {
                             argument("pos", EntityArgument.entities()) {
-                                executes {
+                                executesLogError {
                                     val entities = EntityArgument.getEntities(it, "targets")
                                     val posEntity = EntityArgument.getEntities(it, "pos").random()
                                     if (posEntity == null) {
                                         it.source.sendFailure(Component.literal("Position entity is not valid."))
-                                        return@executes 0
+                                        return@executesLogError 0
                                     }
                                     val level = (posEntity.level() as? ServerLevel) ?: it.source.level
                                     val pos = BlockPos.containing(posEntity.position())
@@ -819,12 +818,12 @@ object ChestDimCommand {
                                 }
 
                                 argument("spawn-radius", IntegerArgumentType.integer(1)) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val posEntity = EntityArgument.getEntities(it, "pos").random()
                                         if (posEntity == null) {
                                             it.source.sendFailure(Component.literal("Position entity is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         val level = (posEntity.level() as? ServerLevel) ?: it.source.level
                                         val pos = BlockPos.containing(posEntity.position())
@@ -841,20 +840,20 @@ object ChestDimCommand {
             literal("give-chest") {
                 requires { it.hasPermission(2) }
 
-                executes {
+                executesLogError {
                     val player = it.source.playerOrException
                     giveChest(player, it.source)
                 }
 
                 uuidArg {
-                    executes {
+                    executesLogError {
                         val player = it.source.playerOrException
                         val uuid = UuidArgument.getUuid(it, "uuid")
                         giveChest(player, uuid)
                     }
 
                     argument("player", EntityArgument.player()) {
-                        executes {
+                        executesLogError {
                             val player = EntityArgument.getPlayer(it, "player")
                                 ?: throw CommandSourceStack.ERROR_NOT_PLAYER.create()
                             val uuid = UuidArgument.getUuid(it, "uuid")
@@ -864,7 +863,7 @@ object ChestDimCommand {
                 }
 
                 argument("player", EntityArgument.player()) {
-                    executes {
+                    executesLogError {
                         val player =
                             EntityArgument.getPlayer(it, "player") ?: throw CommandSourceStack.ERROR_NOT_PLAYER.create()
                         giveChest(player, it.source)
@@ -878,31 +877,31 @@ object ChestDimCommand {
                 literal("set") {
                     literal("dayskeep") {
                         literal("day") {
-                            executes {
+                            executesLogError {
                                 setDayTime(it.source.level, it.source, 1000)
                             }
                         }
 
                         literal("noon") {
-                            executes {
+                            executesLogError {
                                 setDayTime(it.source.level, it.source, 6000)
                             }
                         }
 
                         literal("night") {
-                            executes {
+                            executesLogError {
                                 setDayTime(it.source.level, it.source, 13000)
                             }
                         }
 
                         literal("midnight") {
-                            executes {
+                            executesLogError {
                                 setDayTime(it.source.level, it.source, 18000)
                             }
                         }
 
                         argument("time", TimeArgument.time()) {
-                            executes {
+                            executesLogError {
                                 val time = IntegerArgumentType.getInteger(it, "time")
                                 setDayTime(it.source.level, it.source, time)
                             }
@@ -911,31 +910,31 @@ object ChestDimCommand {
 
                     literal("daysreset") {
                         literal("day") {
-                            executes {
+                            executesLogError {
                                 setTime(it.source.level, it.source, 1000)
                             }
                         }
 
                         literal("noon") {
-                            executes {
+                            executesLogError {
                                 setTime(it.source.level, it.source, 6000)
                             }
                         }
 
                         literal("night") {
-                            executes {
+                            executesLogError {
                                 setTime(it.source.level, it.source, 13000)
                             }
                         }
 
                         literal("midnight") {
-                            executes {
+                            executesLogError {
                                 setTime(it.source.level, it.source, 18000)
                             }
                         }
 
                         argument("time", TimeArgument.time()) {
-                            executes {
+                            executesLogError {
                                 val time = IntegerArgumentType.getInteger(it, "time")
                                 setTime(it.source.level, it.source, time)
                             }
@@ -945,7 +944,7 @@ object ChestDimCommand {
 
                 literal("add") {
                     argument("time", TimeArgument.time()) {
-                        executes {
+                        executesLogError {
                             val time = IntegerArgumentType.getInteger(it, "time")
                             addTime(it.source.level, it.source, time)
                         }
@@ -954,19 +953,19 @@ object ChestDimCommand {
 
                 literal("query") {
                     literal("daytime") {
-                        executes {
+                        executesLogError {
                             queryTime(it.source, getDayTime(it.source.level))
                         }
                     }
 
                     literal("gametime") {
-                        executes {
+                        executesLogError {
                             queryTime(it.source, (it.source.level.gameTime % 2147483647L).toInt())
                         }
                     }
 
                     literal("day") {
-                        executes {
+                        executesLogError {
                             queryTime(it.source, (it.source.level.dayTime / 24000L % 2147483647L).toInt())
                         }
                     }
@@ -976,35 +975,35 @@ object ChestDimCommand {
                     literal("set") {
                         literal("dayskeep") {
                             literal("day") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setDayTime(uuid, it.source, 1000)
                                 }
                             }
 
                             literal("noon") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setDayTime(uuid, it.source, 6000)
                                 }
                             }
 
                             literal("night") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setDayTime(uuid, it.source, 13000)
                                 }
                             }
 
                             literal("midnight") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setDayTime(uuid, it.source, 18000)
                                 }
                             }
 
                             argument("time", TimeArgument.time()) {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     val time = IntegerArgumentType.getInteger(it, "time")
                                     setDayTime(uuid, it.source, time)
@@ -1014,35 +1013,35 @@ object ChestDimCommand {
 
                         literal("daysreset") {
                             literal("day") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setTime(uuid, it.source, 1000)
                                 }
                             }
 
                             literal("noon") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setTime(uuid, it.source, 6000)
                                 }
                             }
 
                             literal("night") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setTime(uuid, it.source, 13000)
                                 }
                             }
 
                             literal("midnight") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setTime(uuid, it.source, 18000)
                                 }
                             }
 
                             argument("time", TimeArgument.time()) {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     val time = IntegerArgumentType.getInteger(it, "time")
                                     setTime(uuid, it.source, time)
@@ -1053,7 +1052,7 @@ object ChestDimCommand {
 
                     literal("add") {
                         argument("time", TimeArgument.time()) {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 val time = IntegerArgumentType.getInteger(it, "time")
                                 addTime(uuid, it.source, time)
@@ -1063,7 +1062,7 @@ object ChestDimCommand {
 
                     literal("query") {
                         literal("daytime") {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 val level = getLevel(it.source, uuid)
                                 queryTime(it.source, getDayTime(level))
@@ -1071,7 +1070,7 @@ object ChestDimCommand {
                         }
 
                         literal("gametime") {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 val level = getLevel(it.source, uuid)
                                 queryTime(it.source, (level.gameTime % 2147483647L).toInt())
@@ -1079,7 +1078,7 @@ object ChestDimCommand {
                         }
 
                         literal("day") {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 val level = getLevel(it.source, uuid)
                                 queryTime(it.source, (level.dayTime / 24000L % 2147483647L).toInt())
@@ -1092,35 +1091,35 @@ object ChestDimCommand {
                     literal("set") {
                         literal("dayskeep") {
                             literal("day") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setDayTime(level, it.source, 1000)
                                 }
                             }
 
                             literal("noon") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setDayTime(level, it.source, 6000)
                                 }
                             }
 
                             literal("night") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setDayTime(level, it.source, 13000)
                                 }
                             }
 
                             literal("midnight") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setDayTime(level, it.source, 18000)
                                 }
                             }
 
                             argument("time", TimeArgument.time()) {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     val time = IntegerArgumentType.getInteger(it, "time")
                                     setDayTime(level, it.source, time)
@@ -1130,35 +1129,35 @@ object ChestDimCommand {
 
                         literal("daysreset") {
                             literal("day") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setTime(level, it.source, 1000)
                                 }
                             }
 
                             literal("noon") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setTime(level, it.source, 6000)
                                 }
                             }
 
                             literal("night") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setTime(level, it.source, 13000)
                                 }
                             }
 
                             literal("midnight") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setTime(level, it.source, 18000)
                                 }
                             }
 
                             argument("time", TimeArgument.time()) {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     val time = IntegerArgumentType.getInteger(it, "time")
                                     setTime(level, it.source, time)
@@ -1169,7 +1168,7 @@ object ChestDimCommand {
 
                     literal("add") {
                         argument("time", TimeArgument.time()) {
-                            executes {
+                            executesLogError {
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 val time = IntegerArgumentType.getInteger(it, "time")
                                 addTime(level, it.source, time)
@@ -1179,21 +1178,21 @@ object ChestDimCommand {
 
                     literal("query") {
                         literal("daytime") {
-                            executes {
+                            executesLogError {
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 queryTime(it.source, getDayTime(level))
                             }
                         }
 
                         literal("gametime") {
-                            executes {
+                            executesLogError {
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 queryTime(it.source, (level.gameTime % 2147483647L).toInt())
                             }
                         }
 
                         literal("day") {
-                            executes {
+                            executesLogError {
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 queryTime(it.source, (level.dayTime / 24000L % 2147483647L).toInt())
                             }
@@ -1205,31 +1204,31 @@ object ChestDimCommand {
                     literal("set") {
                         literal("dayskeep") {
                             literal("day") {
-                                executes {
+                                executesLogError {
                                     setDayTime(it.source, 1000)
                                 }
                             }
 
                             literal("noon") {
-                                executes {
+                                executesLogError {
                                     setDayTime(it.source, 6000)
                                 }
                             }
 
                             literal("night") {
-                                executes {
+                                executesLogError {
                                     setDayTime(it.source, 13000)
                                 }
                             }
 
                             literal("midnight") {
-                                executes {
+                                executesLogError {
                                     setDayTime(it.source, 18000)
                                 }
                             }
 
                             argument("time", TimeArgument.time()) {
-                                executes {
+                                executesLogError {
                                     val time = IntegerArgumentType.getInteger(it, "time")
                                     setDayTime(it.source, time)
                                 }
@@ -1238,31 +1237,31 @@ object ChestDimCommand {
 
                         literal("daysreset") {
                             literal("day") {
-                                executes {
+                                executesLogError {
                                     setTime(it.source, 1000)
                                 }
                             }
 
                             literal("noon") {
-                                executes {
+                                executesLogError {
                                     setTime(it.source, 6000)
                                 }
                             }
 
                             literal("night") {
-                                executes {
+                                executesLogError {
                                     setTime(it.source, 13000)
                                 }
                             }
 
                             literal("midnight") {
-                                executes {
+                                executesLogError {
                                     setTime(it.source, 18000)
                                 }
                             }
 
                             argument("time", TimeArgument.time()) {
-                                executes {
+                                executesLogError {
                                     val time = IntegerArgumentType.getInteger(it, "time")
                                     setTime(it.source, time)
                                 }
@@ -1272,7 +1271,7 @@ object ChestDimCommand {
 
                     literal("add") {
                         argument("time", TimeArgument.time()) {
-                            executes {
+                            executesLogError {
                                 val time = IntegerArgumentType.getInteger(it, "time")
                                 addTime(it.source, time)
                             }
@@ -1285,35 +1284,35 @@ object ChestDimCommand {
                         literal("set") {
                             literal("dayskeep") {
                                 literal("day") {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         setDayTime(uuid, it.source, 1000)
                                     }
                                 }
 
                                 literal("noon") {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         setDayTime(uuid, it.source, 6000)
                                     }
                                 }
 
                                 literal("night") {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         setDayTime(uuid, it.source, 13000)
                                     }
                                 }
 
                                 literal("midnight") {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         setDayTime(uuid, it.source, 18000)
                                     }
                                 }
 
                                 argument("time", TimeArgument.time()) {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         val time = IntegerArgumentType.getInteger(it, "time")
                                         setDayTime(uuid, it.source, time)
@@ -1323,35 +1322,35 @@ object ChestDimCommand {
 
                             literal("daysreset") {
                                 literal("day") {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         setTime(uuid, it.source, 1000)
                                     }
                                 }
 
                                 literal("noon") {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         setTime(uuid, it.source, 6000)
                                     }
                                 }
 
                                 literal("night") {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         setTime(uuid, it.source, 13000)
                                     }
                                 }
 
                                 literal("midnight") {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         setTime(uuid, it.source, 18000)
                                     }
                                 }
 
                                 argument("time", TimeArgument.time()) {
-                                    executes {
+                                    executesLogError {
                                         val uuid = UuidArgument.getUuid(it, "uuid")
                                         val time = IntegerArgumentType.getInteger(it, "time")
                                         setTime(uuid, it.source, time)
@@ -1362,7 +1361,7 @@ object ChestDimCommand {
 
                         literal("add") {
                             argument("time", TimeArgument.time()) {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     val time = IntegerArgumentType.getInteger(it, "time")
                                     addTime(uuid, it.source, time)
@@ -1372,7 +1371,7 @@ object ChestDimCommand {
 
                         literal("query") {
                             literal("daytime") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     val level = getLevel(it.source, uuid)
                                     queryTime(it.source, getDayTime(level))
@@ -1380,7 +1379,7 @@ object ChestDimCommand {
                             }
 
                             literal("gametime") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     val level = getLevel(it.source, uuid)
                                     queryTime(it.source, (level.gameTime % 2147483647L).toInt())
@@ -1388,7 +1387,7 @@ object ChestDimCommand {
                             }
 
                             literal("day") {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     val level = getLevel(it.source, uuid)
                                     queryTime(it.source, (level.dayTime / 24000L % 2147483647L).toInt())
@@ -1404,35 +1403,35 @@ object ChestDimCommand {
                             literal("set") {
                                 literal("dayskeep") {
                                     literal("day") {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             setDayTime(level, it.source, 1000)
                                         }
                                     }
 
                                     literal("noon") {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             setDayTime(level, it.source, 6000)
                                         }
                                     }
 
                                     literal("night") {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             setDayTime(level, it.source, 13000)
                                         }
                                     }
 
                                     literal("midnight") {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             setDayTime(level, it.source, 18000)
                                         }
                                     }
 
                                     argument("time", TimeArgument.time()) {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             val time = IntegerArgumentType.getInteger(it, "time")
                                             setDayTime(level, it.source, time)
@@ -1442,35 +1441,35 @@ object ChestDimCommand {
 
                                 literal("daysreset") {
                                     literal("day") {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             setTime(level, it.source, 1000)
                                         }
                                     }
 
                                     literal("noon") {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             setTime(level, it.source, 6000)
                                         }
                                     }
 
                                     literal("night") {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             setTime(level, it.source, 13000)
                                         }
                                     }
 
                                     literal("midnight") {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             setTime(level, it.source, 18000)
                                         }
                                     }
 
                                     argument("time", TimeArgument.time()) {
-                                        executes {
+                                        executesLogError {
                                             val level = DimensionArgument.getDimension(it, "dimension")
                                             val time = IntegerArgumentType.getInteger(it, "time")
                                             setTime(level, it.source, time)
@@ -1481,7 +1480,7 @@ object ChestDimCommand {
 
                             literal("add") {
                                 argument("time", TimeArgument.time()) {
-                                    executes {
+                                    executesLogError {
                                         val level = DimensionArgument.getDimension(it, "dimension")
                                         val time = IntegerArgumentType.getInteger(it, "time")
                                         addTime(level, it.source, time)
@@ -1491,21 +1490,21 @@ object ChestDimCommand {
 
                             literal("query") {
                                 literal("daytime") {
-                                    executes {
+                                    executesLogError {
                                         val level = DimensionArgument.getDimension(it, "dimension")
                                         queryTime(it.source, getDayTime(level))
                                     }
                                 }
 
                                 literal("gametime") {
-                                    executes {
+                                    executesLogError {
                                         val level = DimensionArgument.getDimension(it, "dimension")
                                         queryTime(it.source, (level.gameTime % 2147483647L).toInt())
                                     }
                                 }
 
                                 literal("day") {
-                                    executes {
+                                    executesLogError {
                                         val level = DimensionArgument.getDimension(it, "dimension")
                                         queryTime(it.source, (level.dayTime / 24000L % 2147483647L).toInt())
                                     }
@@ -1519,60 +1518,60 @@ object ChestDimCommand {
                             literal("set") {
                                 literal("dayskeep") {
                                     literal("day") {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             setDayTime(level, it.source, 1000)
                                         }
                                     }
 
                                     literal("noon") {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             setDayTime(level, it.source, 6000)
                                         }
                                     }
 
                                     literal("night") {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             setDayTime(level, it.source, 13000)
                                         }
                                     }
 
                                     literal("midnight") {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             setDayTime(level, it.source, 18000)
                                         }
                                     }
 
                                     argument("time", TimeArgument.time()) {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             val time = IntegerArgumentType.getInteger(it, "time")
                                             setDayTime(level, it.source, time)
@@ -1582,60 +1581,60 @@ object ChestDimCommand {
 
                                 literal("daysreset") {
                                     literal("day") {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             setTime(level, it.source, 1000)
                                         }
                                     }
 
                                     literal("noon") {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             setTime(level, it.source, 6000)
                                         }
                                     }
 
                                     literal("night") {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             setTime(level, it.source, 13000)
                                         }
                                     }
 
                                     literal("midnight") {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             setTime(level, it.source, 18000)
                                         }
                                     }
 
                                     argument("time", TimeArgument.time()) {
-                                        executes {
+                                        executesLogError {
                                             val dimension = StringArgumentType.getString(it, "dimension")
                                             val level = getLevel(it.source, dimension)
                                             if (level == null) {
                                                 it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                                return@executes 0
+                                                return@executesLogError 0
                                             }
                                             val time = IntegerArgumentType.getInteger(it, "time")
                                             setTime(level, it.source, time)
@@ -1646,12 +1645,12 @@ object ChestDimCommand {
 
                             literal("add") {
                                 argument("time", TimeArgument.time()) {
-                                    executes {
+                                    executesLogError {
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         val time = IntegerArgumentType.getInteger(it, "time")
                                         addTime(level, it.source, time)
@@ -1661,36 +1660,36 @@ object ChestDimCommand {
 
                             literal("query") {
                                 literal("daytime") {
-                                    executes {
+                                    executesLogError {
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         queryTime(it.source, getDayTime(level))
                                     }
                                 }
 
                                 literal("gametime") {
-                                    executes {
+                                    executesLogError {
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         queryTime(it.source, (level.gameTime % 2147483647L).toInt())
                                     }
                                 }
 
                                 literal("day") {
-                                    executes {
+                                    executesLogError {
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         queryTime(it.source, (level.dayTime / 24000L % 2147483647L).toInt())
                                     }
@@ -1705,36 +1704,36 @@ object ChestDimCommand {
                 requires { it.hasPermission(2) }
 
                 literal("clear") {
-                    executes {
+                    executesLogError {
                         setClear(it.source.level, it.source, -1)
                     }
 
                     argument("duration", TimeArgument.time(1)) {
-                        executes {
+                        executesLogError {
                             setClear(it.source.level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                         }
                     }
                 }
 
                 literal("rain") {
-                    executes {
+                    executesLogError {
                         setRain(it.source.level, it.source, -1)
                     }
 
                     argument("duration", TimeArgument.time(1)) {
-                        executes {
+                        executesLogError {
                             setRain(it.source.level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                         }
                     }
                 }
 
                 literal("thunder") {
-                    executes {
+                    executesLogError {
                         setThunder(it.source.level, it.source, -1)
                     }
 
                     argument("duration", TimeArgument.time(1)) {
-                        executes {
+                        executesLogError {
                             setThunder(it.source.level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                         }
                     }
@@ -1742,13 +1741,13 @@ object ChestDimCommand {
 
                 uuidArgOnlyExist {
                     literal("clear") {
-                        executes {
+                        executesLogError {
                             val uuid = UuidArgument.getUuid(it, "uuid")
                             setClear(uuid, it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 setClear(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
@@ -1756,13 +1755,13 @@ object ChestDimCommand {
                     }
 
                     literal("rain") {
-                        executes {
+                        executesLogError {
                             val uuid = UuidArgument.getUuid(it, "uuid")
                             setRain(uuid, it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 setRain(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
@@ -1770,13 +1769,13 @@ object ChestDimCommand {
                     }
 
                     literal("thunder") {
-                        executes {
+                        executesLogError {
                             val uuid = UuidArgument.getUuid(it, "uuid")
                             setThunder(uuid, it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 setThunder(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
@@ -1786,13 +1785,13 @@ object ChestDimCommand {
 
                 argument("dimension", DimensionArgument.dimension()) {
                     literal("clear") {
-                        executes {
+                        executesLogError {
                             val level = DimensionArgument.getDimension(it, "dimension")
                             setClear(level, it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
-                            executes {
+                            executesLogError {
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 setClear(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
@@ -1800,13 +1799,13 @@ object ChestDimCommand {
                     }
 
                     literal("rain") {
-                        executes {
+                        executesLogError {
                             val level = DimensionArgument.getDimension(it, "dimension")
                             setRain(level, it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
-                            executes {
+                            executesLogError {
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 setRain(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
@@ -1814,13 +1813,13 @@ object ChestDimCommand {
                     }
 
                     literal("thunder") {
-                        executes {
+                        executesLogError {
                             val level = DimensionArgument.getDimension(it, "dimension")
                             setThunder(level, it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
-                            executes {
+                            executesLogError {
                                 val level = DimensionArgument.getDimension(it, "dimension")
                                 setThunder(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
@@ -1830,36 +1829,36 @@ object ChestDimCommand {
 
                 literal("all") {
                     literal("clear") {
-                        executes {
+                        executesLogError {
                             setClear(it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
-                            executes {
+                            executesLogError {
                                 setClear(it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
                         }
                     }
 
                     literal("rain") {
-                        executes {
+                        executesLogError {
                             setRain(it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
-                            executes {
+                            executesLogError {
                                 setRain(it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
                         }
                     }
 
                     literal("thunder") {
-                        executes {
+                        executesLogError {
                             setThunder(it.source, -1)
                         }
 
                         argument("duration", TimeArgument.time(1)) {
-                            executes {
+                            executesLogError {
                                 setThunder(it.source, IntegerArgumentType.getInteger(it, "duration"))
                             }
                         }
@@ -1869,13 +1868,13 @@ object ChestDimCommand {
                 literal("chestdims") {
                     uuidArgOnlyExist {
                         literal("clear") {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 setClear(uuid, it.source, -1)
                             }
 
                             argument("duration", TimeArgument.time(1)) {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setClear(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
                                 }
@@ -1883,13 +1882,13 @@ object ChestDimCommand {
                         }
 
                         literal("rain") {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 setRain(uuid, it.source, -1)
                             }
 
                             argument("duration", TimeArgument.time(1)) {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setRain(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
                                 }
@@ -1897,13 +1896,13 @@ object ChestDimCommand {
                         }
 
                         literal("thunder") {
-                            executes {
+                            executesLogError {
                                 val uuid = UuidArgument.getUuid(it, "uuid")
                                 setThunder(uuid, it.source, -1)
                             }
 
                             argument("duration", TimeArgument.time(1)) {
-                                executes {
+                                executesLogError {
                                     val uuid = UuidArgument.getUuid(it, "uuid")
                                     setThunder(uuid, it.source, IntegerArgumentType.getInteger(it, "duration"))
                                 }
@@ -1916,13 +1915,13 @@ object ChestDimCommand {
                     literal("registry") {
                         argument("dimension", DimensionArgument.dimension()) {
                             literal("clear") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setClear(level, it.source, -1)
                                 }
 
                                 argument("duration", TimeArgument.time(1)) {
-                                    executes {
+                                    executesLogError {
                                         val level = DimensionArgument.getDimension(it, "dimension")
                                         setClear(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                                     }
@@ -1930,13 +1929,13 @@ object ChestDimCommand {
                             }
 
                             literal("rain") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setRain(level, it.source, -1)
                                 }
 
                                 argument("duration", TimeArgument.time(1)) {
-                                    executes {
+                                    executesLogError {
                                         val level = DimensionArgument.getDimension(it, "dimension")
                                         setRain(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                                     }
@@ -1944,13 +1943,13 @@ object ChestDimCommand {
                             }
 
                             literal("thunder") {
-                                executes {
+                                executesLogError {
                                     val level = DimensionArgument.getDimension(it, "dimension")
                                     setThunder(level, it.source, -1)
                                 }
 
                                 argument("duration", TimeArgument.time(1)) {
-                                    executes {
+                                    executesLogError {
                                         val level = DimensionArgument.getDimension(it, "dimension")
                                         setThunder(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                                     }
@@ -1962,23 +1961,23 @@ object ChestDimCommand {
                     literal("dynamic") {
                         allDimsArg {
                             literal("clear") {
-                                executes {
+                                executesLogError {
                                     val dimension = StringArgumentType.getString(it, "dimension")
                                     val level = getLevel(it.source, dimension)
                                     if (level == null) {
                                         it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                        return@executes 0
+                                        return@executesLogError 0
                                     }
                                     setClear(level, it.source, -1)
                                 }
 
                                 argument("duration", TimeArgument.time(1)) {
-                                    executes {
+                                    executesLogError {
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         setClear(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                                     }
@@ -1986,23 +1985,23 @@ object ChestDimCommand {
                             }
 
                             literal("rain") {
-                                executes {
+                                executesLogError {
                                     val dimension = StringArgumentType.getString(it, "dimension")
                                     val level = getLevel(it.source, dimension)
                                     if (level == null) {
                                         it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                        return@executes 0
+                                        return@executesLogError 0
                                     }
                                     setRain(level, it.source, -1)
                                 }
 
                                 argument("duration", TimeArgument.time(1)) {
-                                    executes {
+                                    executesLogError {
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         setRain(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                                     }
@@ -2010,23 +2009,23 @@ object ChestDimCommand {
                             }
 
                             literal("thunder") {
-                                executes {
+                                executesLogError {
                                     val dimension = StringArgumentType.getString(it, "dimension")
                                     val level = getLevel(it.source, dimension)
                                     if (level == null) {
                                         it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                        return@executes 0
+                                        return@executesLogError 0
                                     }
                                     setThunder(level, it.source, -1)
                                 }
 
                                 argument("duration", TimeArgument.time(1)) {
-                                    executes {
+                                    executesLogError {
                                         val dimension = StringArgumentType.getString(it, "dimension")
                                         val level = getLevel(it.source, dimension)
                                         if (level == null) {
                                             it.source.sendFailure(Component.literal("Dimension is not valid."))
-                                            return@executes 0
+                                            return@executesLogError 0
                                         }
                                         setThunder(level, it.source, IntegerArgumentType.getInteger(it, "duration"))
                                     }
@@ -2042,14 +2041,14 @@ object ChestDimCommand {
 
                 argument("targets", EntityArgument.entities()) {
                     argument("amount", FloatArgumentType.floatArg(0.0f)) {
-                        executes {
+                        executesLogError {
                             val entities = EntityArgument.getEntities(it, "targets")
                             val amount = FloatArgumentType.getFloat(it, "amount")
                             damage(it.source, entities, amount, it.source.level.damageSources().generic())
                         }
 
                         argument("damageType", ResourceArgument.resource(registryAccess, Registries.DAMAGE_TYPE)) {
-                            executes {
+                            executesLogError {
                                 val entities = EntityArgument.getEntities(it, "targets")
                                 val amount = FloatArgumentType.getFloat(it, "amount")
                                 val damageType = ResourceArgument.getResource(it, "damageType", Registries.DAMAGE_TYPE)
@@ -2063,7 +2062,7 @@ object ChestDimCommand {
 
                             literal("at") {
                                 argument("location", Vec3Argument.vec3()) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val amount = FloatArgumentType.getFloat(it, "amount")
                                         val damageType =
@@ -2081,7 +2080,7 @@ object ChestDimCommand {
 
                             literal("by") {
                                 argument("entity", EntityArgument.entity()) {
-                                    executes {
+                                    executesLogError {
                                         val entities = EntityArgument.getEntities(it, "targets")
                                         val amount = FloatArgumentType.getFloat(it, "amount")
                                         val damageType =
@@ -2097,7 +2096,7 @@ object ChestDimCommand {
 
                                     literal("from") {
                                         argument("cause", EntityArgument.entity()) {
-                                            executes {
+                                            executesLogError {
                                                 val entities = EntityArgument.getEntities(it, "targets")
                                                 val amount = FloatArgumentType.getFloat(it, "amount")
                                                 val damageType =
@@ -2125,14 +2124,14 @@ object ChestDimCommand {
             }
 
             literal("ping") {
-                executes {
+                executesLogError {
                     val player = it.source.playerOrException
                     it.source.sendSuccess({ Component.literal("Ping: ${player.latency}ms") }, true)
                     1
                 }
 
                 argument("player", EntityArgument.player()) {
-                    executes {
+                    executesLogError {
                         val player = EntityArgument.getPlayer(it, "player")
                             ?: throw CommandSourceStack.ERROR_NOT_PLAYER.create()
                         it.source.sendSuccess({ Component.literal("Ping: ${player.latency}ms") }, true)
@@ -2142,12 +2141,12 @@ object ChestDimCommand {
             }
 
             literal("uuid") {
-                executes {
+                executesLogError {
                     val player = it.source.playerOrException
                     val uuid = ChestLevelManager.findUUIDByLevel(player.serverLevel())
                     if (uuid == null) {
                         it.source.sendFailure(Component.literal("No chest dimension found"))
-                        return@executes 0
+                        return@executesLogError 0
                     }
                     val uuidComponent: MutableComponent = Component.literal(uuid.toString()).withStyle { style ->
                         style.withUnderlined(true)
@@ -2171,29 +2170,17 @@ object ChestDimCommand {
     private fun create(entity: Entity, source: CommandSourceStack): Int = create(setOf(entity), source)
 
     private fun create(entities: Collection<Entity>, source: CommandSourceStack): Int {
-        return runCatching {
-            val uuid = UUIDManager.randomUUID()
-            val uuidComponent: MutableComponent = Component.literal(uuid.toString()).withStyle {
-                it.withUnderlined(true)
-                    .withClickEvent(ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, uuid.toString()))
-                    .withHoverEvent(
-                        HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            Component.literal("Click to copy UUID")
-                        )
-                    )
-            }
-            val world = ChestLevelManager.getOrCreate(source.server, uuid)
-            entities.forEach { entity ->
-                ChestLevelManager.teleportEntityToEnter(world, entity)
-            }
-            source.sendSuccess({ Component.literal("Created world: ").append(uuidComponent) }, true)
-            1
-        }.getOrElse {
-            Constants.LOGGER.error(it.localizedMessage, it)
-            source.sendFailure(Component.literal("Command error (${it.localizedMessage})"))
-            0
+        val uuid = UUIDManager.randomUUID()
+        val uuidComponent: MutableComponent = Component.literal(uuid.toString()).withStyle {
+            it.withUnderlined(true).withClickEvent(ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, uuid.toString()))
+                .withHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to copy UUID")))
         }
+        val world = ChestLevelManager.getOrCreate(source.server, uuid)
+        entities.forEach { entity ->
+            ChestLevelManager.teleportEntityToEnter(world, entity)
+        }
+        source.sendSuccess({ Component.literal("Created world: ").append(uuidComponent) }, true)
+        return 1
     }
 
     private fun formatDouble(value: Double): String {

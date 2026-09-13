@@ -5,6 +5,8 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.ArgumentBuilder
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.builder.RequiredArgumentBuilder
+import com.mojang.brigadier.context.CommandContext
+import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.level.UUIDManager
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -21,6 +23,13 @@ inline fun <T> ArgumentBuilder<CommandSourceStack, *>.argument(
     type: ArgumentType<T>,
     block: RequiredArgumentBuilder<CommandSourceStack, T>.() -> Unit
 ): ArgumentBuilder<CommandSourceStack, *> = then(Commands.argument(name, type).apply(block))
+
+inline fun <T> ArgumentBuilder<T, *>.executesLogError(crossinline command: (CommandContext<T>) -> Int): ArgumentBuilder<T, *> =
+    executes { context ->
+        runCatching { command(context) }.onFailure {
+            Constants.LOGGER.error("Failed to execute command: {}", context.input, it)
+        }.getOrThrow()
+    }
 
 internal inline fun ArgumentBuilder<CommandSourceStack, *>.uuidArg(block: RequiredArgumentBuilder<CommandSourceStack, UUID>.() -> Unit) =
     argument("uuid", UuidArgument.uuid()) {
