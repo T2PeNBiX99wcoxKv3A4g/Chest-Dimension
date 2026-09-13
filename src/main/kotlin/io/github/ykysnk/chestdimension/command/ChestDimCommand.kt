@@ -2564,8 +2564,6 @@ object ChestDimCommand {
     }
 
     init {
-        CommandRegistrationCallback.EVENT.register { dispatcher, registryAccess, environment ->
-            register(dispatcher, registryAccess, environment)
-        }
+        CommandRegistrationCallback.EVENT.register(::register)
     }
 }
