@@ -384,6 +384,16 @@ kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_17
     }
+
+    sourceSets {
+        main {
+            kotlin.srcDir(
+                layout.buildDirectory.dir(
+                    "generated/sources/fallbackTranslations"
+                )
+            )
+        }
+    }
 }
 
 java {
@@ -419,18 +429,6 @@ publishing {
         // Notice: This block does NOT have the same function as the block in the top level.
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
-    }
-}
-
-kotlin {
-    sourceSets {
-        main {
-            kotlin.srcDir(
-                layout.buildDirectory.dir(
-                    "generated/sources/fallbackTranslations"
-                )
-            )
-        }
     }
 }
 
