@@ -51,9 +51,9 @@ object ChestDimCommand {
             literal("create") {
                 requires { it.hasPermission(2) }
 
-                executes { context ->
-                    val player = context.source.playerOrException
-                    create(player, context.source)
+                executes {
+                    val player = it.source.playerOrException
+                    create(player, it.source)
                 }
 
                 argument("targets", EntityArgument.entities()) {
@@ -841,9 +841,9 @@ object ChestDimCommand {
             literal("give-chest") {
                 requires { it.hasPermission(2) }
 
-                executes { context ->
-                    val player = context.source.playerOrException
-                    giveChest(player, context.source)
+                executes {
+                    val player = it.source.playerOrException
+                    giveChest(player, it.source)
                 }
 
                 uuidArg {
