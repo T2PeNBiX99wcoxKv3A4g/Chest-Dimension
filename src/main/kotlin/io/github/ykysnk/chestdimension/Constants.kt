@@ -44,8 +44,7 @@ object Constants {
     }
 
     val ForceInitialize: Unit by lazy {
-        LOGGER.debug(
-            "{} {} {} {} {} {} {} {} {} {} {} {} {}",
+        doNothing(
             Configs,
             Blocks,
             Items,
@@ -66,4 +65,6 @@ object Constants {
 
     val Server: MinecraftServer
         get() = getServer ?: error("Server is not initialized")
+
+    private fun doNothing(vararg objects: Any) {}
 }
