@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.world.damagesource
 
-import io.github.ykysnk.chestdimension.tags.NameSpaces
+import io.github.ykysnk.chestdimension.NameSpaces
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.damagesource.DamageScaling

@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.block
 
-import io.github.ykysnk.chestdimension.tags.NameSpaces
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries

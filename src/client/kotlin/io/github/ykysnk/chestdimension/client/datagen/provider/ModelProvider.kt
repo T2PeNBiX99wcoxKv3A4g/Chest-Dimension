@@ -3,9 +3,9 @@
 package io.github.ykysnk.chestdimension.client.datagen.provider
 
 import com.google.gson.JsonObject
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.item.Items
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
 import net.minecraft.core.registries.BuiltInRegistries

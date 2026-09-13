@@ -13,7 +13,6 @@ import io.github.ykysnk.chestdimension.level.levelgen.feature.Features
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import io.github.ykysnk.chestdimension.sounds.Musics
 import io.github.ykysnk.chestdimension.sounds.SoundEvents
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.TaskPool
 import io.github.ykysnk.chestdimension.world.Network
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents

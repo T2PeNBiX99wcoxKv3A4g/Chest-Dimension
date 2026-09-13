@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.level.levelgen.structure
 
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.level.biome.Biomes
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.minecraft.core.HolderGetter
 import net.minecraft.core.HolderSet
 import net.minecraft.core.registries.Registries

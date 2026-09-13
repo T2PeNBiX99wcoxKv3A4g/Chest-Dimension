@@ -3,6 +3,7 @@
 package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.ChestDimensionBlock
 import io.github.ykysnk.chestdimension.event.UtilsEvents
@@ -11,7 +12,6 @@ import io.github.ykysnk.chestdimension.level.biome.Biomes
 import io.github.ykysnk.chestdimension.level.chunk.ChestChunkGenerator
 import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.TaskPool
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.BlockPos

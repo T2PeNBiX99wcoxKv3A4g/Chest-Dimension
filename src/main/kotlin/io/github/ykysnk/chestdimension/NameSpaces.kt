@@ -1,6 +1,6 @@
 @file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
-package io.github.ykysnk.chestdimension.tags
+package io.github.ykysnk.chestdimension
 
 import io.github.ykysnk.chestdimension.utils.SimpleResourceLocation
 import net.minecraft.resources.ResourceLocation

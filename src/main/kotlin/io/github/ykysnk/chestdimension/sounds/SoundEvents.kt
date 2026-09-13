@@ -2,7 +2,7 @@
 
 package io.github.ykysnk.chestdimension.sounds
 
-import io.github.ykysnk.chestdimension.tags.NameSpaces
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry

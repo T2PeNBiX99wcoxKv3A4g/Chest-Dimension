@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.client.renderer
 
-import io.github.ykysnk.chestdimension.tags.NameSpaces
+import io.github.ykysnk.chestdimension.NameSpaces
 import net.minecraft.client.renderer.Sheets
 import net.minecraft.client.resources.model.Material
 

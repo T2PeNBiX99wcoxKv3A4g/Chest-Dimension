@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.level.levelgen.structure
 
-import io.github.ykysnk.chestdimension.tags.NameSpaces
+import io.github.ykysnk.chestdimension.NameSpaces
 
 object LootTables {
     val DEATH_BODY_CHEST = NameSpaces.MOD("chests/death_body_chest")

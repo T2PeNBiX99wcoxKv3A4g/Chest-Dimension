@@ -3,7 +3,7 @@
 package io.github.ykysnk.chestdimension.level.levelgen.structure
 
 import com.mojang.datafixers.util.Pair
-import io.github.ykysnk.chestdimension.tags.NameSpaces
+import io.github.ykysnk.chestdimension.NameSpaces
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstapContext
 import net.minecraft.resources.ResourceKey

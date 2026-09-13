@@ -1,8 +1,8 @@
 package io.github.ykysnk.chestdimension.block.entity
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.block.Blocks
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.entity.BlockEntity

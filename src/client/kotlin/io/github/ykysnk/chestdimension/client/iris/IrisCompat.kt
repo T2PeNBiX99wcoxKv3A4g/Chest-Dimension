@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.client.iris
 
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.compat.ModCompat
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.irisshaders.iris.Iris
 import net.irisshaders.iris.uniforms.SystemTimeUniforms
 

@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.world.inventory
 
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.level.ChestServerLevel
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component

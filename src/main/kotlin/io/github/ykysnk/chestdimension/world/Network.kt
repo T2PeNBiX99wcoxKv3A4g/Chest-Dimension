@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.world
 
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.level.ChestServerLevel
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey

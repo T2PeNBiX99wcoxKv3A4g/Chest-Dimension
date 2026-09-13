@@ -1,10 +1,10 @@
 package io.github.ykysnk.chestdimension.client.world.inventory
 
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.client.extensions.freezeTime
 import io.github.ykysnk.chestdimension.client.extensions.freezeWeather
 import io.github.ykysnk.chestdimension.client.extensions.sendSetTime
 import io.github.ykysnk.chestdimension.client.extensions.sendWeather
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.world.Network
 import io.github.ykysnk.chestdimension.world.WeatherType
 import io.github.ykysnk.chestdimension.world.inventory.WeatherTimeControllerMenu

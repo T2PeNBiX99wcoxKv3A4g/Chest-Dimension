@@ -1,7 +1,7 @@
 package io.github.ykysnk.chestdimension.item
 
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.block.Blocks
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.world.item.DoubleHighBlockItem
 import net.minecraft.world.item.Item

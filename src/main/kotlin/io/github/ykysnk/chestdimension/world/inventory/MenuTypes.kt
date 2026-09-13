@@ -1,6 +1,6 @@
 package io.github.ykysnk.chestdimension.world.inventory
 
-import io.github.ykysnk.chestdimension.tags.NameSpaces
+import io.github.ykysnk.chestdimension.NameSpaces
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries

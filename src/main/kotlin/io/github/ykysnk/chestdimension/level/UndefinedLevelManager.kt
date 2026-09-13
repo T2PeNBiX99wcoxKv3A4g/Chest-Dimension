@@ -3,6 +3,7 @@
 package io.github.ykysnk.chestdimension.level
 
 import io.github.ykysnk.chestdimension.Constants
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.event.UtilsEvents
 import io.github.ykysnk.chestdimension.level.biome.Biomes
 import io.github.ykysnk.chestdimension.level.data.UndefinedData
@@ -10,7 +11,6 @@ import io.github.ykysnk.chestdimension.level.dimension.DimensionTypes
 import io.github.ykysnk.chestdimension.level.levelgen.NoiseGeneratorSettings
 import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import io.github.ykysnk.chestdimension.level.storage.ChestServerLevelData
-import io.github.ykysnk.chestdimension.tags.NameSpaces
 import io.github.ykysnk.chestdimension.utils.AbstractManager
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.registries.Registries

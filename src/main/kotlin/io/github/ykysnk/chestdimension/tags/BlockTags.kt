@@ -2,6 +2,7 @@
 
 package io.github.ykysnk.chestdimension.tags
 
+import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.utils.RegistryHelper
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
