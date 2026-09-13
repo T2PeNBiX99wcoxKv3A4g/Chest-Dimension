@@ -90,7 +90,6 @@ dependencies {
     modImplementation("org.antlr:antlr4-runtime:${providers.gradleProperty("antlr4_version").get()}")
     modImplementation("io.github.douira:glsl-transformer:${providers.gradleProperty("glsl_transformer_version").get()}")
     modImplementation("org.anarres:jcpp:${providers.gradleProperty("jcpp_version").get()}")
-    include(implementation("net.mamoe.yamlkt:yamlkt:${providers.gradleProperty("yamlkt_version").get()}")!!)
 }
 
 val generateFallbackTranslations = tasks.register("generateFallbackTranslations") {
