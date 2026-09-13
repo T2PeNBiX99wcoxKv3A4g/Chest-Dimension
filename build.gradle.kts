@@ -128,7 +128,7 @@ val generateFallbackTranslations = tasks.register("generateFallbackTranslations"
             appendLine("// Generated file. DO NOT EDIT.")
             appendLine("// Generated from assets/${providers.gradleProperty("mod_id").get()}/lang/en_us.json")
             appendLine()
-            appendLine("package $group")
+            appendLine("package ${providers.gradleProperty("group").get()}")
             appendLine()
             appendLine("object FallbackTranslations {")
 
@@ -150,7 +150,11 @@ val generateFallbackTranslations = tasks.register("generateFallbackTranslations"
             appendLine("}")
         }
 
-        val outputFile = outputDirectory.resolve("${group?.replace('.', '/')}/FallbackTranslations.kt")
+        val outputFile = outputDirectory.resolve(
+            "${
+                providers.gradleProperty("group").get().replace('.', '/')
+            }/FallbackTranslations.kt"
+        )
 
         outputFile.parentFile.mkdirs()
         outputFile.writeText(output)
