@@ -101,4 +101,12 @@ object Blocks : RegistryHelper<Block>() {
                 .pushReaction(PushReaction.DESTROY).sound(SoundType.BONE_BLOCK)
         )
     )
+
+    val NULL: Block = register(
+        "null",
+        Block(
+            BlockBehaviour.Properties.of().mapColor(MCBlocks.SNOW.defaultMapColor()).strength(0.5f)
+                .sound(SoundType.GRAVEL)
+        )
+    )
 }

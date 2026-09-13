@@ -46,4 +46,7 @@ object Items : RegistryHelper<Item>() {
 
     @JvmField
     val DEATH_BODY: Item = register(MCItems.registerBlock(Blocks.DEATH_BODY))
+
+    @JvmField
+    val NULL: Item = register(MCItems.registerBlock(Blocks.NULL))
 }

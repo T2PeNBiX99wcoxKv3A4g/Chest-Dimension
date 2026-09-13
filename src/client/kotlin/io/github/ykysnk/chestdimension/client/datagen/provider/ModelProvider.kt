@@ -59,6 +59,7 @@ class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
             ModelLocationUtils.getModelLocation(Blocks.DEATH_BODY),
             MCBlocks.WHITE_WOOL
         ).createWithoutBlockItem(Blocks.DEATH_BODY)
+        blockStateModelGenerator.createTrivialCube(Blocks.NULL)
     }
 
     override fun generateItemModels(itemModelGenerator: ItemModelGenerators) {
