@@ -128,12 +128,13 @@ tasks.processResources {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release = 17
+    options.release = providers.gradleProperty("jvm_target").get().toInt()
 }
 
 kotlin {
+    jvmToolchain(providers.gradleProperty("jdk_version").get().toInt())
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_17
+        jvmTarget = JvmTarget.fromTarget(providers.gradleProperty("jvm_target").get())
     }
 
     sourceSets {
@@ -192,6 +193,6 @@ tasks.named<Jar>("sourcesJar") {
 }
 
 translationGenerator {
-    modId.set(providers.gradleProperty("mod_id"))
-    packageName.set(providers.gradleProperty("package_group"))
+    modId = providers.gradleProperty("mod_id")
+    packageName = providers.gradleProperty("package_group")
 }
