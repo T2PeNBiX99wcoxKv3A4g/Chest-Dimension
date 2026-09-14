@@ -57,6 +57,7 @@ object ChestDimensionDataGenerator : DataGeneratorEntrypoint {
         registryBuilder.add(Registries.BIOME) { context ->
             context.register(Biomes.PLATFORM, Biomes.PlatformType)
             Biomes.createGraveyardBiome(context)
+            Biomes.createNullBiome(context)
         }
         registryBuilder.add(Registries.DIMENSION_TYPE) { context ->
             context.register(DimensionTypes.PLATFORM, DimensionTypes.PlatformDimensionType)

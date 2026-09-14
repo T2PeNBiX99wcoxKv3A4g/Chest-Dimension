@@ -16,6 +16,8 @@ object Biomes {
         ResourceKey.create(Registries.BIOME, NameSpaces.MOD("platform"))
     val GRAVEYARD: ResourceKey<Biome> =
         ResourceKey.create(Registries.BIOME, NameSpaces.MOD("graveyard"))
+    val NULL: ResourceKey<Biome> =
+        ResourceKey.create(Registries.BIOME, NameSpaces.MOD("null"))
 
     val PlatformType: Biome by lazy {
         Biome.BiomeBuilder()
@@ -47,20 +49,32 @@ object Biomes {
             .build()
     }
 
+    private val NullSpecialEffects: BiomeSpecialEffects by lazy {
+        BiomeSpecialEffects.Builder()
+            .fogColor(16777215)
+            .skyColor(16777215)
+            .waterColor(16777215)
+            .waterFogColor(16777215)
+            .build()
+    }
+
     fun createGraveyardBiome(context: BootstapContext<Biome>) {
         val placedFeatures = context.lookup(Registries.PLACED_FEATURE)
         val carvers = context.lookup(Registries.CONFIGURED_CARVER)
-        val generationSettings = BiomeGenerationSettings.Builder(placedFeatures, carvers)
-            .addFeature(
+        val generationSettings = BiomeGenerationSettings.Builder(placedFeatures, carvers).apply {
+            addFeature(
                 GenerationStep.Decoration.SURFACE_STRUCTURES,
                 placedFeatures.getOrThrow(PlacedFeatures.TORCH_PATH)
-            ).addFeature(
+            )
+            addFeature(
                 GenerationStep.Decoration.SURFACE_STRUCTURES,
                 placedFeatures.getOrThrow(PlacedFeatures.BEDROCK_PILLAR)
-            ).addFeature(
+            )
+            addFeature(
                 GenerationStep.Decoration.TOP_LAYER_MODIFICATION,
                 placedFeatures.getOrThrow(PlacedFeatures.FREEZE_TOP_LAYER)
-            ).build()
+            )
+        }.build()
 
         val biome = Biome.BiomeBuilder()
             .hasPrecipitation(true)
@@ -73,5 +87,28 @@ object Biomes {
             .build()
 
         context.register(GRAVEYARD, biome)
+    }
+
+    fun createNullBiome(context: BootstapContext<Biome>) {
+        val placedFeatures = context.lookup(Registries.PLACED_FEATURE)
+        val carvers = context.lookup(Registries.CONFIGURED_CARVER)
+        val generationSettings = BiomeGenerationSettings.Builder(placedFeatures, carvers).apply {
+            addFeature(
+                GenerationStep.Decoration.SURFACE_STRUCTURES,
+                placedFeatures.getOrThrow(PlacedFeatures.TORCH_PATH)
+            )
+        }.build()
+
+        val biome = Biome.BiomeBuilder()
+            .hasPrecipitation(false)
+            .temperature(-1f)
+            .downfall(0f)
+            .specialEffects(NullSpecialEffects)
+            .mobSpawnSettings(MobSpawnSettings.EMPTY)
+            .generationSettings(generationSettings)
+            .temperatureAdjustment(Biome.TemperatureModifier.NONE)
+            .build()
+
+        context.register(NULL, biome)
     }
 }
