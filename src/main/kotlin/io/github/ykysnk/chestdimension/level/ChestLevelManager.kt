@@ -60,12 +60,12 @@ object ChestLevelManager {
             .getHolderOrThrow(DimensionTypes.PLATFORM)
     }
 
+    private val biomeSource by lazy { FixedBiomeSource(biome) }
+    private val generator by lazy { ChestChunkGenerator(biomeSource) }
+    private val levelStem by lazy { LevelStem(dimensionType, generator) }
+
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
-
-        val biomeSource = FixedBiomeSource(biome)
-        val generator = ChestChunkGenerator(biomeSource)
-        val levelStem = LevelStem(dimensionType, generator)
 
         for ((uuidString, data) in UUIDManager.getMap()) {
             val uuid = runCatching { UUID.fromString(uuidString) }.getOrElse {
@@ -92,9 +92,6 @@ object ChestLevelManager {
         val worldKey = createWorldKey(uuid)
         val worldOptions = WorldOptions.defaultWithRandomSeed()
         val seed = worldOptions.seed()
-        val biomeSource = FixedBiomeSource(biome)
-        val generator = ChestChunkGenerator(biomeSource)
-        val levelStem = LevelStem(dimensionType, generator)
         val level = createServerLevel(server, levelStem, uuid, worldOptions)
         createStartPlatform(level)
 
@@ -278,9 +275,6 @@ object ChestLevelManager {
         if (loaded.containsKey(uuid)) return
         val data = UUIDManager[uuid] ?: return
         val server = Constants.Server
-        val biomeSource = FixedBiomeSource(biome)
-        val generator = ChestChunkGenerator(biomeSource)
-        val levelStem = LevelStem(dimensionType, generator)
         val worldKey = createWorldKey(uuid)
         val seed = data.seed
         val worldOptions = WorldOptions(seed, true, false)
