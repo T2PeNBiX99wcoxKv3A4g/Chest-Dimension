@@ -79,7 +79,7 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
                         Climate.Parameter.span(-1.0f, 1.0f),
                         0.0f
                     ),
-                    graveyardBiome
+                    nullBiome
                 )
             )
         )
