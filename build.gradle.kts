@@ -1,4 +1,3 @@
-import groovy.json.JsonSlurper
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -7,6 +6,7 @@ plugins {
     `maven-publish`
     kotlin("jvm")
     kotlin("plugin.serialization")
+    id("io.github.ykysnk.translation-generator")
 }
 
 repositories {
@@ -55,6 +55,12 @@ loom {
     val aw = file("src/main/resources/${providers.gradleProperty("mod_id").get()}.aw")
     if (aw.exists())
         accessWidenerPath = aw
+
+    runs {
+        configureEach {
+            vmArg("-Dsodium.checks.issue2561=false")
+        }
+    }
 }
 
 fabricApi {
@@ -92,264 +98,6 @@ dependencies {
     modImplementation("org.anarres:jcpp:${providers.gradleProperty("jcpp_version").get()}")
 }
 
-val generateFallbackTranslations = tasks.register("generateFallbackTranslations") {
-    description = "Generate fallback translations from en_us.json"
-
-    val inputFile = file(
-        "src/main/resources/assets/${providers.gradleProperty("mod_id").get()}/lang/en_us.json"
-    )
-
-    onlyIf {
-        inputFile.exists()
-    }
-
-    val outputDir = layout.buildDirectory.dir("generated/sources/fallbackTranslations")
-
-    inputs.file(inputFile)
-    outputs.dir(outputDir)
-
-    doLast {
-        val outputDirectory = outputDir.get().asFile
-
-        val translations = JsonSlurper()
-            .parse(inputFile) as Map<*, *>
-
-        fun toConstantName(key: String): String = key.replace(Regex("[^A-Za-z0-9]+"), "_").uppercase().trim('_')
-
-        fun escapeKotlinString(value: String): String = value
-            .replace("\\", "\\\\")
-            .replace("\"", "\\\"")
-            .replace("\r", "\\r")
-            .replace("\n", "\\n")
-            .replace("\t", "\\t")
-
-        val output = buildString {
-            appendLine("// Generated file. DO NOT EDIT.")
-            appendLine("// Generated from assets/${providers.gradleProperty("mod_id").get()}/lang/en_us.json")
-            appendLine()
-            appendLine("package ${providers.gradleProperty("group").get()}")
-            appendLine()
-            appendLine("object FallbackTranslations {")
-
-            translations.forEach { (key, value) ->
-                require(key is String) {
-                    "Translation key must be a string: $key"
-                }
-
-                require(value is String) {
-                    "Translation value must be a string: $key"
-                }
-
-                val constantName = toConstantName(key)
-                val text = escapeKotlinString(value)
-
-                appendLine("    const val $constantName = \"$text\"")
-            }
-
-            appendLine("}")
-        }
-
-        val outputFile = outputDirectory.resolve(
-            "${
-                providers.gradleProperty("group").get().replace('.', '/')
-            }/FallbackTranslations.kt"
-        )
-
-        outputFile.parentFile.mkdirs()
-        outputFile.writeText(output)
-    }
-}
-
-val generateUpsideDownTranslation = tasks.register("generateUpsideDownTranslation") {
-    description = "Generate the en_ud (Upside-Down English) translation from en_us."
-
-    val inputFile =
-        file("src/main/resources/assets/${providers.gradleProperty("mod_id").get()}/lang/en_us.json")
-
-    onlyIf {
-        inputFile.exists()
-    }
-
-    val outputDir = layout.buildDirectory.dir("generated/resources/upsideDownTranslations")
-
-    inputs.file(inputFile)
-    outputs.dir(outputDir)
-
-    doLast {
-        val outputDirectory = outputDir.get().asFile
-        outputDirectory.mkdirs()
-
-        val translations =
-            JsonSlurper().parse(inputFile) as Map<*, *>
-
-        /*
-         * Minecraft format placeholders.
-         *
-         * Examples:
-         * %s
-         * %d
-         * %1$s
-         * %2$d
-         * %1.2f
-         */
-        val placeholderRegex =
-            Regex("%(?:\\d+\\$)?(?:\\d+)?(?:\\.\\d+)?[a-zA-Z]")
-
-        val upsideDownMap = mapOf(
-            // Lowercase
-            'a' to 'ɐ',
-            'b' to 'q',
-            'c' to 'ɔ',
-            'd' to 'p',
-            'e' to 'ǝ',
-            'f' to 'ɟ',
-            'g' to 'ƃ',
-            'h' to 'ɥ',
-            'i' to 'ᴉ',
-            'j' to 'ɾ',
-            'k' to 'ʞ',
-            'l' to 'ן',
-            'm' to 'ɯ',
-            'n' to 'u',
-            'o' to 'o',
-            'p' to 'd',
-            'q' to 'b',
-            'r' to 'ɹ',
-            's' to 's',
-            't' to 'ʇ',
-            'u' to 'n',
-            'v' to 'ʌ',
-            'w' to 'ʍ',
-            'x' to 'x',
-            'y' to 'ʎ',
-            'z' to 'z',
-
-            // Uppercase
-            'A' to '∀',
-            'B' to 'B',
-            'C' to 'Ɔ',
-            'D' to '◖',
-            'E' to 'Ǝ',
-            'F' to 'Ⅎ',
-            'G' to 'פ',
-            'H' to 'H',
-            'I' to 'I',
-            'J' to 'ſ',
-            'K' to 'ʞ',
-            'L' to '˥',
-            'M' to 'M',
-            'N' to 'N',
-            'O' to 'O',
-            'P' to 'Ԁ',
-            'Q' to 'Ό',
-            'R' to 'ᴚ',
-            'S' to 'S',
-            'T' to '┴',
-            'U' to '∩',
-            'V' to 'Λ',
-            'W' to 'M',
-            'X' to 'X',
-            'Y' to '⅄',
-            'Z' to 'Z',
-
-            // Punctuation
-            '.' to '˙',
-            ',' to '\'',
-            '\'' to ',',
-            '?' to '¿',
-            '!' to '¡',
-            '[' to ']',
-            ']' to '[',
-            '(' to ')',
-            ')' to '(',
-            '<' to '>',
-            '>' to '<'
-        )
-
-        fun transformText(text: String): String {
-            val matches = placeholderRegex.findAll(text).toList()
-
-            // No placeholders.
-            if (matches.isEmpty()) {
-                return text
-                    .reversed()
-                    .map { upsideDownMap[it] ?: it }
-                    .joinToString("")
-            }
-
-            val result = StringBuilder()
-
-            /*
-             * We process the text from right to left.
-             *
-             * Placeholders themselves are kept unchanged.
-             */
-            var end = text.length
-
-            for (match in matches.asReversed()) {
-                // Text after the placeholder.
-                result.append(
-                    text.substring(match.range.last + 1, end)
-                        .reversed()
-                        .map { upsideDownMap[it] ?: it }
-                        .joinToString("")
-                )
-
-                // Placeholder itself.
-                result.append(match.value)
-
-                end = match.range.first
-            }
-
-            // Text before the first placeholder.
-            result.append(
-                text.substring(0, end)
-                    .reversed()
-                    .map { upsideDownMap[it] ?: it }
-                    .joinToString("")
-            )
-
-            return result.toString()
-        }
-
-        val output = buildString {
-            appendLine("{")
-
-            translations.entries.forEachIndexed { index, (key, value) ->
-                val translated =
-                    transformText(value.toString())
-                        .replace("\\", "\\\\")
-                        .replace("\"", "\\\"")
-                        .replace("\n", "\\n")
-                        .replace("\r", "\\r")
-                        .replace("\t", "\\t")
-
-                append("  ")
-                append("\"")
-                append(key)
-                append("\": \"")
-                append(translated)
-                append("\"")
-
-                if (index != translations.size - 1) {
-                    append(",")
-                }
-
-                appendLine()
-            }
-
-            appendLine("}")
-        }
-
-        outputDirectory
-            .resolve("assets/${providers.gradleProperty("mod_id").get()}/lang/en_ud.json")
-            .apply {
-                parentFile.mkdirs()
-                writeText(output)
-            }
-    }
-}
-
 tasks.processResources {
     val version = version
     inputs.property("version", version)
@@ -371,7 +119,7 @@ tasks.processResources {
         )
     }
 
-    dependsOn(generateUpsideDownTranslation)
+    dependsOn("generateUpsideDownTranslation")
     from(
         layout.buildDirectory.dir(
             "generated/resources/upsideDownTranslations"
@@ -436,17 +184,14 @@ publishing {
 }
 
 tasks.named<KotlinCompile>("compileKotlin") {
-    dependsOn(generateFallbackTranslations)
+    dependsOn("generateFallbackTranslations")
 }
 
 tasks.named<Jar>("sourcesJar") {
-    dependsOn(generateFallbackTranslations)
+    dependsOn("generateFallbackTranslations")
 }
 
-loom {
-    runs {
-        configureEach {
-            vmArg("-Dsodium.checks.issue2561=false")
-        }
-    }
+translationGenerator {
+    modId.set(providers.gradleProperty("mod_id"))
+    packageName.set(providers.gradleProperty("package_group"))
 }
