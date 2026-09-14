@@ -17,6 +17,7 @@ class BlockLootTableProvider(output: FabricDataOutput) : FabricBlockLootTablePro
         dropSelf(Blocks.CHEST_DIMENSION)
         dropSelf(Blocks.WEATHER_TIME_CONTROLLER)
         dropOther(Blocks.DEATH_BODY, Items.BONE)
+        dropWhenSilkTouch(Blocks.NULL)
         add(Blocks.TELEPORT_DOOR, createDoorTable(Blocks.TELEPORT_DOOR))
     }
 }
