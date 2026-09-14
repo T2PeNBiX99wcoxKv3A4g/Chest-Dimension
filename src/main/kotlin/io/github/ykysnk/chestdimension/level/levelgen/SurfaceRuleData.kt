@@ -2,7 +2,6 @@
 
 package io.github.ykysnk.chestdimension.level.levelgen
 
-import com.google.common.collect.ImmutableList
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.level.biome.Biomes
 import net.minecraft.world.level.block.Block
@@ -65,67 +64,89 @@ object SurfaceRuleData {
         val conditionSource8 = SurfaceRules.waterBlockCheck(-1, 0)
         val conditionSource9 = SurfaceRules.waterBlockCheck(0, 0)
         val conditionSource10 = SurfaceRules.waterStartCheck(-6, -1)
-        // ground rule
-        val ruleSource = SurfaceRules.sequence(
-            SurfaceRules.ifTrue(
-                conditionSource9, SurfaceRules.sequence(
-                    SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.GRAVEYARD), COARSE_DIRT),
-                    SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.NULL), NULL)
-                )
-            ),
-            DIRT
-        )
-        val ruleSource3 = SurfaceRules.sequence(SurfaceRules.ifTrue(SurfaceRules.ON_CEILING, STONE), GRAVEL)
-        val ruleSource7 = SurfaceRules.sequence(DIRT)
-        val ruleSource8 = SurfaceRules.sequence(ruleSource)
-        val ruleSource9 = SurfaceRules.sequence(
-            SurfaceRules.ifTrue(
-                SurfaceRules.ON_FLOOR,
-                SurfaceRules.ifTrue(conditionSource8, SurfaceRules.sequence(ruleSource8))
-            ),
-            SurfaceRules.ifTrue(
-                conditionSource10,
-                SurfaceRules.sequence(SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, ruleSource7))
-            ),
-            SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR, SurfaceRules.sequence(ruleSource3))
-        )
-        val builder = ImmutableList.builder<SurfaceRules.RuleSource>()
-        if (bedrockRoof)
-            builder.add(
-                SurfaceRules.ifTrue(
-                    SurfaceRules.not(
+
+        val groundRuleSource = surfaceRules {
+            ifTrue(conditionSource9) {
+                +COARSE_DIRT
+            }
+
+            +DIRT
+        }
+
+        val ruleSource3 = surfaceRules {
+            ifTrue(SurfaceRules.ON_CEILING) {
+                +STONE
+            }
+
+            +GRAVEL
+        }
+
+        val ruleSource9 = surfaceRules {
+            ifTrue(SurfaceRules.ON_FLOOR) {
+                ifTrue(conditionSource8) {
+                    +groundRuleSource
+                }
+            }
+
+            ifTrue(conditionSource10) {
+                ifTrue(SurfaceRules.UNDER_FLOOR) {
+                    +DIRT
+                }
+            }
+
+            ifTrue(SurfaceRules.ON_FLOOR) {
+                +ruleSource3
+            }
+        }
+
+        val ruleSource10 = surfaceRules {
+            ifTrue(SurfaceRules.abovePreliminarySurface()) {
+                +ruleSource9
+            }
+        }
+
+        return surfaceRules {
+            if (bedrockRoof)
+                ifTrue(
+                    not(
                         SurfaceRules.verticalGradient(
                             "bedrock_roof",
                             VerticalAnchor.belowTop(5),
                             VerticalAnchor.top()
                         )
-                    ), BEDROCK
-                )
-            )
+                    )
+                ) {
+                    +BEDROCK
+                }
 
-        if (bedrockFloor)
-            builder.add(
-                SurfaceRules.ifTrue(
+            if (bedrockFloor)
+                ifTrue(
                     SurfaceRules.verticalGradient(
                         "bedrock_floor",
                         VerticalAnchor.bottom(),
                         VerticalAnchor.aboveBottom(5)
-                    ), BEDROCK
-                )
-            )
+                    )
+                ) {
+                    +BEDROCK
+                }
 
-        val ruleSource10 = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), ruleSource9)
-        builder.add(if (bl) ruleSource10 else ruleSource9)
-        builder.add(
-            SurfaceRules.ifTrue(
-                SurfaceRules.verticalGradient(
-                    "deepslate",
-                    VerticalAnchor.absolute(-64),
-                    VerticalAnchor.absolute(-56)
-                ), COBBLED_DEEPSLATE
-            )
-        )
+            ifTrue(not(SurfaceRules.isBiome(Biomes.NULL))) {
+                if (bl) +ruleSource10 else +ruleSource9
 
-        return SurfaceRules.sequence(*builder.build().toTypedArray())
+                ifTrue(
+                    SurfaceRules.verticalGradient(
+                        "deepslate",
+                        VerticalAnchor.absolute(-64),
+                        VerticalAnchor.absolute(-56)
+                    )
+                ) {
+                    +COBBLED_DEEPSLATE
+                }
+            }
+
+            ifTrue(SurfaceRules.isBiome(Biomes.NULL)) {
+                +NULL
+            }
+        }
     }
 }
