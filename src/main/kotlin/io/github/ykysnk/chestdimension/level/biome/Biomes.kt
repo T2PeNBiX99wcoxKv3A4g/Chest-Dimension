@@ -101,7 +101,7 @@ object Biomes {
 
         val biome = Biome.BiomeBuilder()
             .hasPrecipitation(false)
-            .temperature(-1f)
+            .temperature(1f)
             .downfall(0f)
             .specialEffects(NullSpecialEffects)
             .mobSpawnSettings(MobSpawnSettings.EMPTY)
