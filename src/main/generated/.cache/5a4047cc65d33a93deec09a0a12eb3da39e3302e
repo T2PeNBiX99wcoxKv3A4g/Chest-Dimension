@@ -1,4 +1,4 @@
-// 1.20.1	2026-09-15T03:13:07.3882742	Chest Dimension/Chest Dimension Dynamic Registries
+// 1.20.1	2026-09-15T04:31:50.5671303	Chest Dimension/Chest Dimension Dynamic Registries
 57b2d92eba95254c86eef11f8e89ec9718f1d22b data\chest-dimension\worldgen\template_pool\death_body_chest\bottom.json
 4a6ad97da8546b9920bc1e67f5230dafcc3e966c data\chest-dimension\worldgen\structure\small_shelter.json
 1c5891c8559220548898ced4c204dc8177bd8818 data\chest-dimension\damage_type\explosion_by_teleport_door.json
@@ -7,7 +7,7 @@
 cd37b2c5e4df3bcb298d17eb3ac501d057442dc2 data\chest-dimension\worldgen\structure_set\small_shelter.json
 ac09d07efaca6a0f5d349f1a6ca159fc2957b7db data\chest-dimension\worldgen\structure\death_body_chest.json
 b475a8c5b8916b829ed408b6ededd51be7293617 data\chest-dimension\worldgen\structure_set\death_body_chest.json
-51c3225d08367b96bc42ba3be0c00bc1e9444405 data\chest-dimension\worldgen\noise_settings\undefined.json
+9b231f1d27fbee29c3cff981e4da797ef8a66360 data\chest-dimension\worldgen\noise_settings\undefined.json
 67f0c9ba46cd05192c7c9a8d86bf61f02d236e3f data\chest-dimension\worldgen\template_pool\small_shelter\basement\entrance.json
 ddf2d0ec08c68f107ea852deb5aaac3235311836 data\chest-dimension\dimension_type\platform.json
 7ed14431422431dd40ffd749a8150bb3d9314b07 data\chest-dimension\worldgen\template_pool\small_shelter\basement\hallway.json
@@ -17,7 +17,7 @@ a7937e3577b265a53643ce1a701ad204e68ad129 data\chest-dimension\worldgen\biome\pla
 888cc4d10a3b15c319b069d0a6881131fcbf0ca2 data\chest-dimension\worldgen\configured_feature\torch_path.json
 d1a89ba8951a50ecdd689accce56fa7af7e8d1fa data\chest-dimension\damage_type\explosion_by_chest_inside.json
 c6d69b43d62cef06e30958881ee36fbd9f1f439b data\chest-dimension\dimension_type\undefined.json
-e7497abe0325ae4097a133fdc0dae506a99c0a1d data\chest-dimension\worldgen\biome\null.json
+fe827bf9780c464e0aff370aa6f16722a7077044 data\chest-dimension\worldgen\biome\null.json
 4b8aa5a267e6da779e8fecda05001ee1ac06d22e data\chest-dimension\worldgen\placed_feature\bedrock_pillar.json
 60e505f3e0cd71b70f5255e1296764be75b0fdbd data\chest-dimension\worldgen\template_pool\small_shelter\basement\room.json
 17fc6cfa3b22c03d038c653239bc6833be39b636 data\chest-dimension\worldgen\configured_feature\bedrock_pillar.json

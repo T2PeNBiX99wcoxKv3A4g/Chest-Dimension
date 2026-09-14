@@ -1,12 +1,12 @@
-// 1.20.1	2026-09-15T03:13:07.3908057	Chest Dimension/Model Definitions
+// 1.20.1	2026-09-15T04:31:50.5681783	Chest Dimension/Model Definitions
 e30588104586751b17f99fd62fbcb47a1e1042ce assets\chest-dimension\blockstates\null.json
 9f754be9ab279b8a7f1e69c1b7b7f17b332e663b assets\chest-dimension\models\block\teleport_door_top_right.json
 4a749798590a7527f9be9aecc4b1d096350486b3 assets\chest-dimension\models\item\teleport_pressure_plate.json
 ac79805def049ce0259e0c9db4380089cf1427a5 assets\chest-dimension\blockstates\teleport_door.json
 d3be4ce2f7006d0249a77c37917e79aef4c5410e assets\chest-dimension\models\item\teleport_door.json
 b846ea332280a3a052a8ea1874a894de2cf30b1d assets\chest-dimension\blockstates\blast_resistant_glass.json
-07d0f71d1c9f1965dda7de56f6a9f4747a2c8f28 assets\chest-dimension\models\block\weather_time_controller.json
 879e6ff9dc356865760ef32b5e9ed518e6a315a8 assets\chest-dimension\models\block\blast_resistant_glass_pane_side_alt.json
+07d0f71d1c9f1965dda7de56f6a9f4747a2c8f28 assets\chest-dimension\models\block\weather_time_controller.json
 603fd4e6e9b5158cf81aee4c9354fabf46b99025 assets\chest-dimension\models\block\chest_platform_wall_side_tall.json
 babfa31c29e6455ca140bccd27e168446fc1636b assets\chest-dimension\blockstates\weather_time_controller.json
 b7ea4cb03efca87a5df122fe38ad1ac8e5ede4b9 assets\chest-dimension\models\block\chest_platform_fence_inventory.json
