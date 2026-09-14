@@ -2,6 +2,7 @@
 
 package io.github.ykysnk.chestdimension.level
 
+import com.mojang.datafixers.util.Pair
 import io.github.ykysnk.chestdimension.Constants
 import io.github.ykysnk.chestdimension.NameSpaces
 import io.github.ykysnk.chestdimension.event.UtilsEvents
@@ -13,14 +14,17 @@ import io.github.ykysnk.chestdimension.level.storage.ChestLevelStorage
 import io.github.ykysnk.chestdimension.level.storage.ChestServerLevelData
 import io.github.ykysnk.chestdimension.utils.AbstractManager
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.NbtIo
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.progress.ChunkProgressListener
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.biome.BiomeManager
-import net.minecraft.world.level.biome.FixedBiomeSource
+import net.minecraft.world.level.biome.Climate
+import net.minecraft.world.level.biome.MultiNoiseBiomeSource
 import net.minecraft.world.level.dimension.LevelStem
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator
 import net.minecraft.world.level.levelgen.WorldOptions
@@ -29,10 +33,16 @@ import java.io.File
 object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", UndefinedData(-1L)) {
     private var loaded: UndefinedServerLevel? = null
     private lateinit var chunkProgressListener: ChunkProgressListener
-    private val biome by lazy {
+    private val graveyardBiome by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.BIOME)
             .getHolderOrThrow(Biomes.GRAVEYARD)
     }
+
+    private val nullBiome by lazy {
+        Constants.Server.registryAccess().registryOrThrow(Registries.BIOME)
+            .getHolderOrThrow(Biomes.NULL)
+    }
+
     private val dimensionType by lazy {
         Constants.Server.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE)
             .getHolderOrThrow(DimensionTypes.UNDEFINED)
@@ -44,12 +54,43 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
 
     private val worldKey by lazy { ResourceKey.create(Registries.DIMENSION, NameSpaces.MOD("undefined")) }
 
+    private val parameters: Climate.ParameterList<Holder<Biome>> by lazy {
+        Climate.ParameterList(
+            listOf(
+                Pair(
+                    Climate.parameters(
+                        Climate.Parameter.span(-1.0f, 0.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        0.0f
+                    ),
+                    graveyardBiome
+                ),
+                Pair(
+                    Climate.parameters(
+                        Climate.Parameter.span(0.0f, 1.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        Climate.Parameter.span(-1.0f, 1.0f),
+                        0.0f
+                    ),
+                    graveyardBiome
+                )
+            )
+        )
+    }
+
+    private val biomeSource by lazy { MultiNoiseBiomeSource.createFromList(parameters) }
+    private val generator by lazy { NoiseBasedChunkGenerator(biomeSource, noiseSettings) }
+    private val levelStem by lazy { LevelStem(dimensionType, generator) }
+
     private fun load(server: MinecraftServer, listener: ChunkProgressListener) {
         chunkProgressListener = listener
-
-        val biomeSource = FixedBiomeSource(biome)
-        val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
-        val levelStem = LevelStem(dimensionType, generator)
         if (!data.created) return
         val seed = data.seed
         val worldOptions = WorldOptions(seed, true, false)
@@ -63,9 +104,6 @@ object UndefinedLevelManager : AbstractManager<UndefinedData>("undefined.dat", U
 
         val worldOptions = WorldOptions.defaultWithRandomSeed()
         val seed = worldOptions.seed()
-        val biomeSource = FixedBiomeSource(biome)
-        val generator = NoiseBasedChunkGenerator(biomeSource, noiseSettings)
-        val levelStem = LevelStem(dimensionType, generator)
         val level = createServerLevel(server, levelStem, worldOptions)
         level.chestServerLevelData.freezeWeather = true
         level.chestServerLevelData.setWeatherParametersForce(0, 10000, true, true)
