@@ -3,52 +3,55 @@
 package io.github.ykysnk.chestdimension.level.levelgen
 
 import com.google.common.collect.ImmutableList
+import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.level.biome.Biomes
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.levelgen.Noises
 import net.minecraft.world.level.levelgen.SurfaceRules
 import net.minecraft.world.level.levelgen.SurfaceRules.ConditionSource
 import net.minecraft.world.level.levelgen.VerticalAnchor
+import net.minecraft.world.level.block.Blocks as MCBlocks
 
 object SurfaceRuleData {
-    private val AIR = makeStateRule(Blocks.AIR)
-    private val BEDROCK = makeStateRule(Blocks.BEDROCK)
-    private val WHITE_TERRACOTTA = makeStateRule(Blocks.WHITE_TERRACOTTA)
-    private val ORANGE_TERRACOTTA = makeStateRule(Blocks.ORANGE_TERRACOTTA)
-    private val TERRACOTTA = makeStateRule(Blocks.TERRACOTTA)
-    private val RED_SAND = makeStateRule(Blocks.RED_SAND)
-    private val RED_SANDSTONE = makeStateRule(Blocks.RED_SANDSTONE)
-    private val STONE = makeStateRule(Blocks.STONE)
-    private val DEEPSLATE = makeStateRule(Blocks.DEEPSLATE)
-    private val COBBLED_DEEPSLATE = makeStateRule(Blocks.COBBLED_DEEPSLATE)
-    private val DIRT = makeStateRule(Blocks.DIRT)
-    private val PODZOL = makeStateRule(Blocks.PODZOL)
-    private val COARSE_DIRT = makeStateRule(Blocks.COARSE_DIRT)
-    private val MYCELIUM = makeStateRule(Blocks.MYCELIUM)
-    private val GRASS_BLOCK = makeStateRule(Blocks.GRASS_BLOCK)
-    private val CALCITE = makeStateRule(Blocks.CALCITE)
-    private val GRAVEL = makeStateRule(Blocks.GRAVEL)
-    private val SAND = makeStateRule(Blocks.SAND)
-    private val SANDSTONE = makeStateRule(Blocks.SANDSTONE)
-    private val PACKED_ICE = makeStateRule(Blocks.PACKED_ICE)
-    private val SNOW = makeStateRule(Blocks.SNOW)
-    private val SNOW_BLOCK = makeStateRule(Blocks.SNOW_BLOCK)
-    private val MUD = makeStateRule(Blocks.MUD)
-    private val POWDER_SNOW = makeStateRule(Blocks.POWDER_SNOW)
-    private val ICE = makeStateRule(Blocks.ICE)
-    private val WATER = makeStateRule(Blocks.WATER)
-    private val LAVA = makeStateRule(Blocks.LAVA)
-    private val NETHERRACK = makeStateRule(Blocks.NETHERRACK)
-    private val SOUL_SAND = makeStateRule(Blocks.SOUL_SAND)
-    private val SOUL_SOIL = makeStateRule(Blocks.SOUL_SOIL)
-    private val BASALT = makeStateRule(Blocks.BASALT)
-    private val BLACKSTONE = makeStateRule(Blocks.BLACKSTONE)
-    private val WARPED_WART_BLOCK = makeStateRule(Blocks.WARPED_WART_BLOCK)
-    private val WARPED_NYLIUM = makeStateRule(Blocks.WARPED_NYLIUM)
-    private val NETHER_WART_BLOCK = makeStateRule(Blocks.NETHER_WART_BLOCK)
-    private val CRIMSON_NYLIUM = makeStateRule(Blocks.CRIMSON_NYLIUM)
-    private val ENDSTONE = makeStateRule(Blocks.END_STONE)
+    private val AIR = makeStateRule(MCBlocks.AIR)
+    private val BEDROCK = makeStateRule(MCBlocks.BEDROCK)
+    private val WHITE_TERRACOTTA = makeStateRule(MCBlocks.WHITE_TERRACOTTA)
+    private val ORANGE_TERRACOTTA = makeStateRule(MCBlocks.ORANGE_TERRACOTTA)
+    private val TERRACOTTA = makeStateRule(MCBlocks.TERRACOTTA)
+    private val RED_SAND = makeStateRule(MCBlocks.RED_SAND)
+    private val RED_SANDSTONE = makeStateRule(MCBlocks.RED_SANDSTONE)
+    private val STONE = makeStateRule(MCBlocks.STONE)
+    private val DEEPSLATE = makeStateRule(MCBlocks.DEEPSLATE)
+    private val COBBLED_DEEPSLATE = makeStateRule(MCBlocks.COBBLED_DEEPSLATE)
+    private val DIRT = makeStateRule(MCBlocks.DIRT)
+    private val PODZOL = makeStateRule(MCBlocks.PODZOL)
+    private val COARSE_DIRT = makeStateRule(MCBlocks.COARSE_DIRT)
+    private val MYCELIUM = makeStateRule(MCBlocks.MYCELIUM)
+    private val GRASS_BLOCK = makeStateRule(MCBlocks.GRASS_BLOCK)
+    private val CALCITE = makeStateRule(MCBlocks.CALCITE)
+    private val GRAVEL = makeStateRule(MCBlocks.GRAVEL)
+    private val SAND = makeStateRule(MCBlocks.SAND)
+    private val SANDSTONE = makeStateRule(MCBlocks.SANDSTONE)
+    private val PACKED_ICE = makeStateRule(MCBlocks.PACKED_ICE)
+    private val SNOW = makeStateRule(MCBlocks.SNOW)
+    private val SNOW_BLOCK = makeStateRule(MCBlocks.SNOW_BLOCK)
+    private val MUD = makeStateRule(MCBlocks.MUD)
+    private val POWDER_SNOW = makeStateRule(MCBlocks.POWDER_SNOW)
+    private val ICE = makeStateRule(MCBlocks.ICE)
+    private val WATER = makeStateRule(MCBlocks.WATER)
+    private val LAVA = makeStateRule(MCBlocks.LAVA)
+    private val NETHERRACK = makeStateRule(MCBlocks.NETHERRACK)
+    private val SOUL_SAND = makeStateRule(MCBlocks.SOUL_SAND)
+    private val SOUL_SOIL = makeStateRule(MCBlocks.SOUL_SOIL)
+    private val BASALT = makeStateRule(MCBlocks.BASALT)
+    private val BLACKSTONE = makeStateRule(MCBlocks.BLACKSTONE)
+    private val WARPED_WART_BLOCK = makeStateRule(MCBlocks.WARPED_WART_BLOCK)
+    private val WARPED_NYLIUM = makeStateRule(MCBlocks.WARPED_NYLIUM)
+    private val NETHER_WART_BLOCK = makeStateRule(MCBlocks.NETHER_WART_BLOCK)
+    private val CRIMSON_NYLIUM = makeStateRule(MCBlocks.CRIMSON_NYLIUM)
+    private val ENDSTONE = makeStateRule(MCBlocks.END_STONE)
+
+    private val NULL = makeStateRule(Blocks.NULL)
 
     private fun makeStateRule(block: Block): SurfaceRules.RuleSource {
         return SurfaceRules.state(block.defaultBlockState())
@@ -65,8 +68,12 @@ object SurfaceRuleData {
         // ground rule
         val ruleSource = SurfaceRules.sequence(
             SurfaceRules.ifTrue(
-                SurfaceRules.isBiome(Biomes.GRAVEYARD), SurfaceRules.ifTrue(conditionSource9, COARSE_DIRT)
-            ), DIRT
+                conditionSource9, SurfaceRules.sequence(
+                    SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.GRAVEYARD), COARSE_DIRT),
+                    SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.NULL), NULL)
+                )
+            ),
+            DIRT
         )
         val ruleSource3 = SurfaceRules.sequence(SurfaceRules.ifTrue(SurfaceRules.ON_CEILING, STONE), GRAVEL)
         val ruleSource7 = SurfaceRules.sequence(DIRT)
