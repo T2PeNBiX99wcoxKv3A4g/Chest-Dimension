@@ -104,7 +104,7 @@ class TorchPathFeature(codec: Codec<TorchPathConfiguration>) : Feature<TorchPath
                      * The path itself is outside this chunk.
                      */
                     if (z !in minZ..maxZ) continue
-                    if (placeTorch(level, x, z, origin.y)) placed = true
+                    if (placeTorch(level, x, z)) placed = true
                 }
             }
         } else {
@@ -138,7 +138,7 @@ class TorchPathFeature(codec: Codec<TorchPathConfiguration>) : Feature<TorchPath
                      * The path itself is outside this chunk.
                      */
                     if (x !in minX..maxX) continue
-                    if (placeTorch(level, x, z, origin.y)) placed = true
+                    if (placeTorch(level, x, z)) placed = true
                 }
             }
         }
@@ -273,8 +273,8 @@ class TorchPathFeature(codec: Codec<TorchPathConfiguration>) : Feature<TorchPath
      *
      * This only modifies the current generation area.
      */
-    private fun placeTorch(level: WorldGenLevel, x: Int, z: Int, y: Int): Boolean {
-        var y = y
+    private fun placeTorch(level: WorldGenLevel, x: Int, z: Int): Boolean {
+        var y = level.maxBuildHeight
         while (y > level.minBuildHeight && level.getBlockState(BlockPos(x, y - 1, z)).isAir) y--
         val torchPos = BlockPos(x, y, z)
         if (!level.getBlockState(torchPos).isAir) return false
