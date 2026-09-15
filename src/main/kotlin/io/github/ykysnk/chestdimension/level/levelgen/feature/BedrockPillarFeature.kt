@@ -66,7 +66,7 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         val bedrock = MCBlocks.BEDROCK.defaultBlockState()
         var placed = false
         val maxHeight = config.maxY.coerceAtMost(level.maxBuildHeight)
-        val randomHeight = random.nextIntBetweenInclusive(faceY + 3, maxHeight)
+        val randomHeight = random.nextIntBetweenInclusive(faceY + 10, maxHeight)
 
         for (y in y until randomHeight) {
             val pos = BlockPos(x, y, z)
