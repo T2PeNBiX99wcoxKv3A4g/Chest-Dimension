@@ -1,0 +1,42 @@
+[versions]
+# Fabric Properties
+minecraft = "1.20.1"
+parchment-mappings = "2023.09.03"
+fabric-loader = "0.19.3"
+fabric-api = "0.92.12+1.20.1"
+fabric-language-kotlin = "1.14.1+kotlin.2.4.20"
+modmenu = "7.2.2"
+fzzy-config = "0.7.6+1.20.1"
+create = "6.0.8.1+build.1744-mc1.20.1"
+sodium = "mc1.20.1-0.5.13-fabric"
+iris = "1.7.6+1.20.1"
+antlr4 = "4.13.1"
+glsl-transformer = "2.0.1"
+jcpp = "1.4.14"
+
+# Build & Toolchain
+loom = "1.17-SNAPSHOT"
+kotlin = "2.4.20"
+translation-generator = "0.0.25"
+jdk = "25"
+jvm-target = "17"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
+fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-language-kotlin" }
+modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
+fzzy-config = { module = "me.fzzyhmstrs:fzzy_config", version.ref = "fzzy-config" }
+create-fabric = { module = "com.simibubi.create:create-fabric", version.ref = "create" }
+sodium = { module = "maven.modrinth:sodium", version.ref = "sodium" }
+iris = { module = "maven.modrinth:iris", version.ref = "iris" }
+antlr4-runtime = { module = "org.antlr:antlr4-runtime", version.ref = "antlr4" }
+glsl-transformer = { module = "io.github.douira:glsl-transformer", version.ref = "glsl-transformer" }
+jcpp = { module = "org.anarres:jcpp", version.ref = "jcpp" }
+
+[plugins]
+fabric-loom-remap = { id = "net.fabricmc.fabric-loom-remap", version.ref = "loom" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+translation-generator = { id = "io.github.ykysnk.translation-generator", version.ref = "translation-generator" }
