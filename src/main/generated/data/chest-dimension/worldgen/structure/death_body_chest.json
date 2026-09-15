@@ -6,7 +6,7 @@
   "size": 7,
   "spawn_overrides": {},
   "start_height": {
-    "absolute": -2
+    "absolute": 0
   },
   "start_pool": "chest-dimension:death_body_chest/main",
   "step": "surface_structures",
