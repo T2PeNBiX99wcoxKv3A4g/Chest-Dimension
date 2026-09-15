@@ -132,7 +132,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jdk.get().toInt())
+    jvmToolchain(libs.versions.jvm.toolchain.get().toInt())
     compilerOptions {
         jvmTarget = JvmTarget.fromTarget(libs.versions.jvm.target.get())
     }

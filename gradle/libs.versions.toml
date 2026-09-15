@@ -18,7 +18,7 @@ jcpp = "1.4.14"
 loom = "1.17-SNAPSHOT"
 kotlin = "2.4.20"
 translation-generator = "0.0.25"
-jdk = "25"
+jvm-toolchain = "25"
 jvm-target = "17"
 
 [libraries]
