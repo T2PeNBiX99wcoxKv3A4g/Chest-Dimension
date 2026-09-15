@@ -11,6 +11,9 @@ import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.WorldGenLevel
 import net.minecraft.world.level.levelgen.feature.Feature
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext
+import kotlin.math.cos
+import kotlin.math.roundToInt
+import kotlin.math.sin
 import net.minecraft.world.level.block.Blocks as MCBlocks
 
 // Credits: ChatGPT
@@ -51,27 +54,53 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         y: Int,
         random: RandomSource
     ): Boolean {
-        var y = y
-        while (y > level.minBuildHeight && (level.getBlockState(BlockPos(x, y - 1, z)).isAir || level.getBlockState(
-                BlockPos(x, y - 1, z)
+        var startY = y
+        while (startY > level.minBuildHeight && (level.getBlockState(BlockPos(x, startY - 1, z)).isAir || level.getBlockState(
+                BlockPos(x, startY - 1, z)
             ).`is`(MCBlocks.WATER))
-        ) y--
-        val faceY = y
+        ) startY--
+        val faceY = startY
         for (i in 0 until 2) {
-            val testY = y - 1
+            val testY = startY - 1
             if (testY <= level.minBuildHeight) break
             if (level.getBlockState(BlockPos(x, testY, z)).isAir) break
-            y = testY
+            startY = testY
         }
         val bedrock = MCBlocks.BEDROCK.defaultBlockState()
         var placed = false
         val maxHeight = config.maxY.coerceAtMost(level.maxBuildHeight)
-        val randomHeight = random.nextIntBetweenInclusive(faceY + 10, maxHeight)
+        val minHeight = (faceY + 10).coerceAtMost(maxHeight)
+        if (minHeight > maxHeight) return false
+        val randomHeight = random.nextIntBetweenInclusive(minHeight, maxHeight)
 
-        for (y in y until randomHeight) {
-            val pos = BlockPos(x, y, z)
+        val totalHeight = (randomHeight - startY).toDouble()
+        if (totalHeight <= 0) return false
+
+        val angle = random.nextDouble() * (Math.PI * 2.0)
+        val dirX = cos(angle)
+        val dirZ = sin(angle)
+        val maxOffset = totalHeight * (random.nextDouble() * 0.08 + 0.08)
+
+        var lastX: Int? = null
+        var lastZ: Int? = null
+
+        for (currY in startY until randomHeight) {
+            val progress = (currY - startY) / totalHeight
+            val currentOffset = maxOffset * progress * progress
+            val blockX = (x + dirX * currentOffset).roundToInt()
+            val blockZ = (z + dirZ * currentOffset).roundToInt()
+
+            if (lastX != null && lastZ != null && (blockX != lastX || blockZ != lastZ)) {
+                level.setBlock(BlockPos(blockX, currY - 1, lastZ), bedrock, 2)
+                level.setBlock(BlockPos(blockX, currY - 1, blockZ), bedrock, 2)
+            }
+
+            val pos = BlockPos(blockX, currY, blockZ)
             level.setBlock(pos, bedrock, 2)
             placed = true
+
+            lastX = blockX
+            lastZ = blockZ
         }
 
         if (placed && random.nextInt(30) == 0) placeDeathBody(level, x, faceY, z, random)
