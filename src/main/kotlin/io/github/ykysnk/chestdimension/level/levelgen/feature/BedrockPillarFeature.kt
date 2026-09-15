@@ -55,7 +55,13 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         random: RandomSource
     ): Boolean {
         var startY = y
-        while (startY > level.minBuildHeight && (level.getBlockState(BlockPos(x, startY - 1, z)).isAir || level.getBlockState(
+        while (startY > level.minBuildHeight && (level.getBlockState(
+                BlockPos(
+                    x,
+                    startY - 1,
+                    z
+                )
+            ).isAir || level.getBlockState(
                 BlockPos(x, startY - 1, z)
             ).`is`(MCBlocks.WATER))
         ) startY--
