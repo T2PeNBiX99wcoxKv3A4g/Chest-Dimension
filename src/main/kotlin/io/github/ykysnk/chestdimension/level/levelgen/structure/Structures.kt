@@ -42,7 +42,7 @@ object Structures {
                 settings,
                 pools.getOrThrow(TemplatePools.DEATH_BODY_CHEST_MAIN_POOL),
                 7,
-                ConstantHeight.of(VerticalAnchor.absolute(-2)),
+                ConstantHeight.of(VerticalAnchor.absolute(0)),
                 false,
                 Heightmap.Types.WORLD_SURFACE_WG
             )
@@ -54,7 +54,7 @@ object Structures {
                 settings,
                 pools.getOrThrow(TemplatePools.SMALL_SHELTER_POOL),
                 7,
-                ConstantHeight.of(VerticalAnchor.absolute(0)),
+                ConstantHeight.of(VerticalAnchor.absolute(-1)),
                 false,
                 Heightmap.Types.WORLD_SURFACE_WG
             )
