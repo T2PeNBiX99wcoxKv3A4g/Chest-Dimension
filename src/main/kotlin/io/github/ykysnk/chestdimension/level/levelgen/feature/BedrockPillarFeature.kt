@@ -3,6 +3,7 @@ package io.github.ykysnk.chestdimension.level.levelgen.feature
 import com.mojang.serialization.Codec
 import io.github.ykysnk.chestdimension.block.Blocks
 import io.github.ykysnk.chestdimension.block.DeathBodyBlock
+import io.github.ykysnk.chestdimension.extensions.chance
 import io.github.ykysnk.chestdimension.level.levelgen.feature.configurations.BedrockPillarConfiguration
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -29,7 +30,7 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         val minX = chunkPos.minBlockX
         val minZ = chunkPos.minBlockZ
 
-        if (random.nextInt(100) >= config.placeProbability) return false
+        if (!random.chance(config.placeProbability)) return false
 
         var placed = false
         val usedPositions = mutableSetOf<Long>()
@@ -109,7 +110,7 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
             lastZ = blockZ
         }
 
-        if (placed && random.nextInt(30) == 0) placeDeathBody(level, x, faceY, z, random)
+        if (placed && random.chance(3)) placeDeathBody(level, x, faceY, z, random)
         return placed
     }
 
@@ -142,7 +143,7 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         if (!bodyState.canSurvive(level, bodyPos)) return false
 
         level.setBlock(bodyPos, bodyState, 2)
-        if (random.nextInt(3) == 0) placeTorch(level, bodyPos.x, bodyPos.z, random)
+        if (random.chance(33)) placeTorch(level, bodyPos.x, bodyPos.z, random)
         return true
     }
 
