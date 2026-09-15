@@ -11,7 +11,6 @@ import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.WorldGenLevel
 import net.minecraft.world.level.levelgen.feature.Feature
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext
-import kotlin.math.max
 import net.minecraft.world.level.block.Blocks as MCBlocks
 
 // Credits: ChatGPT
@@ -27,24 +26,19 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         val minX = chunkPos.minBlockX
         val minZ = chunkPos.minBlockZ
 
-        if (random.nextInt(5) != 0) return false
+        if (random.nextInt(100) >= config.placeProbability) return false
 
-        val maxPillars = max(config.minPillars, config.maxPillars)
-        val pillarCount = random.nextIntBetweenInclusive(config.minPillars, maxPillars)
         var placed = false
         val usedPositions = mutableSetOf<Long>()
+        var x: Int
+        var z: Int
 
-        repeat(pillarCount) {
-            var x: Int
-            var z: Int
+        do {
+            x = minX + random.nextInt(16)
+            z = minZ + random.nextInt(16)
+        } while (!usedPositions.add(BlockPos.asLong(x, 0, z)))
 
-            do {
-                x = minX + random.nextInt(16)
-                z = minZ + random.nextInt(16)
-            } while (!usedPositions.add(BlockPos.asLong(x, 0, z)))
-
-            if (placePillar(config, level, x, z, origin.y, random)) placed = true
-        }
+        if (placePillar(config, level, x, z, origin.y, random)) placed = true
 
         return placed
     }
@@ -71,7 +65,7 @@ class BedrockPillarFeature(codec: Codec<BedrockPillarConfiguration>) : Feature<B
         }
         val bedrock = MCBlocks.BEDROCK.defaultBlockState()
         var placed = false
-        val maxHeight = config.maxHeight.coerceAtMost(level.maxBuildHeight)
+        val maxHeight = config.maxY.coerceAtMost(level.maxBuildHeight)
         val randomHeight = random.nextIntBetweenInclusive(faceY + 3, maxHeight)
 
         for (y in y until randomHeight) {
